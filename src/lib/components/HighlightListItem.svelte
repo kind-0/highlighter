@@ -79,6 +79,7 @@
 
             replies = NoteInterface.load({ replies: [highlight.id], ...pubkeyFilter });
             quotes = NoteInterface.load({ quotes: [highlight.id], ...pubkeyFilter });
+            activePubkeyfilter = { quotes: [highlight.id], ...pubkeyFilter };
         }
 
         if (!event || event.id !== highlight.id) {

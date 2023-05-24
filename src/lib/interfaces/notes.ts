@@ -1,6 +1,6 @@
 import { get, get as getStore } from 'svelte/store';
 import ndkStore from '../stores/ndk';
-import { liveQuery } from 'dexie';
+import Dexie, { liveQuery } from 'dexie';
 import { db } from '$lib/interfaces/db';
 import type NDK from '@nostr-dev-kit/ndk';
 import type { NDKEvent, NDKFilter, NDKUser } from '@nostr-dev-kit/ndk';
@@ -82,14 +82,48 @@ const NoteInterface = {
             NoteInterface.startStream(opts);
         }
 
-        if (opts.pubkeys) {
-            return liveQuery(() =>
+        const filters = {
+            pubkeys: (pubkeys: string[]) => {
+                return (n: App.Note) => {
+                    const pubkeyIsInPubkeys = pubkeys.includes(n.pubkey);
+                    return pubkeyIsInPubkeys;
+                }
+            },
+
+            quotes: (quotes: string[]) => {
+                return (n: App.Note) => {
+                    return quotes.includes(n.quotesEventId);
+                }
+            }
+        }
+
+        if (opts.pubkeys && opts.articleId) {
+            return liveQuery(() => {
                 db.notes
-                    .where('pubkey').anyOf(opts.pubkeys as string[])
-                    .limit(opts.limit || 1000)
+                    .where({replyToArticleId: opts.articleId!})
+                    .filter(filters.pubkeys(opts.pubkeys as string[]))
                     .reverse()
                     .sortBy('createdAt')
-            );
+            })
+        }
+
+        if (opts.pubkeys && opts.quotes) {
+            return liveQuery(() => {
+                db.notes
+                    .where({replyToArticleId: opts.articleId!})
+                    .filter(filters.quotes(opts.quotes as string[]))
+                    .reverse()
+                    .sortBy('createdAt')
+            })
+        }
+
+        if (opts.pubkeys) {
+            return liveQuery(() => {
+                db.notes
+                    .where({replyToArticleId: opts.articleId!})
+                    .reverse()
+                    .sortBy('createdAt')
+            })
         } else if (opts.articleId) {
             return liveQuery(() =>
                 db.notes.where({replyToArticleId: opts.articleId!}).toArray()
