@@ -96,7 +96,7 @@
             content: listDescription,
         } as NostrEvent);
         await event.publish();
-        goto(`/atlas/lists/${event.encode()}`);
+        goto(`/my/lists/${event.encode()}`);
     }
 </script>
 

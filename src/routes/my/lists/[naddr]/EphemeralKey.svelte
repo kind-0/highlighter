@@ -2,10 +2,11 @@
     import ndk from '$lib/stores/ndk';
 
     import { findEphemeralSigner, generateEphemeralSigner, saveEphemeralSigner } from '$lib/signers/ephemeral';
-    import type { NDKSigner, NDKUser } from '@nostr-dev-kit/ndk';
+    import type { NDKEvent, NDKSigner, NDKUser } from '@nostr-dev-kit/ndk';
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
 
     export let list: App.BookmarkList;
+    export let listEvent: NDKEvent;
     export let signer: NDKSigner;
     export let signerUser: NDKUser;
     export let isNewSigner: boolean | undefined = undefined;
@@ -16,7 +17,7 @@
                 $ndk,
                 $ndk.signer!,
                 {
-                    name: list?.title || 'bookmark list'
+                    associatedEventNip19: listEvent.encode(),
                 }
             );
 

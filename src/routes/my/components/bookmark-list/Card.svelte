@@ -2,7 +2,7 @@
     export let bookmarkList: App.BookmarkList;
 </script>
 
-<a href="/atlas/lists/{bookmarkList.naddr}" class="flex flex-col">
+<a href="/my/lists/{bookmarkList.naddr}" class="flex flex-col">
     <div class="
         shadow
         flex flex-col h-full gap-4

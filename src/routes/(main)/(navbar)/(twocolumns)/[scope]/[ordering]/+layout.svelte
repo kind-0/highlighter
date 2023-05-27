@@ -42,9 +42,4 @@
 
 <section>
     <slot />
-    <!-- <div class="overflow-hidden rounded-lg bg-white shadow">
-        <div class="p-6">
-            <slot />
-        </div>
-    </div> -->
 </section>

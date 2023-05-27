@@ -6,7 +6,6 @@
     import Zaps from '$lib/components/events/buttons/zaps.svelte';
     import Boost from '$lib/components/events/buttons/boost.svelte';
 
-    import ExpandIcon from '$lib/icons/Expand.svelte';
     import CommentIcon from '$lib/icons/Comment.svelte';
     import LinkIcon from '$lib/icons/Link.svelte';
 
@@ -58,8 +57,6 @@
                     await event.decrypt($currentUser!);
                     content = event.content;
 
-                    console.log('decrypt', content, event.content)
-
                     if (title && title.match(/iv/i)) {
                         try {
                             const decryptedTitle = await $ndk.signer?.decrypt($currentUser!, title);
@@ -99,6 +96,7 @@
         class="flex flex-col h-full flex-grow"
         draggable={true}
         on:dragstart={dragStart}
+        on:click|preventDefault={toggleCompactView}
     >
         <div class="
             shadow
@@ -126,7 +124,13 @@
                 </div>
             {/if}
 
-            <NoteContent note={content} tags={event.tags} title={event.kind === 4 ? title : undefined} />
+            {#if title}
+                <div>{title}</div>
+            {/if}
+
+            {#if !showCompact || !title}
+                <NoteContent note={content} tags={event.tags} />
+            {/if}
 
             <!-- Footer -->
             {#if !showCompact}
@@ -157,13 +161,13 @@
                     <div class="flex flex-row gap-4 items-center" on:click|stopPropagation>
                         <Bookmark {event}  />
                         <Zaps {note} {event}  />
-                        <Boost {note}  />
+                        <Boost {note} {event} />
 
                             <button class="
                                 text-slate-500 hover:text-orange-500
                                 flex flex-row items-center gap-2
                             " on:click={() => { showComments = !showComments; showReplies = showComments; }}>
-                                <CommentIcon />
+                                <div class="w-6 h-6"><CommentIcon /></div>
                                 {($replies||[]).length}
                             </button>
                             <Tooltip  color="black">Discuss</Tooltip>
@@ -205,23 +209,18 @@
 
     <div class="
         absolute
-        flex flex-col gap-2
+        flex flex-row items-center justify-start gap-2
         p-2 px-2
-        top-0 -right-16
+        bottom-0 -right-0
         text-gray-200 group-hover:text-gray-600 transition duration-300
     ">
-        {#if showCompact}
-            <button on:click={toggleCompactView}>
-                <ExpandIcon />
-            </button>
-        {:else}
-            <CopyJson {note} />
-        {/if}
         <button class="
             {($replies||[]).length > 0 ? 'text-gray-600' : ''}
             flex flex-row items-center gap-2
         " on:click={() => { showComments = !showComments; showReplies = showComments; }}>
-            <CommentIcon />
+            <div class="w-4 h-4">
+                <CommentIcon />
+            </div>
             {($replies||[]).length}
         </button>
     </div>

@@ -22,7 +22,7 @@ export function filterForId(id: string): NDKFilter {
         const [kind, pubkey, identifier] = id.split(':');
         return { kinds: [kind], authors: [pubkey], "#d": [identifier] };
     } else {
-        return { "#e": [id] };
+        return { ids: [id] };
     }
 }
 

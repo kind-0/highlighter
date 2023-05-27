@@ -1,6 +1,6 @@
 <div class="
     text-xl text-justify leading-loose
-    overflow-scroll
+    overflow-auto
 ">
     <slot />
 </div>

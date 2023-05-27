@@ -19,7 +19,7 @@ export async function findEphemeralSigner(
     opts: IFindEphemeralSignerLookups
 ): Promise<NDKPrivateKeySigner | undefined> {
     const mainUser = await mainSigner.user();
-    const filter: NDKFilter = {kinds:[4], '#p': [mainUser.hexpubkey()]};
+    const filter: NDKFilter = {kinds:[2600], '#p': [mainUser.hexpubkey()]};
 
     if (opts.name) {
         const hashedName = await getHashedKeyName(opts.name);
@@ -29,7 +29,9 @@ export async function findEphemeralSigner(
         filter["#e"] = [hashedEventReference];
     }
 
+    console.log(`getting signer`, filter)
     const event = await ndk.fetchEvent(filter);
+    console.log(`back from getting signer`)
 
     if (event) {
         await event.decrypt(await mainSigner.user());
@@ -112,7 +114,7 @@ export async function saveEphemeralSigner(
 
     const mainUser = await mainSigner.user();
     const event = new NDKEvent(ndk, {
-        kind: 4,
+        kind: 2600,
         content: generateContent(targetSigner, opts),
         tags: await generateTags(mainSigner, opts)
     } as NostrEvent);
@@ -137,6 +139,5 @@ export async function saveEphemeralSigner(
 
 export function generateEphemeralSigner(): NDKPrivateKeySigner {
     const signer = NDKPrivateKeySigner.generate();
-    console.log('generateEphemeralSigner', signer.privateKey);
     return signer;
 }

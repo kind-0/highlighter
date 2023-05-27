@@ -64,7 +64,11 @@
     $: if (type === 'naddr' && !loadedId) {
         loadedId = articleId;
         $ndk.fetchEvent(filterFromNaddr(naddr)).then(e => {
-            if (!e) return;
+            if (!e) {
+                console.log('unable to find', naddr)
+                return;
+            }
+
             articleEvent = e;
             article = articleFromEvent(e);
             const md = new MarkdownIt();

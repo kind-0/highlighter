@@ -13,7 +13,7 @@
 		<span>Orange Highlights.</span>
     </h3>
 
-	<a href="/atlas/highlights" class="text-zinc-300 absolute top-0 right-0 p-4">
+	<a href="/my/highlights" class="text-zinc-300 absolute top-0 right-0 p-4">
 		<span class="font-black">Atlas</span>
 		<span class="text-light">Notes</span>
 	</a>

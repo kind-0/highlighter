@@ -46,30 +46,33 @@
 
     let encryptedNotes: any;
     let decryptedNotes: Record<string, NDKEvent | null> = {};
+    let loadedNoteIds: string[] = [];
 
     $: {
         if (!encryptedNotes && $currentUser) {
             encryptedNotes = EncryptedNoteInterface.load({ recipient: $currentUser!.hexpubkey() });
         }
 
-        console.log('encrypted notes', $encryptedNotes?.length)
-
-        if ($encryptedNotes && $encryptedNotes.length > 0 && Object.keys(decryptedNotes).length < $encryptedNotes.length) {
+        if ($encryptedNotes && $encryptedNotes.length > 0 && loadedNoteIds.length < $encryptedNotes.length) {
+            console.log('encrypted notes', $encryptedNotes?.length, Object.keys(decryptedNotes).length)
             setTimeout(async () => {
+                loadedNoteIds = $encryptedNotes.map((n: App.EncryptedNote) => n.id);
+
                 for (const note of $encryptedNotes) {
                     try {
-                        if (note.isAtlasMessage) {
-                            if (!decryptedNotes[note.id]) {
-                                const eventJSON = JSON.parse(note.event);
-                                const event = new NDKEvent($ndk, eventJSON);
-                                await event.decrypt($currentUser!);
+                        if (!decryptedNotes[note.id]) {
+                            const eventJSON = JSON.parse(note.event);
+                            const event = new NDKEvent($ndk, eventJSON);
+                            await event.decrypt($currentUser!);
+                            try {
                                 event.content = JSON.parse(event.content);
 
-                                decryptedNotes[note.id] = event;
-
+                                if (event.content.key) continue;
+                            } catch (e) {
                             }
-                        } else {
-                            decryptedNotes[note.id] = null;
+
+                            decryptedNotes[note.id] = event;
+
                         }
                     } catch (e) {
                         console.error(e);
@@ -96,28 +99,32 @@
 {:else}
     <div class="grid grid-flow-row md:grid-cols-4 xl:sdgrid-cols-4 gap-4">
         {#each Object.values(decryptedNotes).filter(n => !!n) as note}
-            <a
-                href="/atlas/notes/{note.content.event||note.content.naddr}"
-                class="flex flex-col"
-                on:click|preventDefault={() => loadedNote = note}
-            >
-                <div class="
-                    shadow
-                    flex flex-col h-full gap-4
-                    border border-zinc-200 hover:border-zinc-200
-                    px-6 pt-6 pb-4 rounded-xl
-                    bg-white hover:bg-slate-50 transition duration-200 ease-in-out
-                " style="max-height: 40rem;">
-                    <div class="flex-1 truncate px-4 py-2 text-sm">
-                        <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
-                            {note.content.title}
-                        </div>
-                        <div class="flex flex-row gap-4 items-start text-sm text-zinc-400">
-                            {new Date(note.created_at*1000).toLocaleString()}
+            {#if note.content.title}
+                <a
+                    href="/my/notes/{note.content.event||note.content.naddr}"
+                    class="flex flex-col"
+                    on:click|preventDefault={() => loadedNote = note}
+                >
+                    <div class="
+                        shadow
+                        flex flex-col h-full gap-4
+                        border border-zinc-200 hover:border-zinc-200
+                        px-6 pt-6 pb-4 rounded-xl
+                        bg-white hover:bg-slate-50 transition duration-200 ease-in-out
+                    " style="max-height: 40rem;">
+                        <div class="flex-1 truncate px-4 py-2 text-sm">
+                            <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
+                                {note.content.title}
+                            </div>
+                            <div class="flex flex-row gap-4 items-start text-sm text-zinc-400">
+                                {new Date(note.created_at*1000).toLocaleString()}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            {:else}
+                <!-- <EventCard event={note} skipHeader={true} /> -->
+            {/if}
         {/each}
     </div>
 {/if}

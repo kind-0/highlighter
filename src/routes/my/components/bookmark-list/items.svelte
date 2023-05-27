@@ -11,4 +11,4 @@
     <Tags tags={encryptedTags} kind={4} />
 {/if}
 
-<Tags tags={tags} />
+<Tags tags={tags} bind:remove={removeItem} />

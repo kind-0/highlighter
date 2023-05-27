@@ -2,7 +2,7 @@
     import ndk from "$lib/stores/ndk";
 
     import HighlightInterface from '$lib/interfaces/highlights';
-    import HighlightList from '../components/highlights/Card.svelte';
+    import HighlightList from '$lib/components/highlights/card.svelte';
     import { onMount } from 'svelte';
 
     let highlights, _highlights: App.Highlight[] = [];

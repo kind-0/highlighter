@@ -87,10 +87,4 @@
         /* allow click-through to backdrop */
         pointer-events: none;
     }
-
-    .actions {
-        margin-top: 32px;
-        display: flex;
-        justify-content: flex-end;
-    }
 </style>

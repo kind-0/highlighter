@@ -27,5 +27,13 @@
         <p>
             Organize your highlights that you have marked from highlighter.com
         </p>
+
+        <p>
+            Create lists of things that are important to you.
+        </p>
+
+        <p>
+            Organize your lists by drag and dropping them
+        </p>
     </div>
 </div>

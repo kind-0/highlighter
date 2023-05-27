@@ -49,7 +49,7 @@
             newListEvent.tags.push(['d', description]);
         }
         await newListEvent.publish();
-        goto(`/atlas/lists/${newListEvent.encode()}`);
+        goto(`/my/lists/${newListEvent.encode()}`);
         closeModal();
     }
 </script>

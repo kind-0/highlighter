@@ -77,7 +77,7 @@
                 <div class="flex flex-row gap-4 items-center">
                     {#if $currentUser}
                         <a
-                            href="/atlas"
+                            href="/my"
                             class="
                                 ring-1
                                 ring-zinc-500
@@ -91,7 +91,7 @@
                             on:click={submitTrack}
                         >
                             <PlusCircle />
-                            Atlas Notes
+                            My Notes
                         </a>
                         <Avatar
                             pubkey={$currentUser?.hexpubkey()}

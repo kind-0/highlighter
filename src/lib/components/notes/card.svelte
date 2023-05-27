@@ -10,6 +10,7 @@
     export let note: App.Note;
     export let highlight: App.Note | App.Highlight | undefined = undefined;
     export let event: NDKEvent | undefined = undefined;
+    export let skipFooter = false;
     export let skipButtons = false;
     export let skipReplies = false;
     export let expandReplies = true;
@@ -36,6 +37,7 @@
     {highlight}
     {event}
     skipHeader={true}
+    {skipFooter}
     {skipButtons}
     replies={($replies||[])}
     {expandReplies}

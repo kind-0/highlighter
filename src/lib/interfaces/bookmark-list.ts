@@ -3,15 +3,9 @@ import ndkStore from '../stores/ndk';
 import { liveQuery } from 'dexie';
 import { db } from '$lib/interfaces/db.js';
 import type NDK from '@nostr-dev-kit/ndk';
-import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
 import type { NDKFilter } from '@nostr-dev-kit/ndk';
 import {nip19} from 'nostr-tools';
-
-function valueFromTag(event: NDKEvent, tag: string): string | undefined {
-    const matchingTag = event.tags.find((t: string[]) => t[0] === tag);
-
-    if (matchingTag) return matchingTag[1];
-}
 
 interface ILoadOpts {
     pubkeys?: string[];
@@ -97,7 +91,33 @@ async function handleEvent30001(event: NDKEvent) {
         event: JSON.stringify(event.rawEvent())
     };
 
+    // Get delete-events
+    const ndk = getStore(ndkStore);
+    ndk.fetchEvent({
+        kinds: [5],
+        '#a': [event.tagId()]
+    }).then((deleteEvent) => {
+        if (deleteEvent) {
+            db.bookmarkLists.delete(bookmarkList.id);
+            console.log('Deleted bookmark list', bookmarkList.id);
+        }
+    });
+
     return bookmarkList;
+}
+
+export async function deleteList(listEvent: NDKEvent) {
+    const ndk: NDK = getStore(ndkStore);
+    const deleteEvent = new NDKEvent(ndk, {
+        kind: 5,
+        tags: [
+            listEvent.tagReference()
+        ],
+        content: ""
+    } as NostrEvent);
+    await deleteEvent.publish();
+
+    await db.bookmarkLists.delete(listEvent.tagId());
 }
 
 export default BookmarkListInterface;

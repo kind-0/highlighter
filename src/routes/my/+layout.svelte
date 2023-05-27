@@ -69,7 +69,7 @@
         <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
             <div class="flex h-16 shrink-0 items-center flex-row gap-2 font-bold tracking-wider text-zinc-800">
                 <GlobalIcon />
-                <a href="/atlas" class="flex flex-row">
+                <a href="/my" class="flex flex-row">
                     <span class="text-zinc-400 font-light">my</span>
                     <span class="text-zinc-900 uppercase">Highlighter</span>
                     <span class="text-orange-500 text-xs font-semibold tracking-tight">ALPHA</span>
@@ -80,17 +80,17 @@
                 <li>
                     <ul role="list" class="-mx-2 space-y-1">
                         <li>
-                            <NavigationButton route="/atlas/highlights">
+                            <NavigationButton route="/my/highlights">
                                 <HighlightIcon />
                                 Highlights
                             </NavigationButton>
 
-                            <NavigationButton route="/atlas/lists">
+                            <NavigationButton route="/my/lists">
                                 <BookmarkIcon />
                                 Lists
                             </NavigationButton>
 
-                            <NavigationButton route="/atlas/notes">
+                            <NavigationButton route="/my/notes">
                                 <NoteIcon />
                                 Private Notes
                             </NavigationButton>

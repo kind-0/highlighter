@@ -314,7 +314,7 @@
                     text-slate-500 hover:text-orange-500
                     flex flex-row items-center gap-2
                 " on:click={() => { showComments = !showComments; showReplies = showComments; }}>
-                    <CommentIcon />
+                    <div class="w-6 h-6"><CommentIcon /></div>
                     {($replies||[]).length}
                 </button>
                 <Tooltip  color="black">Discuss</Tooltip>
@@ -329,14 +329,14 @@
                             <CopyIcon />
                         {/if}
                     </button>
-                    <Tooltip  color="black">
+                    <Tooltip color="black">
                         Copy highlight Nostr ID
                     </Tooltip>
                 {:else if highlight.url && !skipUrl}
                     <a href={highlight.url} class="text-gray-500 hover:text-orange-500 flex flex-row gap-3 text-sm items-center">
                         {domain}
                     </a>
-                    <Tooltip  color="black">
+                    <Tooltip color="black">
                         {highlight.url}
                     </Tooltip>
                 {/if}
@@ -347,7 +347,7 @@
                 ">
                     <LinkIcon />
                 </a>
-                <Tooltip  color="black">Link to this highlight</Tooltip>
+                <Tooltip color="black">Link to this highlight</Tooltip>
             </div>
         </div>
 

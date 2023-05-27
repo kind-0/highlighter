@@ -37,7 +37,7 @@
 		"@mozilla/readability": "^0.4.4",
 		"@neodrag/svelte": "^2.0.3",
 		"@nostr-connect/connect": "^0.2.3",
-		"@nostr-dev-kit/ndk": "^0.3.14",
+		"@nostr-dev-kit/ndk": "^0.3.15",
 		"@popperjs/core": "^2.11.7",
 		"@rollup/plugin-commonjs": "^24.0.1",
 		"@rollup/plugin-json": "^6.0.0",

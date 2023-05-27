@@ -1,7 +1,7 @@
 <script lang="ts">
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
-    import BookmarkListInterface from '$lib/interfaces/bookmark-list';
+    import BookmarkListInterface, { deleteList } from '$lib/interfaces/bookmark-list';
 
     import NoteVisibility from '../../components/note/visibility.svelte';
     import PageTitle from '../../components/PageTitle.svelte';
@@ -9,7 +9,7 @@
     import Tags from './tags.svelte';
     import { onDestroy } from 'svelte';
     import { NDKEvent, NDKPrivateKeySigner, NDKSubscription, NDKUser } from '@nostr-dev-kit/ndk';
-    import type { NDKTag } from '@nostr-dev-kit/ndk/lib/src/events';
+    import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
     import { nip19 } from 'nostr-tools';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
     import EphemeralKey from './EphemeralKey.svelte';
@@ -20,6 +20,7 @@
 
     let currentNpub;
     let bookmarkLists, bookmarkList: App.BookmarkList | null = null;
+    let delegatedName: string;
     let tags: NDKTag[] = [];
     let encryptedTags: NDKTag[] = [];
 
@@ -83,6 +84,10 @@
                 bookmarkList = $bookmarkLists[0];
                 listEvent = new NDKEvent($ndk, JSON.parse(bookmarkList.event));
                 tags = listEvent.tags;
+
+                getDelegatedSignerName(bookmarkList).then((name) => {
+                    delegatedName = name;
+                });
             }
         }
 	}
@@ -157,7 +162,7 @@
     let showSaveButton = false;
 
     function onNewItemChange() {
-        const patterns: string[] = ['npub1', 'naddr', 'note1', 'nprofile', 'nevent', 'http'];
+        const patterns: string[] = ['npub1', 'naddr', 'note1', 'nprofile', 'nevent'];
         let isNotMatching = true;
 
         for (const pattern of patterns) {
@@ -179,6 +184,30 @@
         }
     }
 
+    async function getDelegatedSignerName(list: App.BookmarkList | null) {
+        let name;
+
+        if (!list) {
+            return 'unknown';
+        }
+
+        if (!$currentUser?.profile) {
+            await $currentUser?.fetchProfile();
+        }
+
+        if ($currentUser?.profile?.name) {
+            name = $currentUser.profile.displayName + `'s `;
+        }
+
+        return name + list.title;
+    }
+
+    /**
+     * This callback is called when the user saves from the note editor.
+     *
+     * If the note has been created with a delegated signer, and the
+     * key has not been saved yet, we save it here.
+     */
     async function onNoteEditorSaved(e: CustomEvent) {
         const { event, visibility } = e.detail;
         const tag = event.tagReference();
@@ -191,9 +220,10 @@
                 currentUserPubkeys = currentUserPubkeys;
                 await saveEphemeralSigner($ndk, listSigner, {
                     associatedEvent: listEvent,
-                    name: bookmarkList?.title || 'bookmark list',
+                    name: listEvent.encode(),
                     keyProfile: {
-                        name: bookmarkList?.title || 'bookmark list',
+                        name: await getDelegatedSignerName(bookmarkList),
+                        picture: $currentUser?.profile?.image,
                     }
                 });
             } catch (e) {
@@ -235,21 +265,70 @@
         newItemType = undefined;
         addNewItemValue = '';
     }
+
+    async function onRemoveItem(e: CustomEvent) {
+        const { tag } = e.detail;
+        const tagFilter = (t: NDKTag) => !(t[0] === tag[0] && t[1] === tag[1]);
+
+        // Remove the tag from the list
+        listEvent.tags = listEvent.tags.filter(tagFilter);
+
+        listEvent.created_at = Math.floor(Date.now() / 1000);
+
+        if (listEvent.content?.length > 0) {
+            let tags;
+
+            try {
+                tags = JSON.parse(listEvent.content);
+                if (!tags || !tags) tags = [];
+
+                tags = tags.filter(tagFilter);
+
+                listEvent.content = JSON.stringify(tags);
+                await listEvent.encrypt($currentUser!);
+            } catch (e) {
+            }
+        }
+
+        await listEvent.sign();
+        await listEvent.publish();
+    }
+
+    async function deleteBookmarkList() {
+        if (!confirm("Are you sure you want to delete this list?")) {
+            return;
+        }
+
+        await deleteList(listEvent);
+    }
 </script>
 
 {#if listEvent && bookmarkList}
     <div class="flex flex-col gap-8">
-        <!-- Header -->
-        <PageTitle
-            title={bookmarkList?.title||"Untitled"}
-            subtitle={bookmarkList?.description}
-        />
+        <div class="flex flex-row items-center justify-between">
+            <!-- Header -->
+            <div class="flex-1">
+                <PageTitle
+                    title={bookmarkList?.title||"Untitled"}
+                    subtitle={bookmarkList?.description}
+                />
+            </div>
+
+            <div class="flex flex-row items-center">
+                <button
+                    on:click={deleteBookmarkList}
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
 
         {#await decryptTags()}
             Loading
         {:then}
             <div class="-mt-8">
                 <EphemeralKey
+                    {listEvent}
                     bind:list={bookmarkList}
                     bind:signer={listSigner}
                     bind:signerUser={listSignerUser}
@@ -257,14 +336,14 @@
                 />
             </div>
 
-            <div class="grid grid-flow-row md:grid-cols-1 max-w-prose lg:sdgrid-cols-3 gap-4">
+            <div class="grid grid-flow-row md:grid-cols-1 max-w-prose lg:sdgrid-cols-3 gap-2">
                 <div class="relative flex flex-row items-center justify-center mb-8">
                     {#if newItemType === 'note'}
                         <div class="pb-4 w-full">
                             <NoteEditor
                                 expandEditor={true}
                                 delegatedSigner={listSigner}
-                                delegatedName={bookmarkList?.title||"test"}
+                                {delegatedName}
                                 bind:title={addNewItemValue}
                                 on:keyup={onNewItemChange}
                                 on:saved={onNoteEditorSaved}
@@ -309,14 +388,20 @@
                 {/if}
 
                 Public
-                <Tags tags={tags} {currentUserPubkeys} />
+                <Tags tags={tags} {currentUserPubkeys} on:removeItem={onRemoveItem} />
 
                 {#if !isNewSigner && listSignerUser}
-                    Feed
+                    <div class="text-lg font-semibold">My Feed</div>
 
                     <FilterFeed filter={{
                         '#p': [listSignerUser.hexpubkey()],
                         'authors': [$currentUser.hexpubkey()]
+                    }} />
+
+                    <div class="text-lg font-semibold">Global Feed</div>
+
+                    <FilterFeed filter={{
+                        '#p': [listSignerUser.hexpubkey()],
                     }} />
                 {/if}
             </div>

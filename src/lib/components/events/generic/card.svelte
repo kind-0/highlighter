@@ -6,23 +6,35 @@
     import ndk from '$lib/stores/ndk';
     import { nip19 } from 'nostr-tools';
     import { createEventDispatcher } from 'svelte';
-    import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+    import type { NDKEvent, NDKFilter, NDKTag } from '@nostr-dev-kit/ndk';
+    import { filterForId } from '$lib/utils';
+  import { currentUser } from '$lib/store';
 
+    export let tag: NDKTag | undefined = undefined;
     export let id: string | undefined = undefined;
     export let skipReplies: boolean = false;
+    export let skipFooter: boolean = false;
     export let event: NDKEvent | undefined = undefined;
 
     const dispatcher = createEventDispatcher();
 
-    let hexid: string = event?.id;
+    let filter: NDKFilter = {};
+
+    if (event) {
+        filter = {ids: [event.id as string]};
+    }
+
+    if (tag) {
+        filter = filterForId(tag[1]);
+    }
 
     if (id) {
         const decoded = nip19.decode(id);
 
         if (decoded.type === 'nevent') {
-            hexid = decoded.data.id as string;
+            filter = {ids: [decoded.data.id as string]};
         } else {
-            hexid = decoded.data as string;
+            filter = {ids: [decoded.data as string]};
         }
     }
 
@@ -30,11 +42,20 @@
         if (event) return event;
 
         const p: Promise<NDKEvent | undefined> = new Promise((resolve, reject) => {
-            $ndk.fetchEvent({ids: [hexid]}).then((e) => {
-                if (!e) return reject(`no event ${hexid}`);
+            $ndk.fetchEvent(filter).then((e) => {
+                if (!e) return reject(`no event ${JSON.stringify(filter)}`);
+
+                if (e.kind === 4) {
+                    console.log('decrypting')
+                    setTimeout(async () => {
+                        await e.decrypt($currentUser!);
+                        resolve(e);
+                    }, 1000 * Math.random())
+                } else {
+                    resolve(e);
+                }
 
                 dispatcher('event:load', e);
-                resolve(e);
             });
         });
 
@@ -52,7 +73,7 @@
 </script>
 
 {#await loadEvent()}
-    loading {hexid}
+    loading {JSON.stringify(filter)}
 {:then e}
     {#if e}
         <div
@@ -70,6 +91,13 @@
                 <NoteCard
                     note={handleEvent1(e)}
                     {skipReplies}
+                    {skipFooter}
+                />
+            {:else if e.kind === 4}
+                <NoteCard
+                    note={handleEvent1(e)}
+                    {skipReplies}
+                    {skipFooter}
                 />
             {/if}
         </div>

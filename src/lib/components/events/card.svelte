@@ -6,8 +6,11 @@
     import ViewIcon from '$lib/icons/View.svelte';
     import LinkIcon from '$lib/icons/Link.svelte';
 
+    import ndk from '$lib/stores/ndk';
+
     import NoteCard from '$lib/components/notes/card.svelte';
 
+    import HighlightButton from '$lib/components/events/buttons/HighlightButton.svelte';
     import BookmarkButton from '$lib/components/events/buttons/bookmark.svelte';
     import ZapsButton from '$lib/components/events/buttons/zaps.svelte';
     import RepliesButton from '$lib/components/events/buttons/replies.svelte';
@@ -45,16 +48,27 @@
             copiedEventId = false;
         }, 1500);
     }
+
+    function dragStart(e: DragEvent) {
+        if (!e.dataTransfer) return;
+
+        const tag = event.tagReference();
+
+        e.dataTransfer.setData('id', event.id as string);
+        e.dataTransfer.setData('tag', JSON.stringify(tag));
+    }
 </script>
 
 <div class="flex flex-col gap-6">
     <div class="
         overflow-hidden rounded-lg bg-white shadow
         flex flex-col gap-4
-        px-6 py-4
+        px-6 py-3
         group
         event-card
-    ">
+    " draggable={true}
+    on:dragstart={dragStart}
+    >
         {#if !skipHeader}
             <!-- Header -->
             <div class="flex flex-row justify-between items-start relative">
@@ -105,7 +119,6 @@
         {#if !$$slots.default}
             <div class="
                 leading-relaxed h-full flex flex-col
-                py-2
                 overflow-auto
             ">
                 <CardContent
@@ -157,6 +170,8 @@
                         transition duration-300
                         z-10
                     ">
+                        <HighlightButton {event} />
+
                         <BookmarkButton {event} />
 
                         <ZapsButton {highlight} {event} />

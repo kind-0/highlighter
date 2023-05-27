@@ -1,12 +1,16 @@
 <script lang="ts">
     import ndk from '$lib/stores/ndk';
 	import GenericEventCard from '$lib/components/events/generic/card.svelte';
-    import type { ILoadOpts } from '$lib/interfaces/notes';
-    import NoteInterface from '$lib/interfaces/notes';
     import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
-    import type { Observable } from 'dexie';
+    import { onDestroy } from 'svelte';
 
     export let filter: NDKFilter;
+
+    onDestroy(() => {
+        if (sub) {
+            sub.stop();
+        }
+    })
 
     let feed: NDKEvent[] = [];
 
@@ -18,6 +22,8 @@
         feed = feed;
     })
 </script>
+
+<!-- {JSON.stringify(filter)} -->
 
 {#each feed as event}
     <GenericEventCard

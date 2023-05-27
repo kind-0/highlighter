@@ -17,6 +17,6 @@
     text-slate-500 hover:text-orange-500
     flex flex-row items-center gap-2
 " on:click={() => { openModal(ReplyModal, { event, note, highlight }) }}>
-    <CommentIcon />
+    <div class="w-6 h-6"><CommentIcon /></div>
 </button>
 <Tooltip color="black">Reply</Tooltip>

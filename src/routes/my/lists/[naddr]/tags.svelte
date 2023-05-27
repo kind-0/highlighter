@@ -1,16 +1,15 @@
 <script lang="ts">
     import type { NDKTag } from '@nostr-dev-kit/ndk/lib/src/events';
     import { currentUser } from '$lib/store';
-    import ndk from "$lib/stores/ndk";
     import type { Observable } from 'dexie';
     import type { NDKSubscription } from '@nostr-dev-kit/ndk';
 
     import NoteInterface from '$lib/interfaces/notes';
     import HighlightInterface from '$lib/interfaces/highlights';
 
-    import Highlight from '../../components/highlights/Card.svelte';
-    import Note from '../../components/notes/Card.svelte';
-    import UserCard from '$lib/components/UserCard.svelte';
+    import CollapsibleCard from '../../components/CollapsibleCard.svelte';
+    import FilterFeed from '$lib/components/FilterFeed.svelte';
+    import UserBanner from '$lib/components/UserBanner.svelte';
 
     export let kind = 1;
     export let tags: NDKTag[];
@@ -23,7 +22,6 @@
 
     let noteQuery: Observable<App.Note[]> | undefined;
     let highlightQuery: Observable<App.Highlight[]> | undefined;
-    let peopleFeed: Observable<App.Note[]> | undefined;
 
     let taggedNotes: App.Note[] = [];
     let taggedNoteIds = new Set();
@@ -47,7 +45,7 @@
             for (const tag of tags) {
                 switch (tag[0]) {
                     case 'a':
-                        const [kind] = tag[1].split(':');
+                        // const [kind] = tag[1].split(':');
                         break;
                     case 'e':
                         noteIds.push(tag[1]);
@@ -63,17 +61,11 @@
 
             noteQuery = undefined;
             highlightQuery = undefined;
-            peopleFeed = undefined;
 
             if (noteIds.length > 0) {
                 noteQuery = NoteInterface.load({ ids: noteIds, kind });
                 highlightQuery = HighlightInterface.load({ ids: noteIds });
                 highlightSub = HighlightInterface.startStream({ ids: noteIds, kind });
-            }
-
-            // new people to load
-            if (peopleIds.length > 0) {
-                peopleFeed = NoteInterface.load({ pubkeys: peopleIds, limit: 10 });
             }
         }
     }
@@ -109,6 +101,20 @@
             taggedHighlightIds = taggedHighlightIds;
         }
     }
+
+    function shouldDisplayTag(tag: NDKTag) {
+        switch (tag[0]) {
+            case 'a':
+                const [kind] = tag[1].split(':');
+                return kind === '30023';
+            case 'e':
+                return true;
+            case 'p':
+                return false;
+            case 'r':
+                return true;
+        }
+    }
 </script>
 
 {#each urlTags as tag}
@@ -129,15 +135,14 @@
     </div>
 {/each}
 
-{#each taggedNotes as tag}
-    <div class="h-full">
-        <Note
-            note={tag}
-            skipHeader={true}
-            skipFooter={true}
-            compact={true}
-        />
-    </div>
+{#each tags as tag}
+    {#if shouldDisplayTag(tag)}
+        <CollapsibleCard {tag} on:removeItem />
+    {/if}
+{/each}
+
+<!-- {#each taggedNotes as tag}
+    <CollapsibleCard {tag} />
 {/each}
 
 {#each taggedHighlights as tag}
@@ -145,23 +150,19 @@
         <Highlight highlight={tag} />
     </div>
 {/each}
+-->
 
 {#each peopleIds as personId}
     <div class="h-full">
-        <UserCard pubkey={personId} />
+        <UserBanner pubkey={personId} />
     </div>
 {/each}
 
 {#if peopleIds.length > 0}
     List feed
 
-    <div class="max-w-lg flex flex-col gap-4">
-        {#if $peopleFeed}
-            {#each ($peopleFeed||[]) as note}
-                <Note note={note} />
-            {/each}
-        {:else}
-            Loading...
-        {/if}
-    </div>
+    <FilterFeed filter={{
+        'authors': peopleIds
+    }} />
+
 {/if}
