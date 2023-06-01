@@ -44,7 +44,7 @@
 
     let articles: Observable<App.Article[]> | undefined = undefined;
 
-    $: if (highlight?.articleId && !articles) {
+    $: if (highlight?.articleId && !articles && highlight.articleId.match(/:/)) {
         articles = ArticleInterface.load({id: highlight.articleId});
     }
 
