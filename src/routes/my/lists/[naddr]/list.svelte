@@ -156,7 +156,7 @@
     let addNewItemValue = '';
     let newItemVisibility = 'Delegated';
 
-    let listSigner: NDKPrivateKeySigner;
+    let listSigner = NDKPrivateKeySigner.generate();
     let listSignerUser: NDKUser;
     let isNewSigner: boolean;
     let showSaveButton = false;
@@ -301,6 +301,24 @@
 
         await deleteList(listEvent);
     }
+
+    let dropZoneActive = false;
+
+    async function addToList(e: DragEvent) {
+        console.log('add to list', e);
+        const id = e.dataTransfer.getData('id');
+        const tag = JSON.parse(e.dataTransfer.getData('tag'));
+
+        if (listEvent.tags.find(t => t[1] === id)) {
+            alert('already has it');
+            return;
+        }
+
+        listEvent.tags.push(tag);
+        listEvent.created_at = Math.floor(Date.now() / 1000);
+        await listEvent.sign();
+        listEvent.publish();
+    }
 </script>
 
 {#if listEvent && bookmarkList}
@@ -387,8 +405,24 @@
                     <Tags tags={encryptedTags} kind={4} {currentUserPubkeys} />
                 {/if}
 
-                Public
-                <Tags tags={tags} {currentUserPubkeys} on:removeItem={onRemoveItem} />
+                <div
+                    draggable={true}
+                    on:dragenter={() => dropZoneActive = true}
+                    on:dragleave={() => dropZoneActive = false}
+                    on:drop={e => {addToList(e); dropZoneActive = false;}}
+                    ondragover="return false"
+                    class="
+                        {dropZoneActive ? 'bg-zinc-300' : ''}
+                        rounded-xl
+                        transition duration-200 ease-in-out
+                        p-2 py-8 -mx-6 px-6
+                        flex flex-col gap-2.5
+                    "
+                >
+                    <div class="font-semibold text-lg">Public</div>
+
+                    <Tags tags={tags} {currentUserPubkeys} on:removeItem={onRemoveItem} />
+                </div>
 
                 {#if !isNewSigner && listSignerUser}
                     <div class="text-lg font-semibold">My Feed</div>

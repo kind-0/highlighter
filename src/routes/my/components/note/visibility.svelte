@@ -38,7 +38,7 @@
     {#if delegatedName}
         <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
             <Radio bind:group={value} value='Delegated'>Public (as {delegatedName})</Radio>
-            <Helper class="pl-6">This will be a <em>kind-1</em> note, but will note appear on your timeline; you'll be able to share it and others could comment on it</Helper>
+            <Helper class="pl-6">This will be a <em>kind-1</em> note, but will not appear on your timeline; you'll be able to share it and others could comment on it</Helper>
         </li>
     {/if}
     <li class="rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-600">

@@ -95,7 +95,7 @@
                     flex flex-row items-center gap-2
                     {$quotes?.length > 0 ? '' : 'duration-200 opacity-0 group-hover:opacity-100'}
                 ">
-                    <CommentIcon />
+                    <div class="w-6 h-6"><CommentIcon /></div>
                     {($quotes||[]).length}
                 </a>
                 <Tooltip color="black">View Notes</Tooltip>

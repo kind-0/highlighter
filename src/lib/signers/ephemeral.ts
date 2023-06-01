@@ -19,7 +19,7 @@ export async function findEphemeralSigner(
     opts: IFindEphemeralSignerLookups
 ): Promise<NDKPrivateKeySigner | undefined> {
     const mainUser = await mainSigner.user();
-    const filter: NDKFilter = {kinds:[2600], '#p': [mainUser.hexpubkey()]};
+    const filter: NDKFilter = {kinds:[2600 as number], '#p': [mainUser.hexpubkey()]};
 
     if (opts.name) {
         const hashedName = await getHashedKeyName(opts.name);

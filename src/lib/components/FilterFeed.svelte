@@ -17,7 +17,6 @@
     const sub = $ndk.subscribe(filter, { closeOnEose: false});
 
     sub.on('event', (e, r) => {
-        console.log(`${r.url}: ${e.id}`);
         feed.push(e);
         feed = feed;
     })

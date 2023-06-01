@@ -17,10 +17,3 @@
         </div>
     </div>
 </main>
-
-
-<style>
-    :global(html) {
-        background: #fafaff;
-    }
-</style>

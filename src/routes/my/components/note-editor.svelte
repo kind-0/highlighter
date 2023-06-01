@@ -61,7 +61,7 @@
             }
 
             tags.push(['subject', _title]);
-            content = body.trim();
+            content = `${_title}\n\n${body.trim()}`;
         } else {
             content = title || '';
             content += body||'';

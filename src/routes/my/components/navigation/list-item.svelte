@@ -25,6 +25,7 @@
         }
 
         event.tags.push(tag);
+        event.created_at = Math.floor(Date.now() / 1000);
         await event.sign();
         event.publish();
     }
