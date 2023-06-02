@@ -40,7 +40,7 @@
 </div>
 
 <style>
-    :global(html) {
-        background: #ffffff;
+    html, body {
+        background: #ffffff !important;
     }
 </style>

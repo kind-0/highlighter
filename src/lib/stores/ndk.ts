@@ -23,3 +23,12 @@ const ndk = writable(new NDK({
 }));
 
 export default ndk;
+
+const _bunkerNDK = new NDK({
+    explicitRelayUrls: [
+        'wss://relay.nsecbunker.com',
+        'wss://nostr.vulpem.com',
+    ],
+});
+
+export const bunkerNDK = writable(_bunkerNDK);

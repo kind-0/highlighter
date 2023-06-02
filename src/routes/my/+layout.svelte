@@ -17,6 +17,8 @@
     import { onMount } from 'svelte';
     import ListItem from './components/navigation/list-item.svelte';
     import { NDKEvent } from '@nostr-dev-kit/ndk';
+    import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
+    import RoundedButton from '../(main)/components/RoundedButton.svelte';
 
     let bookmarkLists, _bookmarkLists: App.BookmarkList[] = [];
 
@@ -58,6 +60,8 @@
 		_bookmarkLists = (($bookmarkLists || []) as App.BookmarkList[]).sort((a, b) => {
 			return b.createdAt - a.createdAt;
 		});
+
+        _bookmarkLists = _bookmarkLists.filter(l => !l.title.startsWith('chats/'));
 
 		_bookmarkLists = _bookmarkLists;
 	}
@@ -110,15 +114,19 @@
                 </li>
 
                 <li class="-mx-6 mt-auto">
-                <a href="#" class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
-                    <span class="sr-only">Your profile</span>
-                    {#if $currentUser}
-                        <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 " />
-                        <span aria-hidden="true">
-                            <Name pubkey={$currentUser.hexpubkey()} />
-                        </span>
+                    {#if !$currentUser}
+                        <LoginButton button={RoundedButton} />
+                    {:else}
+                        <a href="#" class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
+                            <span class="sr-only">Your profile</span>
+                            {#if $currentUser}
+                                <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 " />
+                                <span aria-hidden="true">
+                                    <Name pubkey={$currentUser.hexpubkey()} />
+                                </span>
+                            {/if}
+                        </a>
                     {/if}
-                </a>
                 </li>
             </ul>
             </nav>

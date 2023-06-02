@@ -92,11 +92,11 @@
                 {$article[0].title}
             </a>
             <div class="flex flex-row items-center gap-2 overflow-auto">
-                {#each ($article[0].tags||[]).slice(0, 3) as tag}
+                <!-- {#each ($article[0].tags||[]).slice(0, 3) as tag}
                 <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
                     {tag}
                 </span>
-                {/each}
+                {/each} -->
             </div>
         </div>
 
@@ -122,8 +122,8 @@
             {#if $articleHighlights.length > maxHighlightCountToShow}
                 <div class="flex flex-row gap-2 items-center">
                     <div class="isolate flex -space-x-2 overflow-hidden">
-                        {#each Array.from(highlightPubkeys).slice(0, 6) as highlightPubkey}
-                            <div class="relative z-30 inline-block h-8 w-8 rounded-full ring-2 ring-white">
+                        {#each Array.from(highlightPubkeys).slice(0, 3) as highlightPubkey}
+                            <div class="relative z-30 inline-block h-6 w-6 rounded-full ring-2 ring-white">
                                 <Avatar pubkey={highlightPubkey} />
                             </div>
                         {/each}
@@ -143,7 +143,7 @@
                 text-sm
                 text-zinc-600 font-semibold
             " href={linkTo(($article && $article[0]), ($note && $note[0]))}>
-                Go to article
+                View article →
             </a>
         </div>
     {/if}

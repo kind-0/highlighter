@@ -32,10 +32,6 @@
         z-index: 99999999;
     }
 
-    :global(html) {
-        background: #fafaff;
-    }
-
     :global(div[role="tooltip"]) {
         background: #000000;
         color: #ffffff;

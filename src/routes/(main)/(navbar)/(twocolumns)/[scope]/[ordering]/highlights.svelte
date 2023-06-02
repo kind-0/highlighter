@@ -42,14 +42,17 @@
     let items: Observable<App.Highlight[]>;
 
     async function loadArticlesGroupedByHighlights(filter: any = {}) {
+        const oneMonthAgo = Math.floor(Date.now() / 1000) - 60 * 60 * 24 * 30;
         filter = {
             limit: 500,
+            since: oneMonthAgo,
             ...filter
         };
-        console.log({filter});
 
         items = HighlightInterface.load(filter);
 		subs = HighlightInterface.startStream(filter);
+
+        return items;
     }
 
     let processedItemCount = 0;

@@ -64,12 +64,21 @@
         }
     }
 
-    const options = [
+    let options;
+
+    const signedIn = [
         'personal',
         'network',
         'global',
         'curated'
-    ]
+    ];
+
+    const signedOut = [
+        'global',
+        'curated'
+    ];
+
+    $: options = $currentUser ? signedIn : signedOut;
 </script>
 
 <div class="relative inline-block text-left">

@@ -22,6 +22,7 @@ export interface ILoadOpts {
     url?: string;
     ids?: string[];
     limit?: number;
+    since?: number;
 };
 
 // until I add delete support
@@ -58,6 +59,11 @@ const HighlightInterface = {
         if (opts.limit) {
             filter['limit'] = opts.limit;
             // boostFilter['limit'] = opts.limit;
+        }
+
+        if (opts.since) {
+            filter['since'] = opts.since;
+            // boostFilter['since'] = opts.since;
         }
 
         const subs = ndk.subscribe(filter, { closeOnEose: false });
@@ -123,6 +129,10 @@ const HighlightInterface = {
 
         if (opts.limit) {
             query = query.limit(opts.limit);
+        }
+
+        if (opts.since) {
+            query = query.filter(h => h.timestamp! > opts.since!);
         }
 
         return liveQuery(() => query.toArray());

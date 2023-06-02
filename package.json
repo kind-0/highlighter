@@ -9,6 +9,7 @@
 		"lint": "eslint ."
 	},
 	"devDependencies": {
+		"@grail-ui/svelte": "^0.9.4",
 		"@rollup/plugin-alias": "^5.0.0",
 		"@rollup/plugin-node-resolve": "^15.0.2",
 		"@rollup/plugin-typescript": "^11.1.0",
@@ -38,6 +39,7 @@
 		"@neodrag/svelte": "^2.0.3",
 		"@nostr-connect/connect": "^0.2.3",
 		"@nostr-dev-kit/ndk": "^0.3.27",
+		"@nostr-dev-kit/ndk-svelte-components": "^0.0.1",
 		"@popperjs/core": "^2.11.7",
 		"@rollup/plugin-commonjs": "^24.0.1",
 		"@rollup/plugin-json": "^6.0.0",

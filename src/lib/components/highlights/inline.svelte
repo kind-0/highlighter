@@ -51,7 +51,9 @@
             {!skipHighlighter ? '' : "absolute bottom-0 right-0" }
         ">
             {#if !skipHighlighter}
-                <div class="text-sm font-medium text-zinc-600 flex flex-row items-center gap-2">
+                <div class="
+                    text-sm font-medium text-zinc-600 flex flex-row items-center gap-2
+                ">
                     <Avatar pubkey={highlight.pubkey} klass="w-4 h-4" />
                     by
                     <a href="/p/{npub}">

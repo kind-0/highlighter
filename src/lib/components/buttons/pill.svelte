@@ -23,8 +23,8 @@
     rounded-lg
     transition duration-150
     {active ? 'font-semibold' : 'font-normal'}
-    {active ? 'text-white' : 'text-zinc-500 hover:text-white'}
-    {active ? 'bg-zinc-700' : 'bg-transparent'}
+    {active ? 'text-white' : 'text-zinc-700 hover:text-black'}
+    {active ? 'bg-orange-500' : 'bg-transparent'}
     " on:click={onClick}
 >
     <slot />

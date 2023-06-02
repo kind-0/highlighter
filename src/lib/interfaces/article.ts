@@ -42,8 +42,6 @@ const ArticleInterface = {
 
         const ndk: NDK = getStore(ndkStore);
 
-        console.log(`article load query`, filter)
-
         const subs = ndk.subscribe(filter);
 
         subs.on('event', async (event: NDKEvent) => {
