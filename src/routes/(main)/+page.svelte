@@ -7,7 +7,7 @@
     <header class="py-4">
         <div class="flex flex-row items-center justify-between">
             <div class="flex flex-row items-center">
-                <FullLogo />
+                <div class="w-32"><FullLogo /></div>
             </div>
             <div class="flex flex-row items-center">
                 <RoundedButton href="/network/highlights">Get Started</RoundedButton>

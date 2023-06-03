@@ -23,7 +23,7 @@
             {/if}
         </div>
     </div>
-    <div class="mt-5 flex flex-1 lg:ml-4 lg:mt-0">
+    <!-- <div class="mt-5 flex flex-1 lg:ml-4 lg:mt-0">
         <slot />
-    </div>
+    </div> -->
 </div>

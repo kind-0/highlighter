@@ -65,7 +65,7 @@
         loadedId = articleId;
         $ndk.fetchEvent(filterFromNaddr(naddr)).then(e => {
             if (!e) {
-                console.log('unable to find', naddr)
+                console.log('unable to find', naddr, filterFromNaddr(naddr))
                 return;
             }
 

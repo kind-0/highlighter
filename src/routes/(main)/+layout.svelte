@@ -10,7 +10,7 @@
 <Modals>
     <div
         slot="backdrop"
-        class="backdrop"
+        class="backdrop z-10 fixed"
         on:click={closeModal}
         transition:fade={{ duration: 100 }}>
     />
@@ -19,17 +19,12 @@
 <style>
     .backdrop {
         position: fixed;
-        z-index: 99999;
         top: 0;
         bottom: 0;
         right: 0;
         backdrop-filter: blur(0.15rem);
         left: 0;
         background: rgba(0,0,0,0.50)
-    }
-
-    :global(.modal) {
-        z-index: 99999999;
     }
 
     :global(div[role="tooltip"]) {

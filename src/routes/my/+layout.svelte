@@ -1,8 +1,9 @@
 <script lang="ts">
-    import GlobalIcon from '$lib/icons/Global.svelte';
+    import LogoIcon from '$lib/icons/Logo.svelte';
     import HighlightIcon from '$lib/icons/Highlight.svelte';
     import BookmarkIcon from '$lib/icons/Bookmark.svelte';
     import NoteIcon from '$lib/icons/MyHighlights.svelte';
+    import CloseIcon from '$lib/icons/Close.svelte';
 
     import Avatar from '$lib/components/Avatar.svelte';
     import Name from '$lib/components/Name.svelte';
@@ -19,6 +20,7 @@
     import { NDKEvent } from '@nostr-dev-kit/ndk';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import RoundedButton from '../(main)/components/RoundedButton.svelte';
+    import { NavHamburger } from 'flowbite-svelte';
 
     let bookmarkLists, _bookmarkLists: App.BookmarkList[] = [];
 
@@ -65,75 +67,118 @@
 
 		_bookmarkLists = _bookmarkLists;
 	}
+
+    let isOpen = false;
 </script>
 
 <div class="h-full pb-48">
-    <div class="fixed inset-y-0 z-50 flex w-72 flex-col">
-    <!-- Sidebar component, swap this element with another sidebar if you like -->
-        <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+    <div class="
+        fixed inset-y-0 z-50 sm:z-auto flex w-72 flex-col
+        max-h-screen
+        {isOpen ? 'flex shadow-lg': 'hidden sm:block'}
+    ">
+        <button on:click={() => {isOpen = false;}} class="
+            absolute top-2 right-2
+            sm:hidden
+        ">
+            <CloseIcon />
+        </button>
+
+        <div class="
+            grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-2
+            h-full
+            sm:flex
+        ">
             <div class="flex h-16 shrink-0 items-center flex-row gap-2 font-bold tracking-wider text-zinc-800">
-                <GlobalIcon />
+                <span class="w-6 h-6 overflow-clip"><LogoIcon /></span>
                 <a href="/my" class="flex flex-row">
                     <span class="text-zinc-400 font-light">my</span>
                     <span class="text-zinc-900 uppercase">Highlighter</span>
-                    <span class="text-orange-500 text-xs font-semibold tracking-tight">ALPHA</span>
                 </a>
             </div>
-            <nav class="flex flex-1 flex-col">
-            <ul role="list" class="flex flex-1 flex-col gap-y-7">
-                <li>
-                    <ul role="list" class="-mx-2 space-y-1">
-                        <li>
-                            <NavigationButton route="/my/highlights">
-                                <HighlightIcon />
-                                Highlights
-                            </NavigationButton>
 
-                            <NavigationButton route="/my/lists">
-                                <BookmarkIcon />
-                                Lists
-                            </NavigationButton>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <nav class="
+                flex flex-1 flex-col
+            " on:click={() => { isOpen = false; }}
+            >
+                <ul class="flex flex-1 flex-col gap-y-7">
+                    <li>
+                        <ul class="-mx-2 space-y-1">
+                            <li>
+                                <NavigationButton route="/my/highlights">
+                                    <HighlightIcon />
+                                    Highlights
+                                </NavigationButton>
 
-                            <NavigationButton route="/my/notes">
-                                <NoteIcon />
-                                Private Notes
-                            </NavigationButton>
-                        </li>
-                    </ul>
-                </li>
+                                <NavigationButton route="/my/lists">
+                                    <BookmarkIcon />
+                                    Lists
+                                </NavigationButton>
 
-                <li>
-                    <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
-                    <ul role="list" class="-mx-2 mt-2 space-y-1">
-                        {#each _bookmarkLists as bookmarkList}
-                            {#if isTopLevel(bookmarkList)}
-                                <ListItem list={bookmarkList} allLists={_bookmarkLists} />
-                            {/if}
-                        {/each}
-                    </ul>
-                </li>
+                                <NavigationButton route="/my/notes">
+                                    <NoteIcon />
+                                    Private Notes
+                                </NavigationButton>
+                            </li>
+                        </ul>
+                    </li>
 
-                <li class="-mx-6 mt-auto">
+                    <li>
+                        <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
+                        <ul role="list" class="-mx-2 mt-2 space-y-1">
+                            {#each _bookmarkLists as bookmarkList}
+                                {#if isTopLevel(bookmarkList)}
+                                    <ListItem list={bookmarkList} allLists={_bookmarkLists} />
+                                {/if}
+                            {/each}
+                        </ul>
+                    </li>
+
+
                     {#if !$currentUser}
-                        <LoginButton button={RoundedButton} />
+                        <li class="w-full">
+                            <LoginButton klass="w-full" button={RoundedButton} />
+                        </li>
                     {:else}
-                        <a href="#" class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
-                            <span class="sr-only">Your profile</span>
-                            {#if $currentUser}
-                                <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 " />
-                                <span aria-hidden="true">
-                                    <Name pubkey={$currentUser.hexpubkey()} />
-                                </span>
-                            {/if}
-                        </a>
+                        <li class="-mx-6 mt-auto">
+                            <a href="#" class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
+                                <span class="sr-only">Your profile</span>
+                                {#if $currentUser}
+                                    <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 " />
+                                    <span aria-hidden="true">
+                                        <Name pubkey={$currentUser.hexpubkey()} />
+                                    </span>
+                                {/if}
+                            </a>
+                        </li>
                     {/if}
-                </li>
-            </ul>
+                </ul>
             </nav>
         </div>
     </div>
 
-    <main class="py-10 pl-72 h-full pb-48">
+    <div class="
+        flex flex-row items-center justify-between
+        sm:hidden
+        {isOpen ? 'opacity-10' : '' }
+    ">
+        <div class="flex flex-row gap-2">
+            <NavHamburger on:click={() => {isOpen = true}} />
+            <div class="flex h-16 shrink-0 items-center flex-row gap-2 font-bold tracking-wider text-zinc-800">
+                <span class="w-6 h-6"><LogoIcon /></span>
+                <a href="/my" class="flex flex-row">
+                    <span class="text-zinc-400 font-light">my</span>
+                    <span class="text-zinc-900 uppercase">Highlighter</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main class="
+        py-10 sm:pl-72 h-full pb-48
+        {isOpen ? 'opacity-10' : '' }
+    ">
         <div class="px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex flex-col gap-6 max-h-screen">
                 <!-- <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -177,16 +222,12 @@
 
     .backdrop {
         position: fixed;
-        z-index: 99999;
+        /* z-index: 0; */
         top: 0;
         bottom: 0;
         right: 0;
         backdrop-filter: blur(0.15rem);
         left: 0;
         background: rgba(0,0,0,0.50)
-    }
-
-    :global(.modal) {
-        z-index: 99999999;
     }
 </style>

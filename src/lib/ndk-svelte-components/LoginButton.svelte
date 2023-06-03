@@ -55,11 +55,9 @@
                 $ndk = $ndk;
                 dispatch('signIn');
             } catch (e) {
+                openModal(LoginModal);
                 console.error(e);
             }
-        } else {
-            delay += 100
-            setTimeout(() => attemptNip07SignIn(delay), delay);
         }
     }
 

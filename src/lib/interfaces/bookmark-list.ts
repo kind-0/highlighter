@@ -99,7 +99,6 @@ async function handleEvent30001(event: NDKEvent) {
     }).then((deleteEvent) => {
         if (deleteEvent) {
             db.bookmarkLists.delete(bookmarkList.id);
-            console.log('Deleted bookmark list', bookmarkList.id);
         }
     });
 

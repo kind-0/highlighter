@@ -32,6 +32,8 @@
 
         if (existingPrivateKey) {
             localSigner = new NDKPrivateKeySigner(existingPrivateKey);
+        } else {
+            localSigner = NDKPrivateKeySigner.generate();
         }
 
         const remoteSigner = new NDKNip46Signer($bunkerNDK, remoteUser.hexpubkey(), localSigner);

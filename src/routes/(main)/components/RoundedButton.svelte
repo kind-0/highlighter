@@ -10,6 +10,7 @@
     text-white font-semibold
     rounded-full px-6 py-2
     transition-colors duration-200
+    w-full
     {klass}
     ">
         <slot />
@@ -20,6 +21,7 @@
         text-white font-semibold
         rounded-full px-6 py-2
         transition-colors duration-200
+        w-full
         {klass}
     ">
         <slot />

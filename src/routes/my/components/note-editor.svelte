@@ -2,6 +2,9 @@
     import ndk from "$lib/stores/ndk";
     import NoteVisibility from './note/visibility.svelte';
 
+    import Textarea from '$lib/components/Textarea.svelte';
+    import Input from '$lib/components/Input.svelte';
+
     import { createEventDispatcher } from 'svelte';
     import { NDKEvent, NDKPrivateKeySigner, NDKUser } from '@nostr-dev-kit/ndk';
     import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
@@ -61,7 +64,7 @@
             }
 
             tags.push(['subject', _title]);
-            content = `${_title}\n\n${body.trim()}`;
+            content = `${title}\n\n${body.trim()}`;
         } else {
             content = title || '';
             content += body||'';
@@ -98,25 +101,26 @@
 <div class="relative w-full">
     <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
         <label for="title" class="sr-only">Title</label>
-        <input type="text" name="title" id="title" class="
+        <Input type="text" name="title" id="title" class="
             block w-full border-0 pt-2.5 text-xl font-medium placeholder:text-gray-400 focus:ring-0
             pb-4
         " placeholder="Title" autofocus
             bind:value={title}
-            bind:this={titleEl}
+            bind:element={titleEl}
             on:keydown={titleKeyPress}
             on:keyup
-        >
+        />
         <label for="description" class="sr-only">Description</label>
 
         {#if expandEditor}
-            <textarea rows="6" class="
+            <Textarea rows="6" class="
                 block w-full resize-none border-0 py-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6
+                pb-12
             " placeholder="..."
                 bind:value={body}
-                bind:this={bodyEl}
+                bind:element={bodyEl}
                 on:keydown={bodyKeyPress}
-            ></textarea>
+            />
         {/if}
     </div>
 

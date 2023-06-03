@@ -1,4 +1,6 @@
 <script lang="ts">
+    import Trash from '$lib/icons/Trash.svelte';
+
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
     import BookmarkListInterface, { deleteList } from '$lib/interfaces/bookmark-list';
@@ -107,6 +109,7 @@
             }
         } catch (e) {
             console.error(e);
+            throw e;
         }
     }
 
@@ -335,75 +338,77 @@
             <div class="flex flex-row items-center">
                 <button
                     on:click={deleteBookmarkList}
-                >
-                    Delete
-                </button>
+                    class="w-6 h-6 opacity-50 hover:opacity-100 duration-300"
+                ><Trash /></button>
             </div>
         </div>
 
-        {#await decryptTags()}
-            Loading
-        {:then}
-            <div class="-mt-8">
-                <EphemeralKey
-                    {listEvent}
-                    bind:list={bookmarkList}
-                    bind:signer={listSigner}
-                    bind:signerUser={listSignerUser}
-                    bind:isNewSigner
-                />
+        <div class="-mt-8">
+            <EphemeralKey
+                {listEvent}
+                bind:list={bookmarkList}
+                bind:signer={listSigner}
+                bind:signerUser={listSignerUser}
+                bind:isNewSigner
+            />
+        </div>
+
+        <div class="grid grid-flow-row md:grid-cols-1 sm:max-w-prose lg:sdgrid-cols-3 gap-2 w-full">
+            <div class="relative flex flex-row items-center justify-center sm:mb-8">
+                {#if newItemType === 'note'}
+                    <div class="pb-4 w-full">
+                        <NoteEditor
+                            expandEditor={true}
+                            delegatedSigner={listSigner}
+                            {delegatedName}
+                            bind:title={addNewItemValue}
+                            on:keyup={onNewItemChange}
+                            on:saved={onNoteEditorSaved}
+                            bind:visibility={newItemVisibility}
+                        />
+                    </div>
+                {:else}
+                    <div class="
+                        px-4 py-2 text-lg
+                        h-14
+                        sm:mb-12
+                        shadow
+                        w-full
+                        border border-zinc-200
+                        rounded-xl
+                        bg-white transition duration-200 ease-in-out
+                        flex flex-row gap-2
+                    ">
+                        <input autofocus bind:value={addNewItemValue} on:keyup={onNewItemChange} class="
+                            w-full
+                            focus:outline-none
+                        " placeholder="Start typing" />
+
+                        {#if showSaveButton}
+                            <div class="flex flex-row gap-2">
+                                <NoteVisibility bind:value={newItemVisibility} />
+                                <button
+                                    class="inline-flex items-center gap-x-2 rounded-md bg-gradient-to-br from-orange-500 to-red-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-orange-600 hover:to-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500
+                                    px-4
+                                " on:click={save}>
+                                    Save
+                                </button>
+                            </div>
+                        {/if}
+                    </div>
+                {/if}
             </div>
 
-            <div class="grid grid-flow-row md:grid-cols-1 max-w-prose lg:sdgrid-cols-3 gap-2">
-                <div class="relative flex flex-row items-center justify-center mb-8">
-                    {#if newItemType === 'note'}
-                        <div class="pb-4 w-full">
-                            <NoteEditor
-                                expandEditor={true}
-                                delegatedSigner={listSigner}
-                                {delegatedName}
-                                bind:title={addNewItemValue}
-                                on:keyup={onNewItemChange}
-                                on:saved={onNoteEditorSaved}
-                                bind:visibility={newItemVisibility}
-                            />
-                        </div>
-                    {:else}
-                        <div class="
-                            px-4 py-2 text-lg
-                            h-14
-                            mb-12
-                            shadow
-                            w-full
-                            border border-zinc-200
-                            rounded-xl
-                            bg-white transition duration-200 ease-in-out
-                            flex flex-row gap-2
-                        ">
-                            <input autofocus bind:value={addNewItemValue} on:keyup={onNewItemChange} class="
-                                w-full
-                                focus:outline-none
-                            " placeholder="Start typing" />
-
-                            {#if showSaveButton}
-                                <div class="flex flex-row gap-2">
-                                    <NoteVisibility bind:value={newItemVisibility} />
-                                    <button
-                                        class="inline-flex items-center gap-x-2 rounded-md bg-gradient-to-br from-orange-500 to-red-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-orange-600 hover:to-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500
-                                        px-4
-                                    " on:click={save}>
-                                        Save
-                                    </button>
-                                </div>
-                            {/if}
-                        </div>
+            <div class="w-full overflow-auto flex flex-col gap-2">
+                {#await decryptTags()}
+                {:then}
+                    {#if encryptedTags && encryptedTags.length > 0}
+                        Secret (encrypted)
+                        <Tags tags={encryptedTags} kind={4} {currentUserPubkeys} on:removeItem={onRemoveItem} />
                     {/if}
-                </div>
-
-                {#if encryptedTags && encryptedTags.length > 0}
-                    Secret (encrypted)
-                    <Tags tags={encryptedTags} kind={4} {currentUserPubkeys} />
-                {/if}
+                {:catch e}
+                    error: {e}
+                {/await}
 
                 <div
                     draggable={true}
@@ -439,9 +444,6 @@
                     }} />
                 {/if}
             </div>
-        {:catch e}
-        error
-            {e}
-        {/await}
+        </div>
     </div>
 {/if}

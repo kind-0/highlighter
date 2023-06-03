@@ -135,11 +135,11 @@
     <title>{article?.title || "Highlighter.com"}</title>
 </svelte:head>
 
-<div class="flex flex-row sm:flex-row w-full mx-auto px-6">
+<div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
     <div class="
         rounded-b-lg shadow
         text-lg p-8 text-justify leading-loose flex flex-col gap-2
-        bg-white rounded-xl w-7/12
+        bg-white rounded-xl md:w-7/12
         overflow-auto
     ">
         {#if article || articleEvent}
@@ -210,7 +210,7 @@
 
     <!-- Sidebar -->
     <div class="relative">
-        <div class="px-4 h-screen fixed overflow-auto w-5/12">
+        <div class="px-4 md:h-screen md:fixed overflow-auto md:w-5/12">
             <div class="flex flex-row justify-end mb-4">
                 <ScopeDropdown bind:scope />
             </div>
