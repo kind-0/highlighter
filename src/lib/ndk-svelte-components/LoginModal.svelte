@@ -10,7 +10,7 @@
     import ModalWrapper from "$lib/components/ModalWrapper.svelte";
     import Input from "$lib/components/Input.svelte";
 
-    let npub = '';
+    let connectionString = '';
 
     let connectionStatus: string | undefined = undefined;
 
@@ -19,12 +19,7 @@
     });
 
     async function nip46Login() {
-        connectionStatus = 'Connecting to bunker relays';
-
         connectionStatus = 'Requesting permission';
-
-        const remoteUser = new NDKUser({npub});
-        remoteUser.ndk = $bunkerNDK;
 
         // check if there is a private key stored in localStorage
         const existingPrivateKey = localStorage.getItem('nostr-nsecbunker-key');
@@ -36,21 +31,25 @@
             localSigner = NDKPrivateKeySigner.generate();
         }
 
-        const remoteSigner = new NDKNip46Signer($bunkerNDK, remoteUser.hexpubkey(), localSigner);
+        try {
+            const remoteSigner = new NDKNip46Signer($bunkerNDK, connectionString, localSigner);
+            await remoteSigner.blockUntilReady();
 
-        const user = await remoteSigner.blockUntilReady();
+            if (!existingPrivateKey) {
+                localStorage.setItem('nostr-nsecbunker-key', remoteSigner.localSigner.privateKey!);
+            }
 
-        if (!existingPrivateKey) {
-            localStorage.setItem('nostr-nsecbunker-key', remoteSigner.localSigner.privateKey!);
+            connectionStatus = 'Authorized';
+            $ndk.signer = remoteSigner;
+            $currentUser = await remoteSigner.user();
+            $currentUser.ndk = $ndk;
+            localStorage.setItem('nostr-key-method', 'nip46');
+            localStorage.setItem('nostr-target-npub', $currentUser.npub);
+            fetchFollowers();
+            console.log('Logged in as', $currentUser);
+        } catch (e: any) {
+            connectionStatus = e;
         }
-
-        connectionStatus = 'Authorized';
-        $ndk.signer = remoteSigner;
-        $currentUser = remoteUser;
-        $currentUser.ndk = $ndk;
-        localStorage.setItem('nostr-key-method', 'nip46');
-        localStorage.setItem('nostr-target-npub', npub);
-        fetchFollowers();
 
         setTimeout(() => {
             closeModal();
@@ -61,7 +60,7 @@
 <ModalWrapper>
     <h1>Login using nsecBunker</h1>
 
-    <Input type="text" placeholder="npub" bind:value={npub} klass="font-mono" />
+    <Input type="text" placeholder="npub or connection token" bind:value={connectionString} klass="font-mono" />
 
     <RoundedButton on:click={nip46Login}>
         {#if !connectionStatus}
