@@ -1,6 +1,6 @@
 <script lang="ts">
     import type NDKList from "$lib/ndk-kinds/lists";
-    import { NDKPrivateKeySigner, NDKUser, type NDKTag } from "@nostr-dev-kit/ndk";
+    import type { NDKPrivateKeySigner, NDKUser, NDKTag } from "@nostr-dev-kit/ndk";
     import { nip19 } from "nostr-tools";
     import NoteEditor from "../../../routes/my/components/note-editor.svelte";
     import NoteVisibility from "../../../routes/my/components/note/visibility.svelte";
@@ -8,10 +8,9 @@
     import { createEventDispatcher } from 'svelte';
 
     export let list: NDKList;
-    export let delegatedName: string;
-    export let listSigner: NDKPrivateKeySigner;
-    export let listSignerUser: NDKUser;
-    export let isNewSigner: boolean;
+    export let delegatedName: string | undefined = undefined;
+    export let listSigner: NDKPrivateKeySigner | undefined = undefined;
+    export let listSignerUser: NDKUser | undefined = undefined;
 
     const dispatch = createEventDispatcher();
     let addNewItemValue = '';
@@ -107,7 +106,7 @@
             <NoteEditor
                 expandEditor={true}
                 {delegatedName}
-                delegatedSigner={listSigner}
+                delegatedUser={listSignerUser}
                 bind:title={addNewItemValue}
                 on:keyup={onNewItemChange}
                 on:saved={onNewItemSaved}

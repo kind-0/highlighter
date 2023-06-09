@@ -122,7 +122,7 @@
                 w-2/3
             " placeholder="New List" bind:value={newListName} />
 
-            <RoundedButton klass="
+            <RoundedButton class="
                 rounded-lg w-1/3
             " on:click={createNewList}>
                 Create

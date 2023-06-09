@@ -5,8 +5,8 @@
 
     export let pubkey: string | undefined = undefined;
     export let userProfile: App.UserProfile | undefined = undefined;
-    export let klass: string = '';
-    export let size: "xs" | "sm" | "md" | "lg" | "xl" | undefined;
+    export let klass: string = $$props.class??'';
+    export let size: "xs" | "sm" | "md" | "lg" | "xl" | undefined = 'md';
     let prevPubkey: string | undefined = undefined;
 
     let observeUserProfile: Observable<App.UserProfile> | undefined = undefined;

@@ -16,7 +16,6 @@
     export let skipReplies: boolean = false;
     export let skipFooter: boolean = false;
     export let event: NDKEvent | undefined = undefined;
-    export let popoverButtons: boolean = false;
 
     const dispatcher = createEventDispatcher();
 
@@ -79,7 +78,6 @@
                     <HighlightCard
                         highlight={handleEvent9802(e)}
                         skipTitle={true}
-                        {popoverButtons}
                     />
                 </div>
             {:else if e.kind === 1}
@@ -87,7 +85,6 @@
                     note={handleEvent1(e)}
                     {skipReplies}
                     {skipFooter}
-                    {popoverButtons}
                 />
             {:else if e.kind === 4}
                 <NoteCard

@@ -79,7 +79,7 @@
                         </a>
                     {:else}
                         <div class="embedded-card text-sm">
-                            <GenericEventCard id={value.entity} skipReplies={true} popoverButtons={true} />
+                            <GenericEventCard id={value.entity} skipReplies={true} />
                         </div>
                     {/if}
                 {:else if type === "topic"}

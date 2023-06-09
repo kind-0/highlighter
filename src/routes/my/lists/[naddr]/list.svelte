@@ -5,25 +5,21 @@
     import ndk from "$lib/stores/ndk";
     import BookmarkListInterface, { deleteList } from '$lib/interfaces/bookmark-list';
 
-    import NoteVisibility from '../../components/note/visibility.svelte';
     import PageTitle from '../../components/PageTitle.svelte';
-    import { Tabs, TabItem, Alert } from 'flowbite-svelte';
+    import { Tabs, TabItem } from 'flowbite-svelte';
 
-    import NoteEditor from '../../components/note-editor.svelte';
     import Tags from './tags.svelte';
-    import { onDestroy, onMount } from 'svelte';
-    import { NDKEvent, NDKPrivateKeySigner, NDKSubscription, NDKUser } from '@nostr-dev-kit/ndk';
     import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
-    import { saveEphemeralSigner } from '$lib/signers/ephemeral';
-    import EphemeralKey from './EphemeralKey.svelte';
     import FilterFeed from '$lib/components/FilterFeed.svelte';
     import { goto } from '$app/navigation';
     import AddListItem from '$lib/components/lists/AddListItem.svelte';
-    import type NDKList from '$lib/ndk-kinds/list/index.js';
+    import type NDKList from '$lib/ndk-kinds/lists';
     import AddRelayListItem from '$lib/components/lists/AddRelayListItem.svelte';
     import NDKRelayList from '$lib/ndk-kinds/lists/relay-list';
     import ListsFeed from './ListsFeed.svelte';
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
+    import listSigners, { getSigner, type SignerStoreItem } from '$lib/stores/signer';
+  import { saveEphemeralSigner } from '$lib/signers/ephemeral';
 
     export let list: NDKList;
     let listId;
@@ -32,6 +28,8 @@
     let publicTags: NDKTag[] = [];
 
     let encryptedTagsPromise: Promise<NDKTag[]>;
+
+    let listSignerData: SignerStoreItem | undefined;
 
     if (list.id !== listId) {
         listId = list.id;
@@ -43,40 +41,15 @@
         });
     }
 
-    let delegatedName: string;
-
     /**
      * Establishes what pubkeys are going to be treated as
      * "current user"'s pubkeys
      */
     let currentUserPubkeys: string[] = [];
 
-    let listSigner: NDKPrivateKeySigner = NDKPrivateKeySigner.generate();
-    let listSignerUser: NDKUser;
-    let isNewSigner: boolean;
-
-    $: if (listSignerUser && !currentUserPubkeys.includes(listSignerUser.hexpubkey())) {
-        currentUserPubkeys.push(listSignerUser.hexpubkey());
+    $: if (listSignerData?.user && !currentUserPubkeys.includes(listSignerData.user.hexpubkey())) {
+        currentUserPubkeys.push(listSignerData.user.hexpubkey());
     }
-
-    async function getDelegatedSignerName(list: NDKList) {
-        let name;
-
-        if (!$currentUser?.profile) {
-            $currentUser.ndk = $ndk;
-            await $currentUser?.fetchProfile();
-        }
-
-        if ($currentUser?.profile?.name) {
-            name = $currentUser.profile.displayName + `'s `;
-        }
-
-        return name + list.name;
-    }
-
-    onMount(async () => {
-        delegatedName = await getDelegatedSignerName(list);
-    });
 
     async function deleteBookmarkList() {
         if (!confirm("Are you sure you want to delete this list?")) {
@@ -118,14 +91,18 @@
         const tag = event.tagReference();
 
         // check if we need to save an ephemeral key
-        if (visibility === 'Delegated' && isNewSigner) {
+        if (visibility === 'Delegated' && !listSignerData?.saved) {
+            if (!listSignerData?.signer) {
+                alert('no signer found');
+                return;
+            }
+
             try {
-                const listUser = await listSigner.user();
-                await saveEphemeralSigner($ndk, listSigner, {
+                await saveEphemeralSigner($ndk, listSignerData.signer, {
                     associatedEvent: list,
                     name: list.encode(),
                     keyProfile: {
-                        name: delegatedName,
+                        name: listSignerData.name,
                         picture: $currentUser?.profile?.image,
                     }
                 });
@@ -165,6 +142,12 @@
         await list.sign();
         await list.publish();
     }
+
+    $: if (list && listSignerData?.id !== list.encode()) {
+        listSignerData = undefined;
+        getSigner(list).then(d => listSignerData = d);
+    }
+
 </script>
 
 <svelte:head>
@@ -187,24 +170,29 @@
     </div>
 
     <div class="-mt-8">
-        <EphemeralKey
-            bind:list={list}
-            bind:signer={listSigner}
-            bind:signerUser={listSignerUser}
-            bind:isNewSigner
-        />
+        {#if listSignerData?.saved}
+            <AvatarWithName pubkey={listSignerData.user.hexpubkey()}>
+                <div slot="bio">
+                    {listSignerData.user.npub}
+                </div>
+            </AvatarWithName>
+        {/if}
     </div>
 
     <div class="grid grid-flow-row md:grid-cols-1 sm:max-w-prose lg:sdgrid-cols-3 gap-2 w-full">
         {#if list instanceof NDKRelayList}
             <AddRelayListItem {list} />
+        {:else if listSignerData}
+            <AddListItem
+                list={list}
+                delegatedName={listSignerData.name}
+                listSigner={listSignerData.signer}
+                listSignerUser={listSignerData.user}
+                on:saved={onNoteEditorSaved}
+            />
         {:else}
             <AddListItem
                 list={list}
-                {delegatedName}
-                {listSigner}
-                {listSignerUser}
-                {isNewSigner}
                 on:saved={onNoteEditorSaved}
             />
         {/if}
@@ -228,17 +216,15 @@
                 </div>
             </TabItem>
 
-            {#await encryptedTagsPromise}
-            {:then encryptedTags}
+            {#await encryptedTagsPromise then encryptedTags}
                 {#if encryptedTags.length > 0}
                     <TabItem title="Secret">
                         <Tags {list} tags={encryptedTags} kind={4} {currentUserPubkeys} />
                     </TabItem>
                 {/if}
-            {:catch e}
             {/await}
 
-            {#if !isNewSigner && listSignerUser && $currentUser}
+            {#if listSignerData?.saved && $currentUser}
                 <TabItem title={`My Feed ${myFeedLength > 0 ? `(${myFeedLength})` : ''}`}>
                     {#if myFeedLength === 0}
                         <div class="
@@ -250,7 +236,7 @@
                         ">
                             <p>
                                 This tab shows mentions <em>you</em> have done of this list's account
-                                <AvatarWithName pubkey={listSignerUser.hexpubkey()} size='xs' />
+                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} size='xs' />
                             </p>
 
                             <p>
@@ -261,7 +247,7 @@
                     {/if}
                     <FilterFeed filter={{
                         kinds: [1, 9802, 4, 30023],
-                        '#p': [listSignerUser.hexpubkey()],
+                        '#p': [listSignerData.user.hexpubkey()],
                         'authors': [$currentUser.hexpubkey()]
                     }} bind:feedLength={myFeedLength} />
                 </TabItem>
@@ -277,7 +263,7 @@
                         ">
                             <p>
                                 This tab shows <b>all</b> mentions of this list's account
-                                <AvatarWithName pubkey={listSignerUser.hexpubkey()} size='xs' />
+                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} size='xs' />
                             </p>
 
                             <p>
@@ -288,7 +274,7 @@
                     {/if}
                     <FilterFeed filter={{
                         kinds: [1, 9802, 4, 30023],
-                        '#p': [listSignerUser.hexpubkey()]
+                        '#p': [listSignerData.user.hexpubkey()]
                     }} bind:feedLength={globalFeedLength} />
                 </TabItem>
             {/if}

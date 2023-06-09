@@ -1,9 +1,12 @@
 <script lang="ts">
     import type { NDKEvent } from "@nostr-dev-kit/ndk";
 
+    import { Button, Dropdown, DropdownItem, Chevron } from 'flowbite-svelte'
+
     import { currentUser } from "$lib/store";
 
     import CopyIcon from '$lib/icons/Copy.svelte';
+    import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
     import CheckIcon from '$lib/icons/Check.svelte';
     import ViewIcon from '$lib/icons/View.svelte';
     import LinkIcon from '$lib/icons/Link.svelte';
@@ -22,6 +25,7 @@
     import Avatar from "../Avatar.svelte";
     import Name from "../Name.svelte";
     import { Tooltip } from "flowbite-svelte";
+  import MoreOptions from "$lib/icons/MoreOptions.svelte";
 
     export let event: NDKEvent;
     export let note: App.Note | undefined = undefined;
@@ -39,14 +43,25 @@
     if (!userPubkey) userPubkey = event.pubkey;
 
     let copiedEventId = false;
+    let copiedEventJSON = false;
     let niceTime = event.created_at ? new Date(event.created_at * 1000).toLocaleString() : undefined;
     let noteId = event.encode();
 
-    function copyId() {
-        navigator.clipboard.writeText(event.id);
+    function copyId(e: Event) {
+        e.stopPropagation();
+        navigator.clipboard.writeText(event.encode());
         copiedEventId = true;
         setTimeout(() => {
             copiedEventId = false;
+        }, 1500);
+    }
+
+    function copyJSON(e: Event) {
+        e.stopPropagation();
+        navigator.clipboard.writeText(JSON.stringify(event.rawEvent()));
+        copiedEventJSON = true;
+        setTimeout(() => {
+            copiedEventJSON = false;
         }, 1500);
     }
 
@@ -76,33 +91,6 @@
                             </div>
                         {/if}
                     </div>
-                </div>
-
-                <div class="
-                    flex flex-col gap-4 absolute -right-14
-                    opacity-0 group-hover:opacity-100 transition duration-300
-                ">
-                    <button class="text-gray-700 hover:text-gray-400 transition duration-300 w-fit"
-                        on:click={() => {
-                            navigator.clipboard.writeText(JSON.stringify(event.rawEvent()));
-                        }}
-                    >
-                        <ViewIcon />
-                    </button>
-                    <Tooltip color="black">Copy event JSON</Tooltip>
-
-                    <button class="
-                        flex flex-row gap-2 items-center text-slate-500 hover:text-orange-500
-                    " on:click={copyId}>
-                        {#if copiedEventId}
-                            <CheckIcon />
-                        {:else}
-                            <CopyIcon />
-                        {/if}
-                    </button>
-                    <Tooltip color="black">
-                        Copy highlight Nostr ID
-                    </Tooltip>
                 </div>
             </div>
         {/if}
@@ -180,9 +168,24 @@
                             text-slate-500 hover:text-orange-500
                             flex flex-row items-center gap-2
                         ">
-                            <LinkIcon />
+                            <LinkIcon class="w-4 h-4" />
                         </a>
                         <Tooltip color="black">Link to this note</Tooltip>
+
+                        <button on:click|stopPropagation={() => {}}>
+                            <MoreOptionsIcon class="w-4 h-4" />
+                        </button>
+                        <Dropdown>
+                            <DropdownItem class="flex flex-row items-center gap-2" on:click={copyId}>
+                                <CopyIcon class="w-4 h-4" />
+                                {copiedEventId ? 'Copied!' : 'Copy ID'}
+                            </DropdownItem>
+
+                            <DropdownItem class="flex flex-row items-center gap-2" on:click={copyJSON}>
+                                <CopyIcon class="w-4 h-4" />
+                                {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
+                            </DropdownItem>
+                        </Dropdown>
                     </div>
                 {/if}
             </div>

@@ -1,6 +1,5 @@
 <script lang="ts">
     export let href: string | undefined = undefined;
-    export let klass: string = '';
 </script>
 
 {#if href}
@@ -11,7 +10,7 @@
     rounded-full px-6 py-2
     transition-colors duration-200
     w-full
-    {klass}
+    {$$props.class??''}
     ">
         <slot />
     </a>
@@ -22,7 +21,7 @@
         rounded-full px-6 py-2
         transition-colors duration-200
         w-full
-        {klass}
+        {$$props.class??''}
     ">
         <slot />
     </button>

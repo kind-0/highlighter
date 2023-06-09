@@ -52,7 +52,7 @@
             " placeholder="Description" bind:value={description} />
         </div>
 
-        <RoundedButton klass="
+        <RoundedButton class="
             text-lg py-2 font-bold rounded-xl w-full
         " on:click={createNewList}>
             CREATE

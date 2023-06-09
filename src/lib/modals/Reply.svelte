@@ -21,8 +21,7 @@
             } as NostrEvent)
             commentEvent.tag(event, 'reply');
             await commentEvent.sign();
-            console.log(commentEvent.rawEvent());
-            // await commentEvent.publish();
+            await commentEvent.publish();
             closeModal();
         }
     }
@@ -54,7 +53,7 @@
             <div class="text-xs text-zinc-500">
             </div>
 
-            <RoundedButton klass="rounded-lg uppercase text-lg" on:click={save}>
+            <RoundedButton class="rounded-lg uppercase text-lg" on:click={save}>
                 Publish
             </RoundedButton>
         </div>

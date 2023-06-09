@@ -29,13 +29,10 @@ export async function findEphemeralSigner(
         filter["#e"] = [hashedEventReference];
     }
 
-    console.log(`getting signer`, filter)
     const event = await ndk.fetchEvent(filter);
-    console.log(`back from getting signer`)
 
     if (event) {
         await event.decrypt(await mainSigner.user());
-        console.log(`decrypted`, event.content);
         const content = JSON.parse(event.content);
         return new NDKPrivateKeySigner(content.key);
     }
@@ -120,7 +117,6 @@ export async function saveEphemeralSigner(
     } as NostrEvent);
     event.pubkey = mainUser.hexpubkey();
     await event.encrypt(mainUser, mainSigner);
-    // await event.sign(mainSigner);
     await event.publish();
 
     // XXX Extract this to NDK

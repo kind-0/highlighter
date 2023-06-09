@@ -52,8 +52,8 @@ class NDKList extends NDKEvent {
                 }
             }
         } catch (e) {
-            console.error(e);
-            throw e;
+            // console.trace(e);
+            // throw e;
         }
 
         return [];

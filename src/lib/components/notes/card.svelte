@@ -14,7 +14,6 @@
     export let skipButtons = false;
     export let skipReplies = false;
     export let expandReplies = true
-    export let popoverButtons: boolean = false;;
 
     if (!event) event = new NDKEvent($ndk, JSON.parse(note.event));
 
@@ -42,6 +41,5 @@
     {skipButtons}
     replies={($replies||[])}
     {expandReplies}
-    {popoverButtons}
 >
 </EventCard>

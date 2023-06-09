@@ -1,5 +1,4 @@
 <script lang="ts">
-    import PlusCircle from '$lib/icons/PlusCircle.svelte';
     import MyHighlightsIcon from '$lib/icons/MyHighlights.svelte';
     import ConsoleIcon from '$lib/icons/Console.svelte';
     import AboutIcon from '$lib/icons/About.svelte';
@@ -7,7 +6,6 @@
     import ndk from '$lib/stores/ndk';
 
     import { currentUser, currentScope } from '$lib/store';
-    import { createEventDispatcher } from 'svelte';
 
     import Avatar from '$lib/components/Avatar.svelte';
     import Link from './Link.svelte';
@@ -16,9 +14,7 @@
     import RoundedButton from '../../components/RoundedButton.svelte';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import { fetchFollowers } from '$lib/currentUser';
-  import RelaysButton from '$lib/components/RelaysButton.svelte';
-
-    const dispatch = createEventDispatcher();
+    import RelaysButton from '$lib/components/RelaysButton.svelte';
 
     async function onSignIn() {
         if (!$ndk.signer) return;
@@ -86,15 +82,15 @@
                 <!-- Profile dropdown -->
                 <div class="relative ml-3">
                     <div class="flex flex-row gap-4 items-center">
-                        <RelaysButton ndk={$ndk} />
+                        <RelaysButton />
 
                         {#if $currentUser}
-                            <RoundedButton href="/my">
+                            <RoundedButton class="text-center" href="/my">
                                 My Notes
                             </RoundedButton>
                             <Avatar
                                 pubkey={$currentUser?.hexpubkey()}
-                                klass="w-10 h-10 border-2 border-slate-200"
+                                class="w-10 h-10 border-2 border-slate-200"
                             />
                         {:else}
                             <LoginButton button={RoundedButton} on:signIn={onSignIn} />

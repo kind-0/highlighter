@@ -167,7 +167,7 @@
             bind:value={comment} />
     </div>
 
-    <RoundedButton klass="w-full py-3 text-lg rounded-md" on:click={zap}>
+    <RoundedButton class="w-full py-3 text-lg rounded-md" on:click={zap}>
         ZAP
     </RoundedButton>
 </ModalWrapper>

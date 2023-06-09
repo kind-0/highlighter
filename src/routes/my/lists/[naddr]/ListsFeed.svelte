@@ -80,7 +80,7 @@
 
     {#if loadOffset < lists.length}
         <RoundedButton
-            klass="rounded-lg p-2 mt-4"
+            class="rounded-lg p-2 mt-4"
             on:click={() => loadOffset += Math.max(10, loadOffset * 1.25)}
         >
             Load more

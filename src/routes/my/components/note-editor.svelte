@@ -6,7 +6,7 @@
     import Input from '$lib/components/Input.svelte';
 
     import { createEventDispatcher } from 'svelte';
-    import { NDKEvent, NDKPrivateKeySigner, NDKUser } from '@nostr-dev-kit/ndk';
+    import { NDKEvent, NDKUser } from '@nostr-dev-kit/ndk';
     import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
     import type { NDKSigner } from '@nostr-dev-kit/ndk/lib/src/signers';
     const dispatch = createEventDispatcher();
@@ -15,8 +15,8 @@
     export let body: string = '';
     export let visibility: string;
     export let expandEditor = false;
-    export let delegatedSigner: NDKPrivateKeySigner;
-    export let delegatedName: string;
+    export let delegatedUser: NDKUser | undefined = undefined;
+    export let delegatedName: string | undefined = undefined;
 
     let bodyEl: HTMLTextAreaElement;
     let titleEl: HTMLInputElement;
@@ -133,7 +133,7 @@
     ">
         {#if expandEditor}
             <div class="flex flex-row items-center gap-4">
-                <NoteVisibility bind:value={visibility} {delegatedName} />
+                <NoteVisibility bind:value={visibility} {delegatedName} {delegatedUser} />
             </div>
         {/if}
 
