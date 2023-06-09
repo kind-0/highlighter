@@ -6,6 +6,7 @@ import type NDK from '@nostr-dev-kit/ndk';
 import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
 import type { NDKFilter } from '@nostr-dev-kit/ndk';
 import {nip19} from 'nostr-tools';
+import type NDKList from '$lib/ndk-kinds/lists';
 
 interface ILoadOpts {
     pubkeys?: string[];
@@ -16,7 +17,7 @@ interface ILoadOpts {
 const BookmarkListInterface = {
     startStream: (opts: ILoadOpts = {}) => {
         const ndk: NDK = getStore(ndkStore);
-        const filter: NDKFilter = { kinds: [30000, 30001] };
+        const filter: NDKFilter = { kinds: [30000, 30001, 30022] };
 
         if (opts.pubkeys) {
             filter['authors'] = opts.pubkeys;
@@ -67,6 +68,7 @@ async function eventHandler(event: NDKEvent) {
         switch (event.kind) {
             case 30000: bookmarkList = await handleEvent30001(event); break;
             case 30001: bookmarkList = await handleEvent30001(event); break;
+            case 30022: bookmarkList = await handleEvent30001(event); break;
         }
 
         if (bookmarkList) db.bookmarkLists.put(bookmarkList);
@@ -105,17 +107,9 @@ async function handleEvent30001(event: NDKEvent) {
     return bookmarkList;
 }
 
-export async function deleteList(listEvent: NDKEvent) {
+export async function deleteList(listEvent: NDKList) {
     const ndk: NDK = getStore(ndkStore);
-    const deleteEvent = new NDKEvent(ndk, {
-        kind: 5,
-        tags: [
-            listEvent.tagReference()
-        ],
-        content: ""
-    } as NostrEvent);
-    await deleteEvent.publish();
-
+    await listEvent.delete();
     await db.bookmarkLists.delete(listEvent.tagId());
 }
 

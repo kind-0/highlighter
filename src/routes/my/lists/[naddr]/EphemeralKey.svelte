@@ -4,9 +4,9 @@
     import { findEphemeralSigner, generateEphemeralSigner, saveEphemeralSigner } from '$lib/signers/ephemeral';
     import type { NDKEvent, NDKSigner, NDKUser } from '@nostr-dev-kit/ndk';
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
+    import type NDKList from '$lib/ndk-kinds/lists';
 
-    export let list: App.BookmarkList;
-    export let listEvent: NDKEvent;
+    export let list: NDKList;
     export let signer: NDKSigner;
     export let signerUser: NDKUser;
     export let isNewSigner: boolean | undefined = undefined;
@@ -17,7 +17,7 @@
                 $ndk,
                 $ndk.signer!,
                 {
-                    associatedEventNip19: listEvent.encode(),
+                    associatedEventNip19: list.encode(),
                 }
             );
 

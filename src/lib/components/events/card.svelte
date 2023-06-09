@@ -1,12 +1,13 @@
 <script lang="ts">
     import type { NDKEvent } from "@nostr-dev-kit/ndk";
 
+    import { currentUser } from "$lib/store";
+
     import CopyIcon from '$lib/icons/Copy.svelte';
     import CheckIcon from '$lib/icons/Check.svelte';
     import ViewIcon from '$lib/icons/View.svelte';
     import LinkIcon from '$lib/icons/Link.svelte';
-
-    import ndk from '$lib/stores/ndk';
+    import { Card } from 'flowbite-svelte'
 
     import NoteCard from '$lib/components/notes/card.svelte';
 
@@ -59,16 +60,8 @@
     }
 </script>
 
-<div class="flex flex-col gap-6">
-    <div class="
-        overflow-hidden rounded-lg bg-white shadow
-        flex flex-col gap-4
-        px-6 py-3
-        group
-        event-card
-    " draggable={true}
-    on:dragstart={dragStart}
-    >
+<div class="flex flex-col w-full gap-6">
+    <Card class="flex flex-col gap-4 group" size="full" draggable={true} on:dragstart={dragStart}>
         {#if !skipHeader}
             <!-- Header -->
             <div class="flex flex-row justify-between items-start relative">
@@ -144,7 +137,7 @@
                     <a
                         href="/p/{userPubkey}"
                         class="flex flex-row gap-4 items-center justify-center">
-                        <Avatar pubkey={userPubkey} klass="h-4" />
+                        <Avatar pubkey={userPubkey} size='xs' />
                         <div class=" text-gray-500 text-xs hidden sm:block">
                             {byString||''}
                             <Name pubkey={userPubkey} />
@@ -170,26 +163,18 @@
                         transition duration-300
                         z-10
                     ">
-                        <HighlightButton {event} />
-
+                        {#if event.kind !== 9802}
+                            <HighlightButton {event} />
+                        {/if}
                         <BookmarkButton {event} />
 
-                        <ZapsButton {highlight} {event} />
-
-                        <BoostButton {note} {highlight} {event} />
-
-                        {#if replies}
-                            <RepliesButton {highlight} {note} {event} {replies} />
+                        {#if $currentUser?.hexpubkey() !== event.pubkey}
+                            <ZapsButton {highlight} {event} />
                         {/if}
-
-                        <!-- {#if !highlight.articleId && highlight.url && !skipUrl}
-                            <a href={highlight.url} class="text-gray-500 hover:text-orange-500 flex flex-row gap-3 text-sm items-center">
-                                {domain}
-                            </a>
-                            <Tooltip  color="black">
-                                {highlight.url}
-                            </Tooltip>
-                        {/if} -->
+                        <BoostButton {event} />
+                        {#if replies}
+                            <RepliesButton {note} {event} {replies} />
+                        {/if}
 
                         <a href={`/e/${noteId}`} class="
                             text-slate-500 hover:text-orange-500
@@ -202,9 +187,9 @@
                 {/if}
             </div>
         {/if}
-    </div>
+    </Card>
 
-    {#if replies?.length > 0}
+    {#if replies?.length && replies?.length > 0}
         {#if !expandReplies}
             {#each replies as reply}
                 <div class="ml-6">

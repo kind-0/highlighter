@@ -61,33 +61,37 @@
     overflow-auto
 ">
     <div>
-        {#each content as { type, value }}
-            {#if type === "newline"}
-                {#each value as _}
-                    {#if addNewLines}
-                        <br />
+        {#if content}
+            {#each content as { type, value }}
+                {#if type === "newline"}
+                    {#each value as _}
+                        {#if addNewLines}
+                            <br />
+                        {/if}
+                    {/each}
+                {:else if type === "link"}
+                    {value.replace(/https?:\/\/(www\.)?/, "")}
+                    <!-- <img src="{value}" /> -->
+                {:else if type.startsWith("nostr:")}
+                    {#if value.pubkey || value.entity.startsWith('npub')}
+                        <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
+                            <Name pubkey={value.id||value.pubkey} />
+                        </a>
+                    {:else}
+                        <div class="embedded-card text-sm">
+                            <GenericEventCard id={value.entity} skipReplies={true} popoverButtons={true} />
+                        </div>
                     {/if}
-                {/each}
-            {:else if type === "link"}
-                {value.replace(/https?:\/\/(www\.)?/, "")}
-                <!-- <img src="{value}" /> -->
-            {:else if type.startsWith("nostr:")}
-                {#if value.pubkey || value.entity.startsWith('npub')}
-                    <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
-                        <Name pubkey={value.id||value.pubkey} />
-                    </a>
-                {:else}
-                    <div class="embedded-card text-sm">
-                        <GenericEventCard id={value.entity} skipReplies={true} />
-                    </div>
-                {/if}
-            {:else if type === "topic"}
-                <b>#{value}</b>
+                {:else if type === "topic"}
+                    <b>#{value}</b>
 
-            {:else}
-                {@html value}
-            {/if}
-        {/each}
+                {:else}
+                    {@html value}
+                {/if}
+            {/each}
+        {:else}
+            Empty content?
+        {/if}
     </div>
 </div>
 

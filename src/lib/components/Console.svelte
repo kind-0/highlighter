@@ -99,35 +99,35 @@
         <ul class="flex flex-col gap-2 max-w-prose overflow-auto ">
             <li>
                 Snort link:
-                <button on:click={setValue} href="https://snort.social/e/note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa" class="text-orange-500">
+                <button on:click={setValue} href="https://snort.social/e/note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa" class="text-orange-500 text-left">
                     https://snort.social/e/note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa
                 </button>
             </li>
 
             <li>
                 Kind 1 (short note) event:
-                <button on:click={setValue} href="note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa" class="text-orange-500">
+                <button on:click={setValue} href="note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa" class="text-orange-500 text-left">
                     note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa
                 </button>
             </li>
 
             <li>
                 Medium Article
-                <button on:click={setValue} href="https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9" class="text-orange-500">
+                <button on:click={setValue} href="https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9" class="text-orange-500 text-left">
                     https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9
                 </button>
             </li>
 
             <li>
                 Habla.news link:
-                <button on:click={setValue} href="https://habla.news/a/naddr1qqxryvpjxvcrgvfsfacy2eqpzdmhxue69uhhyetvv9ujue3h0ghxjme0qy0hwumn8ghj7mn0wd68yttjv4kxz7fwdehkkmm5v9ex7tnrdakj7q3q9mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqxpqqqp65w27z7wl" class="text-orange-500">
+                <button on:click={setValue} href="https://habla.news/a/naddr1qqxryvpjxvcrgvfsfacy2eqpzdmhxue69uhhyetvv9ujue3h0ghxjme0qy0hwumn8ghj7mn0wd68yttjv4kxz7fwdehkkmm5v9ex7tnrdakj7q3q9mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqxpqqqp65w27z7wl" class="text-orange-500 text-left">
                     https://habla.news/a/naddr1qqxryvpjxvcrgvfsfacy2eqpzdmhxue69uhhyetvv9ujue3h0ghxjme0qy0hwumn8ghj7mn0wd68yttjv4kxz7fwdehkkmm5v9ex7tnrdakj7q3q9mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqxpqqqp65w27z7wl
                 </button>
             </li>
 
             <li>
                 NIP-23 (long-form article) event:
-                <button on:click={setValue} href="naddr1qqxryvpjxvcrgvfsfacy2eqpzdmhxue69uhhyetvv9ujue3h0ghxjme0qy0hwumn8ghj7mn0wd68yttjv4kxz7fwdehkkmm5v9ex7tnrdakj7q3q9mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqxpqqqp65w27z7wl" class="text-orange-500">
+                <button on:click={setValue} href="naddr1qqxryvpjxvcrgvfsfacy2eqpzdmhxue69uhhyetvv9ujue3h0ghxjme0qy0hwumn8ghj7mn0wd68yttjv4kxz7fwdehkkmm5v9ex7tnrdakj7q3q9mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqxpqqqp65w27z7wl" class="text-orange-500 text-left">
                     naddr1qqxryvpjxvcrgvfsfacy2eqpzdmhxue69uhhyetvv9ujue3h0ghxjme0qy0hwumn8ghj7mn0wd68yttjv4kxz7fwdehkkmm5v9ex7tnrdakj7q3q9mduaf5569jx9xz555jcx3v06mvktvtpu0zgk47n4lcpjsz43zzqxpqqqp65w27z7wl
                 </button>
             </li>

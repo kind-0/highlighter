@@ -16,6 +16,7 @@
     import RoundedButton from '../../components/RoundedButton.svelte';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import { fetchFollowers } from '$lib/currentUser';
+  import RelaysButton from '$lib/components/RelaysButton.svelte';
 
     const dispatch = createEventDispatcher();
 
@@ -85,6 +86,8 @@
                 <!-- Profile dropdown -->
                 <div class="relative ml-3">
                     <div class="flex flex-row gap-4 items-center">
+                        <RelaysButton ndk={$ndk} />
+
                         {#if $currentUser}
                             <RoundedButton href="/my">
                                 My Notes

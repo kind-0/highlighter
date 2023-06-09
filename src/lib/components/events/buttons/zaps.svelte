@@ -38,10 +38,12 @@
 {#if event?.id}
     <button class="
         text-slate-500 hover:text-orange-500
-        flex flex-row items-center gap-2
-    " on:click={() => { openModal(ZapModal, { note, highlight }) }}>
+        flex flex-row items-center gap-2 w-4 h-4
+    " on:click={() => { openModal(ZapModal, { event, note, highlight }) }}>
         <ZapIcon />
-        <div class="text-sm">{nicelyFormattedSatNumber(zappedAmount)}</div>
+        {#if zappedAmount > 0}
+            <div class="text-sm">{nicelyFormattedSatNumber(zappedAmount)}</div>
+        {/if}
     </button>
     <Tooltip  color="black">Zap</Tooltip>
 {/if}

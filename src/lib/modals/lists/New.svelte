@@ -10,48 +10,21 @@
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Input from '$lib/components/Input.svelte';
     import Textarea from '$lib/components/Textarea.svelte';
-  import RoundedButton from '../../../routes/(main)/components/RoundedButton.svelte';
+    import RoundedButton from '../../../routes/(main)/components/RoundedButton.svelte';
 
-    let currentNpub;
-    let bookmarkLists, _bookmarkLists: App.BookmarkList[] = [];
+    import NDKList from '$lib/ndk-kinds/lists/index.js';
+
     let name: string;
     let description: string;
 
-    async function loadbookmarkLists() {
-        const user = await $ndk.signer?.user();
-
-		if (!user) {
-            setTimeout(() => {
-                loadbookmarkLists();
-            }, 100);
-            return;
-		}
-
-		currentNpub = user.npub;
-
-		const opts = { pubkeys: [user.hexpubkey()] };
-		bookmarkLists = BookmarkListInterface.load(opts);
-		return BookmarkListInterface.startStream(opts);
-    }
+    export let kind = 30001;
 
     async function createNewList() {
-        const user = await $ndk.signer?.user();
-
-        if (!user) {
-            return;
-        }
-
-        const newListEvent = new NDKEvent($ndk, {
-            kind: 30001,
-            tags: [
-                ['d', name ],
-            ],
-        } as NostrEvent);
-        if (description) {
-            newListEvent.tags.push(['d', description]);
-        }
-        await newListEvent.publish();
-        goto(`/my/lists/${newListEvent.encode()}`);
+        const list = new NDKList($ndk, {kind} as NostrEvent);
+        list.name = name;
+        list.description = description;
+        await list.publish();
+        goto(`/my/lists/${list.encode()}`);
         closeModal();
     }
 </script>
@@ -64,7 +37,7 @@
         <CloseIcon />
     </button>
     <div class="flex flex-col gap-8">
-        <h2 class="text-zinc-500 font-semibold text-base uppercase">NEW LIST</h2>
+        <h2 class="text-zinc-500 font-semibold text-base uppercase">NEW LIST {kind}</h2>
 
         <div class="flex flex-col">
             <Input type="text" class="

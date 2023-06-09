@@ -16,7 +16,6 @@
     import CardContent from '$lib/components/events/content.svelte';
 
     export let article: App.Article | undefined = undefined;
-    export let eventId: string | undefined = undefined;
     export let articleEvent: NDKEvent;
     export let content: string;
     export let unmarkedContent: string;
@@ -126,7 +125,7 @@
         }
     }
 
-    function onNewHighlightCancel() {
+    function onNewHighlightClose() {
         newHighlightItem = undefined;
     }
 </script>
@@ -220,7 +219,7 @@
                     <HighlightListItemForm
                         {articleEvent}
                         highlight={newHighlightItem}
-                        on:cancel={onNewHighlightCancel}
+                        on:close={onNewHighlightClose}
                     />
                 </div>
             {/if}

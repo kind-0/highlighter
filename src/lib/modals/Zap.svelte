@@ -13,6 +13,7 @@
   import ModalWrapper from '$lib/components/ModalWrapper.svelte';
   import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
 
+    export let event: NDKEvent;
     export let highlight: App.Highlight;
     export let article: App.Article;
 
@@ -107,7 +108,7 @@
 
         {#if article?.author}
             <UserCard pubkey={article.author} subtitle="AUTHOR">
-                <div slot="right-column">
+                <div slot="right">
                     ⚡️ {authorAmount}
                 </div>
             </UserCard>
@@ -115,7 +116,7 @@
 
         {#if article?.publisher && article?.publisher !== article?.author}
             <UserCard pubkey={article.publisher} subtitle="PUBLISHER">
-                <div slot="right-column">
+                <div slot="right">
                     ⚡️ {publisherAmount}
                 </div>
             </UserCard>
@@ -123,7 +124,7 @@
 
         {#if highlight && highlight.pubkey !== article?.author}
             <UserCard pubkey={highlight.pubkey} subtitle="HIGHLIGHTER">
-                <div slot="right-column">
+                <div slot="right">
                     ⚡️ {highlighterAmount}
                 </div>
             </UserCard>

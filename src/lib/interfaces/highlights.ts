@@ -38,10 +38,9 @@ const HighlightInterface = {
     },
 
     startStream: (opts: ILoadOpts = {}) => {
-        console.log(`starting highlight stream with opts: ${JSON.stringify(opts)}`);
         let articleReference: string | undefined;
         const ndk: NDK = getStore(ndkStore);
-        let filter: NDKFilter = { kinds: [9802] };
+        let filter: NDKFilter = { kinds: [9802 as number] };
         // const boostFilter: NDKFilter = { kinds: [6], '#k': ["9802"], since: 100000000 };
 
         if (opts.pubkeys) {
@@ -66,7 +65,9 @@ const HighlightInterface = {
             // boostFilter['since'] = opts.since;
         }
 
-        const subs = ndk.subscribe(filter, { closeOnEose: false });
+        const filterHasIds = filter['ids'] && filter['ids'].length > 0;
+        const closeOnEose = !!filterHasIds;
+        const subs = ndk.subscribe(filter, { closeOnEose });
         // const boostSubs = ndk.subscribe(boostFilter, { closeOnEose: false });
 
         subs.on('event', eventHandler);

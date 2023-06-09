@@ -1,13 +1,13 @@
 <script lang="ts">
     import UserInterface from '$lib/interfaces/users';
     import type { Observable } from 'dexie';
+    import {Avatar} from 'flowbite-svelte';
 
     export let pubkey: string | undefined = undefined;
     export let userProfile: App.UserProfile | undefined = undefined;
     export let klass: string = '';
+    export let size: "xs" | "sm" | "md" | "lg" | "xl" | undefined;
     let prevPubkey: string | undefined = undefined;
-
-    let defaultImage = `https://robohash.org/${pubkey?.slice(0, 1)}`;
 
     let observeUserProfile: Observable<App.UserProfile> | undefined = undefined;
     let image: string | undefined = userProfile?.image;
@@ -22,15 +22,14 @@
             userProfile = ($observeUserProfile||{}) as App.UserProfile;
         }
 
-        defaultImage = `https://robohash.org/${pubkey?.slice(0, 1)}`;
-        image = userProfile?.image || defaultImage;
+        image = userProfile?.image;
     }
 </script>
 
 {#await observeUserProfile}
-    <img src={defaultImage} class={`rounded-full ${klass}`} />
+    <Avatar class={klass||""} {size} />
 {:then _userProfile}
-    <img src={image || defaultImage} class={`rounded-full ${klass}`} />
+    <Avatar src={image} class={`${klass}`} {size} />
 {:catch error}
-    <span class="rounded-full w-6 h-6 text-red-600">E</span>
+    <Avatar class={klass||""} {size} />
 {/await}

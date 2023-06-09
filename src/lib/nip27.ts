@@ -10,7 +10,6 @@ function last(list: any) {
 
 export function parseContent(content: string, tags = []) {
     const result: any[] = []
-    console.log({content});
     let text = content.trim()
     let buffer = ""
 

@@ -6,7 +6,7 @@
     import 'bytemd/dist/index.css';
     import { filterFromNaddr, idFromNaddr } from '$lib/utils';
     import { onMount } from 'svelte';
-  import RoundedButton from '../../../(main)/components/RoundedButton.svelte';
+    import RoundedButton from '../../../(main)/components/RoundedButton.svelte';
 
     export let event: NDKEvent;
     export let signer: NDKPrivateKeySigner;

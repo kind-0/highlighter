@@ -15,6 +15,7 @@
     export let skipButtons: boolean = false;
     export let skipFooter: boolean = false;
     export let disableClick: boolean = false;
+    export let popoverButtons: boolean = false;
     let prevHighlightId: string | undefined = undefined;
 
     let event: NDKEvent;
@@ -108,6 +109,7 @@
     byString={"highlighted by"}
     skipHeader={skipTitle}
     {skipFooter}
+    {popoverButtons}
 >
     <div slot="header">
         <div class="text-xl font-semibold truncate">

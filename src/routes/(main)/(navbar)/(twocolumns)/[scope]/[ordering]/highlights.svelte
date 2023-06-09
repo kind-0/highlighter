@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentUser, currentScope } from '$lib/store';
+    import { currentScope } from '$lib/store';
     import type { Observable } from "dexie";
     import type { NDKSubscription } from '@nostr-dev-kit/ndk';
     import HighlightInterface from '$lib/interfaces/highlights';
@@ -81,7 +81,7 @@
     }
 </script>
 
-<ul class="space-y-3">
+<ul class="flex flex-col gap-8">
     {#each taggedEventIds as articleId}
         <li class="overflow-hidden rounded-md bg-white px-6 py-4 shadow">
             <ArticleCardWithHighlights

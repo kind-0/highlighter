@@ -8,6 +8,9 @@
     import { fade } from 'svelte/transition';
     import { onMount } from 'svelte';
     import type { NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
+    import ModalWrapper from '$lib/components/ModalWrapper.svelte';
+    import Input from '$lib/components/Input.svelte';
+    import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
 
     export let event: NDKEvent;
 
@@ -84,75 +87,46 @@
     }
 </script>
 
-<div role="dialog" class="modal" transition:fade>
-    <div class="
-        rounded-xl p-6
-        shadow-xl shadow-black
-        bg-zinc-900 text-white
-        flex flex-col gap-8
-        relative
-    " style="pointer-events: auto;">
-        <button class="
-            text-zinc-500 hover:text-zinc-300 transition duration-300
-            absolute top-2 right-2
-        " on:click={closeModal}>
-            <CloseIcon />
-        </button>
-        <div class="flex flex-col gap-8">
-            <h2 class="text-zinc-500 font-semibold text-base uppercase">BOOKMARK</h2>
+<ModalWrapper klass="max-w-sm">
+    <button class="
+        text-zinc-500 hover:text-zinc-300 transition duration-300
+        absolute top-2 right-2
+    " on:click={closeModal}>
+        <CloseIcon />
+    </button>
+    <div class="flex flex-col gap-8">
+        <h2 class="text-zinc-500 font-semibold text-base uppercase">BOOKMARK</h2>
 
-            <ul class="
-                rounded-lg border border-zinc-800
-                dark:bg-zinc-800 dark:border-zinc-600
-                divide-y divide-zinc-800 text-zinc-300 dark:divide-zinc-600
-                max-h-56 overflow-y-auto
-                w-full max-w-sm
-            ">
-                {#each _bookmarkLists as bookmarkList}
-                    <li>
-                        <button class="p-3 truncate" on:click={()=>{addToBookmarkList(bookmarkList)}}>{bookmarkList.title}</button>
-                    </li>
-                {/each}
-            </ul>
+        <ul class="
+            rounded-lg
+            divide-y divide-zinc-200
+            border border-zinc-300
+            overflow-y-auto
+            w-full
+            max-h-96
+        ">
+            {#each _bookmarkLists as bookmarkList}
+                <li>
+                    <button class="
+                        p-3 truncate
+                        hover:bg-zinc-100
+                        w-full
+                        text-left
+                    " on:click={()=>{addToBookmarkList(bookmarkList)}}>{bookmarkList.title}</button>
+                </li>
+            {/each}
+        </ul>
 
-            <div class="flex flex-row gap-2">
-                <input type="text" class="
-                    rounded-lg
-                    w-full
-                    border-zinc-800
-                    dark:bg-zinc-800 dark:border-zinc-600
-                    bg-transparent
-                    text-zinc-300
-                " placeholder="New List" bind:value={newListName} />
+        <div class="flex flex-row gap-2">
+            <Input type="text" klass="
+                w-2/3
+            " placeholder="New List" bind:value={newListName} />
 
-                <button class="
-                    text-sm bg-slate-800 px-4 rounded-lg
-                " on:click={createNewList}>
-                    Create
-                </button>
-            </div>
+            <RoundedButton klass="
+                rounded-lg w-1/3
+            " on:click={createNewList}>
+                Create
+            </RoundedButton>
         </div>
     </div>
-</div>
-
-<style>
-    .modal {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        /* allow click-through to backdrop */
-        pointer-events: none;
-    }
-
-    .actions {
-        margin-top: 32px;
-        display: flex;
-        justify-content: flex-end;
-    }
-</style>
+</ModalWrapper>

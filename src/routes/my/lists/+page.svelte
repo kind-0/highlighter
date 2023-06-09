@@ -56,20 +56,29 @@
             <div class=" bg-white flex font-semibold text-sm flex-col absolute rounded-xl shadow-lg mt-10 border border-zinc-400">
                 <a href="/my/lists/people/new" class="
                     text-zinc-500 hover:text-white
-                    bg-whitse hover:bg-orange-600
-                    px-4 py-2 rounded-xl
+                    text-left
+                    bg-white hover:bg-orange-600
+                    px-4 py-2 rounded-t-xl
                 ">Profile List</a>
 
                 <button class="
                     text-zinc-500 hover:text-white
-                    bg-whitse hover:bg-orange-600
-                    px-4 py-2 rounded-xl
+                    text-left
+                    bg-white hover:bg-orange-600
+                    px-4 py-2
                 " on:click={() => { openModal(NewListModal, {}) }}>Generic List</button>
+
+                <button class="
+                    text-zinc-500 hover:text-white
+                    text-left
+                    bg-white hover:bg-orange-600
+                    px-4 py-2 rounded-b-xl
+                " on:click={() => { openModal(NewListModal, { kind: 30022 }) }}>Relay List</button>
             </div>
         {/if}
     </div>
 
-    <div class="grid grid-flow-row md:grid-cols-3 xl:sdgrid-cols-3 gap-4">
+    <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-3 gap-4">
         {#each _bookmarkLists as bookmarkList}
             <div>
                 <BookmarkList {bookmarkList} />

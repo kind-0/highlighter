@@ -8,41 +8,33 @@
     import { createEventDispatcher } from 'svelte';
     import type { NDKEvent, NDKFilter, NDKTag } from '@nostr-dev-kit/ndk';
     import { filterForId } from '$lib/utils';
-  import { currentUser } from '$lib/store';
+    import { currentUser } from '$lib/store';
+    import { Card, CardPlaceholder, Skeleton, TextPlaceholder } from 'flowbite-svelte'
 
     export let tag: NDKTag | undefined = undefined;
     export let id: string | undefined = undefined;
     export let skipReplies: boolean = false;
     export let skipFooter: boolean = false;
     export let event: NDKEvent | undefined = undefined;
+    export let popoverButtons: boolean = false;
 
     const dispatcher = createEventDispatcher();
 
-    let filter: NDKFilter = {};
-
-    if (event) {
-        filter = {ids: [event.id as string]};
-    }
+    let filter: NDKFilter | undefined = undefined;
 
     if (tag) {
         filter = filterForId(tag[1]);
-    }
-
-    if (id) {
-        const decoded = nip19.decode(id);
-
-        if (decoded.type === 'nevent') {
-            filter = {ids: [decoded.data.id as string]};
-        } else {
-            filter = {ids: [decoded.data as string]};
-        }
     }
 
     async function loadEvent(): Promise<NDKEvent | undefined> {
         if (event) return event;
 
         const p: Promise<NDKEvent | undefined> = new Promise((resolve, reject) => {
-            $ndk.fetchEvent(filter).then((e) => {
+            if (!id && !filter) {
+                throw new Error(`no id or filter`);
+            }
+
+            $ndk.fetchEvent(filter || id).then((e) => {
                 if (!e) return reject(`no event ${JSON.stringify(filter)}`);
 
                 if (e.kind === 4) {
@@ -52,7 +44,7 @@
                         resolve(e);
                     }, 1000 * Math.random())
                 } else {
-                    resolve(e);
+                    setTimeout(() => {resolve(e)}, 1000 * Math.random());
                 }
 
                 dispatcher('event:load', e);
@@ -73,7 +65,9 @@
 </script>
 
 {#await loadEvent()}
-    loading {JSON.stringify(filter)}
+    <Card size="full">
+        <div role="status" class="max-w-lg animate-pulse my-8"><div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-4"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-9/12 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-10/12 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-11/12 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-9/12"></div> <span class="sr-only">Loading...</span></div>
+    </Card>
 {:then e}
     {#if e}
         <div
@@ -85,6 +79,7 @@
                     <HighlightCard
                         highlight={handleEvent9802(e)}
                         skipTitle={true}
+                        {popoverButtons}
                     />
                 </div>
             {:else if e.kind === 1}
@@ -92,6 +87,7 @@
                     note={handleEvent1(e)}
                     {skipReplies}
                     {skipFooter}
+                    {popoverButtons}
                 />
             {:else if e.kind === 4}
                 <NoteCard
@@ -105,5 +101,7 @@
         @{id}
     {/if}
 {:catch e}
-    {e}
+    <Card size="full">
+        {e}
+    </Card>
 {/await}

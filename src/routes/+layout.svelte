@@ -3,7 +3,11 @@
     import { onMount } from 'svelte';
 
     onMount(async () => {
-        await $ndk.connect();
+        try {
+            $ndk.connect();
+        } catch (e) {
+            console.error(`layout error`, e);
+        }
     });
 </script>
 

@@ -2,13 +2,21 @@ declare global {
     namespace App {
         interface Article {
             id?: string;
-            url: string;
+            url?: string;
             title: string;
             publisher: string;
-            tags: string[];
+            tags: string[][];
             content: string;
             author?: string;
             event: string;
+        }
+
+        interface Event {
+            id: string;
+            pubkey: string;
+            kind: number;
+            createdAt: number;
+            json: string;
         }
 
         interface Highlight {

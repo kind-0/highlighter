@@ -3,6 +3,7 @@
     import Name from '$lib/components/Name.svelte';
     import UserInterface from '$lib/interfaces/users';
     import type { Observable } from 'dexie';
+  import { Card } from 'flowbite-svelte';
 
     export let pubkey: string | undefined;
     export let userProfile: App.UserProfile | undefined = undefined;
@@ -22,26 +23,27 @@
     }
 </script>
 
-<div class="
-    flex flex-row items-center justify-between gap-12 p-4
-    border border-zinc-800 rounded-lg
-    overflow-clip
-">
-    <div class="flex flex-row items-center gap-3">
-        <Avatar {userProfile} klass="w-14 h-14" />
-
-        <div class="flex flex-col gap-2">
-            <div class="text-base font-semibold whitespace-nowrap w-42 truncate">
+<Card class="group block flex-shrink-0">
+    <div class="flex flex-row gap-3.5 items-center">
+        <div class="">
+            <Avatar {userProfile} />
+        </div>
+        <div class="w-4/5">
+            <p class="text-base font-medium text-gray-700 group-hover:text-gray-900">
                 <Name {userProfile} />
-            </div>
+            </p>
 
-            {#if subtitle}
-                <div class="text-sm text-gray-500">
-                    {subtitle}
-                </div>
+            {#if subtitle || userProfile?.about}
+                <p class="text-sm font-medium text-gray-500 group-hover:text-gray-700 truncate">
+                    {subtitle || userProfile?.about}
+                </p>
             {/if}
         </div>
     </div>
 
-    <slot name="right-column" />
-</div>
+    {#if $$slots.right}
+        <div class="flex items-center justify-end">
+            <slot name="right" />
+        </div>
+    {/if}
+</Card>

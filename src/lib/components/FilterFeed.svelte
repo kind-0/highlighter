@@ -5,6 +5,9 @@
     import { onDestroy } from 'svelte';
 
     export let filter: NDKFilter;
+    export let feedLength: number = 0;
+
+    let feed: NDKEvent[] = [];
 
     onDestroy(() => {
         if (sub) {
@@ -12,19 +15,23 @@
         }
     })
 
-    let feed: NDKEvent[] = [];
-
-    const sub = $ndk.subscribe(filter, { closeOnEose: false});
+    const sub = $ndk.subscribe(filter, { closeOnEose: false });
 
     sub.on('event', (e, r) => {
         feed.push(e);
+        feedLength = feed.length;
         feed = feed;
     })
 </script>
 
-<!-- {JSON.stringify(filter)} -->
+{#if feed.length === 0}
+    <div class="flex flex-col items-center justify-center gap-2">
+        <div class="text-lg font-semibold">No events found</div>
+    </div>
+{/if}
 
 {#each feed as event}
+    {JSON.stringify(event.kind)}
     <GenericEventCard
         event={event}
         skipReplies={true}

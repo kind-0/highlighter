@@ -12,7 +12,7 @@
 </script>
 
 <button
-    class="text-slate-500 hover:text-purple-700"
+    class="text-slate-500 hover:text-purple-700 w-4 h-4"
     on:click={() => { openModal(BookmarkModal, { event }) }}
 ><BookmarkIcon /></button>
 <Tooltip color="black">Bookmark</Tooltip>

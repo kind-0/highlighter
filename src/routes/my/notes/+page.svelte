@@ -1,10 +1,11 @@
 <script lang="ts">
     import EncryptedNoteInterface from '$lib/interfaces/encrypted-notes';
+    import EventCard from '$lib/components/events/card.svelte';
 
     import NewIcon from '$lib/icons/New.svelte';
 
     import ToolbarButton from '../components/toolbar/button.svelte';
-    import SecretNodeEditor from '../components/secret-notes/editor.svelte';
+    import SecretNoteEditor from '../components/secret-notes/editor.svelte';
 
     import { NDKEvent } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
@@ -95,11 +96,11 @@
 </div>
 
 {#if loadedNote}
-    <SecretNodeEditor event={loadedNote} />
+    <SecretNoteEditor event={loadedNote} />
 {:else}
-    <div class="grid grid-flow-row md:grid-cols-4 xl:sdgrid-cols-4 gap-4">
+    <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-4 gap-4">
         {#each Object.values(decryptedNotes).filter(n => !!n) as note}
-            {#if note.content.title}
+            {#if note.content?.title}
                 <a
                     href="/my/notes/{note.content.event||note.content.naddr}"
                     class="flex flex-col"
@@ -122,8 +123,8 @@
                         </div>
                     </div>
                 </a>
-            {:else}
-                <!-- <EventCard event={note} skipHeader={true} /> -->
+            {:else if note}
+                <EventCard event={note} skipHeader={true} />
             {/if}
         {/each}
     </div>

@@ -7,6 +7,7 @@
     export let pubkey: string | undefined;
     export let userProfile: App.UserProfile | undefined = undefined;
     export let subtitle: string | undefined = undefined;
+    export let size: "xs" | "sm" | "md" | "lg" | "xl" | undefined = undefined;
     let prevPubkey: string | undefined = undefined;
     let observeUserProfile: Observable<App.UserProfile> | undefined = undefined;
 
@@ -25,7 +26,7 @@
 <div class="group block flex-shrink-0">
     <div class="flex items-center gap-2">
         <div>
-            <Avatar {userProfile} klass="w-10 h-10" />
+            <Avatar {userProfile} {size} />
         </div>
         <div>
             <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><Name {userProfile} /></p>

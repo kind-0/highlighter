@@ -9,16 +9,19 @@ export class Database extends Dexie {
     users!: Table<App.UserProfile>;
     zaps!: Table<App.Zap>;
 
+    events!: Table<App.Event>;
+
     constructor() {
         super('highlighter');
-        this.version(28).stores({
+        this.version(29).stores({
             articles: '++id, url, publisher, content, author, event, title',
             bookmarkLists: '++id, pubkey, title',
             highlights: '++id, url, pubkey, boostedBy, event, content, articleId, timestamp',
             encryptedNotes: '++id, pubkey, event, encryptedContent',
             notes: '++id, url, pubkey, replyToArticleId, replyToEventId, quotesEventId, event, content, createdAt',
             users: '++id, name, displayName, image, banner, bio, nip05, lud16, about, zapService, event',
-            zaps: '++id, zapper, zappee, zapped, zappedEvent, amount, comment, event, zappedEventKind'
+            zaps: '++id, zapper, zappee, zapped, zappedEvent, amount, comment, event, zappedEventKind',
+            events: 'id, pubkey, kind'
         });
     }
 }

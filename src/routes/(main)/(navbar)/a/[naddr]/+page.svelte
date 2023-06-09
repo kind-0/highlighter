@@ -4,11 +4,8 @@
 
     import { page } from '$app/stores';
     import ArticleInterface, { articleFromEvent } from '$lib/interfaces/article';
-    import { onMount } from 'svelte';
     import MarkdownIt from 'markdown-it';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
-    import { openModal } from 'svelte-modals'
-    import HighlightIntroModal from '$lib/modals/HighlightIntro.svelte';
     import ndk from '$lib/stores/ndk';
     import { filterFromNaddr, idFromNaddr } from '$lib/utils';
     import { nip19 } from 'nostr-tools';
@@ -31,32 +28,34 @@
     let content: string = '';
     let unmarkedContent: string = '';
 
-    onMount(async () => {
-        // check if the highlightintro modal has been displayed on localStorage
-        if (!localStorage.getItem('highlightIntro')) {
-            openModal(HighlightIntroModal);
-            localStorage.setItem('highlightIntro', 'true');
-        }
-    });
-
     // Load article
     $: if (type === 'note' || type === 'nevent' && !article) {
         loadedId = articleId;
-        $ndk.fetchEvent({ids: [articleId]}).then(e => {
+        console.log('fetching', articleId);
+        setTimeout(async () => {
+            const e = await $ndk.fetchEvent({ids: [articleId]});
+
             if (!e) return;
-            if (e.kind === 1) {
-                article = {
-                    id: e.id,
-                    title: "",
-                    tags: e.tags,
-                    publisher: e.pubkey,
-                    author: e.pubkey,
-                    content: e.content,
-                } as App.Article;
-                articleEvent = e;
-                content = e.content;
-            } else {
-                articleEvent = e;
+
+            try {
+                if (e.kind === 1) {
+                    article = {
+                        id: e.id,
+                        title: "",
+                        tags: e.tags,
+                        publisher: e.pubkey,
+                        author: e.pubkey,
+                        content: e.content,
+                        event: JSON.stringify(e.rawEvent()),
+                    } as App.Article;
+                    console.log('article', article);
+                    articleEvent = e;
+                    content = e.content;
+                } else {
+                    articleEvent = e;
+                }
+            } catch (e) {
+                console.log(e);
             }
         });
     }

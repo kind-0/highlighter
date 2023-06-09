@@ -5,9 +5,10 @@
     import ClickToAddComment from './ClickToAddComment.svelte';
 
     import ndk from '$lib/stores/ndk';
-    import { NDKEvent, NDKRelaySet, NDKUser, type NostrEvent } from '@nostr-dev-kit/ndk';
+    import { NDKEvent, NDKUser, type NostrEvent } from '@nostr-dev-kit/ndk';
     import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
     import { createEventDispatcher } from 'svelte';
+    import NDKHighlight from '$lib/ndk-kinds/highlight';
 
 
     export let highlight: App.Highlight;
@@ -16,6 +17,7 @@
 
     let articleLink: string;
     let highlightUser = new NDKUser({hexpubkey: highlight.pubkey});
+    let saving = false;
 
     const dispatch = createEventDispatcher();
 
@@ -25,27 +27,24 @@
         return ['alt', content];
     }
 
-    function cancel() {
-        dispatch('cancel');
+    function close() {
+        dispatch('close');
     }
 
     async function save() {
-        const event = new NDKEvent($ndk, {
-            kind: 9802,
-            content: highlight.content,
-        } as NostrEvent)
-
-        if (highlight.context) {
-            event.tags.push(['context', highlight.context])
-        }
+        saving = true;
+        const event = new NDKHighlight($ndk);
+        event.content = highlight.content;
 
         if (articleEvent) {
-            event.tags.push(articleEvent.tagReference());
+            event.article = articleEvent;
         } else if (highlight.url) {
-            event.tags.push(['r', highlight.url]);
+            event.article = highlight.url;
         }
+
+        // NIP-31
         event.tags.push(altTag(event));
-        await event.sign();
+
         await event.publish();
 
         if (comment) {
@@ -58,6 +57,8 @@
             } as NostrEvent)
             await commentEvent.publish();
         }
+
+        dispatch('close');
     }
 
     let contextWithHighlight = '';
@@ -118,12 +119,12 @@
                 flex flex-row gap-4 items-center
             ">
                 <!-- Cancel Button -->
-                <button class="text-gray-500 text" on:click={cancel}>
+                <button class="text-gray-500 text" on:click={close}>
                     Cancel
                 </button>
 
                 <!-- Save Button -->
-                <RoundedButton on:click={save}>Save</RoundedButton>
+                <RoundedButton on:click={save} disabled={saving}>Save</RoundedButton>
             </div>
         </div>
     </div>

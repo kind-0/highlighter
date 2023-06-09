@@ -11,6 +11,6 @@
 
 <a
     href="/a/{event.encode()}"
-    class="text-slate-500 hover:text-purple-700"
+    class="text-slate-500 hover:text-purple-700 w-4 h-4"
 ><HighlightIcon /></a>
 <Tooltip color="black">Highlight</Tooltip>
