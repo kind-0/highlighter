@@ -27,8 +27,6 @@
             tags
         } as NostrEvent);
         await event.sign();
-        console.log(await event.toNostrEvent());
-
         await event.publish();
 
         content = '';

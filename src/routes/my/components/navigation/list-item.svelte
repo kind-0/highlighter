@@ -1,39 +1,49 @@
 <script lang="ts">
     import ndk from '$lib/stores/ndk';
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
+    import { NDKEvent, type NDKTag } from '@nostr-dev-kit/ndk';
 
     import NavigationButton from './Button.svelte';
     import BookmarkListInterface from '$lib/interfaces/bookmark-list';
+    import NDKList from '$lib/ndk-kinds/lists';
 
     export let allLists: App.BookmarkList[];
     export let list: App.BookmarkList;
 
     let loadedListId: string;
-    let listEvent = new NDKEvent($ndk, JSON.parse(list.event));
+    let listEvent = new NDKList($ndk, JSON.parse(list.event));
     let childrenLists;
 
     let hover = false;
 
     async function addToList(e: DragEvent) {
-        const id = e.dataTransfer.getData('id');
-        const tag = JSON.parse(e.dataTransfer.getData('tag'));
-        const event = new NDKEvent($ndk, JSON.parse(list.event));
+        if (!e.dataTransfer) return;
 
-        if (event.tags.find(t => t[1] === id)) {
-            alert('already has it');
-            return;
+        const id = e.dataTransfer.getData('id');
+        const kind = e.dataTransfer.getData('kind');
+        const tag = JSON.parse(e.dataTransfer.getData('tag'));
+
+        // encrypted notes are added to encrypted tags
+        if (kind === '4') {
+            await listEvent.addItem(tag, undefined, true);
+        } else {
+            if (listEvent.tags.find(t => t[1] === id)) {
+                alert('already has it');
+                return;
+            }
+
+            await listEvent.addItem(tag);
         }
 
-        event.tags.push(tag);
-        event.created_at = Math.floor(Date.now() / 1000);
-        await event.sign();
-        event.publish();
+        listEvent.created_at = Math.floor(Date.now() / 1000);
+        await listEvent.sign();
+        listEvent.publish();
     }
 
     function tagIsList(tag: NDKTag) {
         return tag[0] === 'a' && (
             tag[1].startsWith('30000:') ||
-            tag[1].startsWith('30001:')
+            tag[1].startsWith('30001:') ||
+            tag[1].startsWith('30022:')
         );
     }
 

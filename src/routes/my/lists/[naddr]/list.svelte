@@ -37,7 +37,7 @@
 
         encryptedTagsPromise = new Promise(async (resolve) => {
             encryptedTags = await list.encryptedTags();
-            setTimeout(() => {resolve(encryptedTags)}, 2000);
+            resolve(encryptedTags);
         });
     }
 
