@@ -6,10 +6,9 @@
     import ndk, { bunkerNDK } from "$lib/stores/ndk";
     import { currentUser } from "$lib/store";
     import { createEventDispatcher } from 'svelte';
+    import RoundedButton from "../../routes/(main)/components/RoundedButton.svelte";
 
     const dispatch = createEventDispatcher();
-
-    export let button;
 
     onMount(() => {
         // Check if there is a localStorage item with the key "nostr-key-method"
@@ -93,7 +92,7 @@
 </script>
 
 {#if !ndk.signer}
-    <svelte:component this={button} on:click={signIn}>
+    <RoundedButton on:click={signIn}>
         Sign in
-    </svelte:component>
+    </RoundedButton>
 {/if}

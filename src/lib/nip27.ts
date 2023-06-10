@@ -8,8 +8,9 @@ function last(list: any) {
     return list ? list[list.length - 1] : undefined;
 }
 
-export function parseContent(content: string, tags = []) {
+export function parseContent(content: string = "", tags = []) {
     const result: any[] = []
+    content = content.toString();
     let text = content.trim()
     let buffer = ""
 

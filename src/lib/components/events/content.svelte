@@ -13,7 +13,7 @@
     const ranges = []
 
     let anchorId;
-    let content;
+    let content: string;
 
     $: if (note && note !== notePrev) {
         notePrev = note;

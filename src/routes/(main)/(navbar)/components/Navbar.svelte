@@ -93,7 +93,7 @@
                                 class="w-10 h-10 border-2 border-slate-200"
                             />
                         {:else}
-                            <LoginButton button={RoundedButton} on:signIn={onSignIn} />
+                            <LoginButton on:signIn={onSignIn} />
                         {/if}
                     </div>
                 </div>
