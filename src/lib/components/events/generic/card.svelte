@@ -85,7 +85,7 @@
                     {skipFooter}
                 />
             {:else if e.kind >= 30000 && e.kind < 40000}
-                <div class="
+                <a href="/my/lists/{e.encode()}" class="
                     shadow
                     flex flex-col h-full gap-4
                     border border-zinc-200 hover:border-zinc-200
@@ -98,7 +98,7 @@
                             {(new NDKList($ndk, e.rawEvent())).name} list
                         </div>
                     </div>
-                </div>
+                </a>
             {:else}
                 @{e.kind}
             {/if}
