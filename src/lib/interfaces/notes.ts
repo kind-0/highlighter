@@ -54,8 +54,6 @@ const NoteInterface = {
 
         if (opts.limit) filter['limit'] = opts.limit;
 
-        let articleReference: string | undefined;
-
         if (opts.articleId) {
             filter = { ...filterForId(opts.articleId), ...filter };
         }
@@ -73,7 +71,6 @@ const NoteInterface = {
             db.notes.where('id').anyOf(opts.ids).toArray().then((notes) => {
                 if (notes.length === opts.ids!.length) {
                 } else {
-                    console.log('notes from cache', notes.length, 'need to fetch', opts.ids!.length - notes.length, 'got requested', notes.length, {comparison: notes.length !== opts.ids!.length, idsRequested: opts.ids});
                     NoteInterface.startStream(opts);
                 }
             });

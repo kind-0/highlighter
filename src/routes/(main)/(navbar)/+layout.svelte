@@ -2,7 +2,7 @@
     import Navbar from './components/Navbar.svelte';
 </script>
 
-<div class="min-h-full" style="background: #fafaff">
+<div class="min-h-full">
 
     <Navbar />
 

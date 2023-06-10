@@ -21,7 +21,6 @@
     import ListItem from './components/navigation/list-item.svelte';
     import { NDKEvent } from '@nostr-dev-kit/ndk';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
-    import RoundedButton from '../(main)/components/RoundedButton.svelte';
     import { NavHamburger } from 'flowbite-svelte';
 
     let bookmarkLists, _bookmarkLists: App.BookmarkList[] = [];
@@ -144,7 +143,7 @@
 
                     {#if !$currentUser}
                         <li class="w-full">
-                            <LoginButton button={RoundedButton} />
+                            <LoginButton />
                         </li>
                     {:else}
                         <li class="-mx-6 mt-auto">
@@ -203,14 +202,6 @@
 </Modals>
 
 <style>
-    :global(html) {
-        background-color: #f7f7f7 !important;
-    }
-
-    :global(body) {
-        background-color: #f7f7f7 !important;
-    }
-
     .backdrop {
         position: fixed;
         /* z-index: 0; */

@@ -5,8 +5,8 @@
     import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
     import { closeModal } from 'svelte-modals';
     import NoteCard from '$lib/components/notes/card.svelte';
-    import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
+    import ModalButton from '$lib/components/ModalButton.svelte';
 
     export let event: NDKEvent;
     export let note: App.Note | undefined = undefined;
@@ -20,8 +20,14 @@
                 content: comment,
             } as NostrEvent)
             commentEvent.tag(event, 'reply');
-            await commentEvent.sign();
+
+            if (event.kind === 4) {
+                commentEvent.kind = 4;
+                await commentEvent.encrypt(event.author);
+            }
+
             await commentEvent.publish();
+
             closeModal();
         }
     }
@@ -49,13 +55,8 @@
             <ClickToAddComment bind:value={comment} show={true} cancelButton={false} />
         </div>
 
-        <div class="flex flex-row justify-between">
-            <div class="text-xs text-zinc-500">
-            </div>
-
-            <RoundedButton class="rounded-lg uppercase text-lg" on:click={save}>
-                Publish
-            </RoundedButton>
-        </div>
+        <ModalButton on:click={save}>
+            Publish
+        </ModalButton>
     </div>
 </ModalWrapper>

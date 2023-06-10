@@ -1,8 +1,6 @@
 <script lang="ts">
     import ndk from '$lib/stores/ndk';
-    import BookmarkListInterface from '$lib/interfaces/bookmark-list';
     import CloseIcon from '$lib/icons/Close.svelte';
-    import { NDKEvent, zapInvoiceFromEvent } from '@nostr-dev-kit/ndk';
 
     import { closeModal } from 'svelte-modals';
     import type { NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
@@ -10,9 +8,9 @@
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Input from '$lib/components/Input.svelte';
     import Textarea from '$lib/components/Textarea.svelte';
-    import RoundedButton from '../../../routes/(main)/components/RoundedButton.svelte';
 
     import NDKList from '$lib/ndk-kinds/lists/index.js';
+    import ModalButton from '$lib/components/ModalButton.svelte';
 
     let name: string;
     let description: string;
@@ -37,7 +35,7 @@
         <CloseIcon />
     </button>
     <div class="flex flex-col gap-8">
-        <h2 class="text-zinc-500 font-semibold text-base uppercase">NEW LIST {kind}</h2>
+        <h2 class="text-zinc-500 font-semibold text-base uppercase">NEW LIST</h2>
 
         <div class="flex flex-col">
             <Input type="text" class="
@@ -52,10 +50,8 @@
             " placeholder="Description" bind:value={description} />
         </div>
 
-        <RoundedButton class="
-            text-lg py-2 font-bold rounded-xl w-full
-        " on:click={createNewList}>
+        <ModalButton on:click={createNewList}>
             CREATE
-        </RoundedButton>
+        </ModalButton>
     </div>
 </ModalWrapper>

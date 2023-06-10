@@ -57,8 +57,10 @@
     }
 </script>
 
-{#each tags as tag}
-    {#if shouldDisplayTag(tag)}
-        <CollapsibleCard {tag} on:removeItem={onRemoveItem} />
-    {/if}
-{/each}
+<div class="flex flex-col gap-2.5">
+    {#each tags as tag}
+        {#if shouldDisplayTag(tag)}
+            <CollapsibleCard {tag} on:removeItem={onRemoveItem} />
+        {/if}
+    {/each}
+</div>

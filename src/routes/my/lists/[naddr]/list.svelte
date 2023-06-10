@@ -220,7 +220,6 @@
                         rounded-xl
                         transition duration-200 ease-in-out
                         p-2 py-2 -mx-6 px-6
-                        flex flex-col gap-2.5
                     "
                 >
                     <Tags {list} tags={list.tags} {currentUserPubkeys} />

@@ -5,16 +5,22 @@
     import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
     import { closeModal } from 'svelte-modals';
     import GenericEventCard from '$lib/components/events/generic/card.svelte';
-    import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
+    import ModalButton from '$lib/components/ModalButton.svelte';
 
     export let event: NDKEvent;
     export let id: string;
 
     let comment: string;
+    let isRepost: boolean;
+
+    $: isRepost = !(comment && comment.length > 0);
 
     async function save() {
-        if (comment && comment.length > 0) {
+        if (isRepost) {
+            await event.repost();
+            closeModal();
+        } else {
             const commentEvent = new NDKEvent($ndk, {
                 kind: 1,
                 content: `nostr:${event.encode()}\n${comment}`,
@@ -50,13 +56,12 @@
             <ClickToAddComment bind:value={comment} />
         </div>
 
-        <div class="flex flex-row justify-between">
-            <div class="text-xs text-zinc-500">
-            </div>
-
-            <RoundedButton on:click={save}>
+        <ModalButton on:click={save}>
+            {#if isRepost}
+                Repost
+            {:else}
                 Publish
-            </RoundedButton>
-        </div>
+            {/if}
+        </ModalButton>
     </div>
 </ModalWrapper>
