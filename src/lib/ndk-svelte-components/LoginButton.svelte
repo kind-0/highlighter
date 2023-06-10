@@ -40,23 +40,22 @@
                     }
 
                     if (loadAttempts++ > 10) clearInterval(loadNip07Interval);
-                }, 50);
+                }, 100);
         }
     });
 
     // move to NDK's nip-07 signer
-    async function attemptNip07SignIn(delay = 0) {
+    async function attemptNip07SignIn() {
         if (window.nostr) {
             try {
                 $ndk.signer = new NDKNip07Signer();
                 $currentUser = await $ndk.signer.user();
-                await $ndk.signer?.blockUntilReady();
                 $currentUser.ndk = $ndk;
                 $ndk = $ndk;
                 dispatch('signIn');
             } catch (e) {
                 openModal(LoginModal);
-                console.error(e);
+                console.error('attemptNip07SignIn', e);
             }
         }
     }

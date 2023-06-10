@@ -167,13 +167,25 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 event: JSON.stringify(event.rawEvent()),
             })
         } else {
-            db.events.put({
-                id: event.tagId(),
-                pubkey: event.pubkey,
-                kind: event.kind as number,
-                createdAt: event.created_at as number,
-                json: JSON.stringify(event.rawEvent()),
-            });
+            let addEvent = true;
+
+            if (event.isParamReplaceable()) {
+                const replaceableId = `${event.kind}:${event.pubkey}:${event.tagId()}`;
+                const existingEvent = await db.events.where({ id: replaceableId }).first();
+                if (existingEvent && existingEvent.createdAt > event.created_at!) {
+                    addEvent = false;
+                }
+            }
+
+            if (addEvent) {
+                db.events.put({
+                    id: event.tagId(),
+                    pubkey: event.pubkey,
+                    kind: event.kind as number,
+                    createdAt: event.created_at as number,
+                    json: JSON.stringify(event.rawEvent()),
+                });
+            }
         }
     }
 }

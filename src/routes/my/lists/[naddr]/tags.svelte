@@ -60,6 +60,5 @@
 {#each tags as tag}
     {#if shouldDisplayTag(tag)}
         <CollapsibleCard {tag} on:removeItem={onRemoveItem} />
-    {:else}
     {/if}
 {/each}

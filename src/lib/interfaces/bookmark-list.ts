@@ -3,7 +3,7 @@ import ndkStore from '../stores/ndk';
 import { liveQuery } from 'dexie';
 import { db } from '$lib/interfaces/db.js';
 import type NDK from '@nostr-dev-kit/ndk';
-import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
+import { NDKEvent, NDKRelay, type NostrEvent } from '@nostr-dev-kit/ndk';
 import type { NDKFilter } from '@nostr-dev-kit/ndk';
 import {nip19} from 'nostr-tools';
 import type NDKList from '$lib/ndk-kinds/lists';
@@ -61,7 +61,7 @@ const BookmarkListInterface = {
     }
 };
 
-async function eventHandler(event: NDKEvent) {
+async function eventHandler(event: NDKEvent, relay: NDKRelay) {
     let bookmarkList;
 
     try {
@@ -71,7 +71,13 @@ async function eventHandler(event: NDKEvent) {
             case 30022: bookmarkList = await handleEvent30001(event); break;
         }
 
-        if (bookmarkList) db.bookmarkLists.put(bookmarkList);
+        if (bookmarkList) {
+            db.bookmarkLists.where('id').equals(bookmarkList.id).first().then((existing) => {
+                if (!existing || existing.createdAt < bookmarkList.createdAt) {
+                    db.bookmarkLists.put(bookmarkList);
+                }
+            });
+        }
 
     } catch (e) {
         console.error(e);

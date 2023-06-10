@@ -1,11 +1,9 @@
 <script lang="ts">
 	import UserCard from '$lib/components/UserCard.svelte';
-    import Name from '$lib/components/Name.svelte';
     import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import RelayCard from '$lib/components/relays/RelayCard.svelte';
     import type { NDKTag } from '@nostr-dev-kit/ndk';
     import { createEventDispatcher } from 'svelte';
-    import BookmarkList from '../components/bookmark-list/Card.svelte';
 
     const dispatch = createEventDispatcher();
 
