@@ -131,7 +131,7 @@
                         <button
                             class="text-xs font-medium text-zinc-600 hover:text-zinc-500"
                             on:click={() => { collapsedQuotes = false }}>
-                            Show {$quotes.length} notes...
+                            Show {$quotes?.length} notes...
                         </button>
                     </div>
                 </div>

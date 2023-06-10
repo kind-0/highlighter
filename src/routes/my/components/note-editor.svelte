@@ -6,7 +6,7 @@
     import Input from '$lib/components/Input.svelte';
 
     import { createEventDispatcher } from 'svelte';
-    import { NDKEvent, NDKUser } from '@nostr-dev-kit/ndk';
+    import { NDKEvent, NDKPrivateKeySigner, NDKUser } from '@nostr-dev-kit/ndk';
     import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
     import type { NDKSigner } from '@nostr-dev-kit/ndk/lib/src/signers';
     const dispatch = createEventDispatcher();
@@ -17,6 +17,7 @@
     export let expandEditor = false;
     export let delegatedUser: NDKUser | undefined = undefined;
     export let delegatedName: string | undefined = undefined;
+    export let delegatedSigner: NDKSigner | undefined = undefined;
 
     let bodyEl: HTMLTextAreaElement;
     let titleEl: HTMLInputElement;
@@ -89,7 +90,7 @@
         switch (visibility) {
             case 'Public': e = await saveNote($ndk.signer!, 1, false); break;
             case 'Secret': e = await saveNote($ndk.signer!, 4, true); break;
-            case 'Delegated': e = await saveNote(delegatedSigner, 1, false); break;
+            case 'Delegated': e = await saveNote(delegatedSigner!, 1, false); break;
         }
 
         if (e) {

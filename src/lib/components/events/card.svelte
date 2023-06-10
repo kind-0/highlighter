@@ -25,7 +25,7 @@
     import Avatar from "../Avatar.svelte";
     import Name from "../Name.svelte";
     import { Tooltip } from "flowbite-svelte";
-  import MoreOptions from "$lib/icons/MoreOptions.svelte";
+    import MoreOptions from "$lib/icons/MoreOptions.svelte";
 
     export let event: NDKEvent;
     export let note: App.Note | undefined = undefined;
@@ -80,7 +80,7 @@
         {#if !skipHeader}
             <!-- Header -->
             <div class="flex flex-row justify-between items-start relative">
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 overflow-clip">
                     <div class="flex flex-row gap-4 items-start">
                         {#if $$slots.header}
                             <slot name="header" />

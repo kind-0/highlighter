@@ -50,13 +50,6 @@
             note = NoteInterface.load({ids:[id]})
         }
 
-        // load all highlights for this article
-        const highlightFilter = {
-            articleId: id,
-            pubkeys: highlightsFrom,
-            limit: 500,
-        };
-
         articleHighlights = HighlightInterface.loadByArticleIdAndPubkeys(
             id,
             highlightsFrom,
@@ -111,9 +104,13 @@
 
     {#if $articleHighlights && $articleHighlights.length > 0}
         <div class="ml-6">
-            <ul role="list" class="flex flex-col gap-4 divide-y divide-gray-200">
+            <ul class="flex flex-col gap-4 divide-y divide-gray-200">
                 {#each $articleHighlights.slice(0, maxHighlightCountToShow) as highlight}
-                    <InlineHighlight {highlight} {skipHighlighter} href={linkTo($article && $article[0], $note && $note[0])} />
+                    <InlineHighlight
+                        {highlight}
+                        {skipHighlighter}
+                        href={linkTo($article && $article[0], $note && $note[0])}
+                    />
                 {/each}
             </ul>
         </div>

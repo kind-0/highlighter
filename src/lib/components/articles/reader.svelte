@@ -5,31 +5,30 @@
     import type { NDKSubscription } from '@nostr-dev-kit/ndk';
     import ScopeDropdown from '$lib/components/ScopeDropdown.svelte';
     import HighlightList from '$lib/components/HighlightList.svelte';
+    import ndk from '$lib/stores/ndk';
     import HighlightListItemForm from '$lib/components/HighlightListItemForm.svelte';
     import { currentUser, currentUserFollowPubkeys, currentScope } from '$lib/store';
     import { fade } from 'svelte/transition';
     import { fetchFollowers } from '$lib/currentUser';
-    import Avatar from '../Avatar.svelte';
-    import Name from '../Name.svelte';
+
+    import { Avatar, Name } from '@nostr-dev-kit/ndk-svelte-components';
+
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
     import CardContent from '$lib/components/events/content.svelte';
+    import type NDKLongForm from '$lib/ndk-kinds/long-form';
+    import { Card } from 'flowbite-svelte';
 
-    export let article: App.Article | undefined = undefined;
-    export let articleEvent: NDKEvent;
-    export let content: string;
+    export let article: NDKEvent | NDKLongForm | App.Article | undefined = undefined;
+    export let content: string | undefined = undefined;
     export let unmarkedContent: string;
+    export let url: string | undefined = undefined;
 
     let articleId: string;
-    let articleUrl: string;
 
-    $: if (article?.id && article?.id !== articleId) {
-        articleId = article.id;
+    $: if (article?.tagId && article?.tagId() && article?.tagId() !== articleId) {
+        articleId = article.tagId();
         notes = NoteInterface.load({articleId});
-    }
-
-    $: if (!articleUrl && !article?.id && article?.url) {
-        articleUrl = article.url
     }
 
     let scope = $currentScope.label;
@@ -66,7 +65,7 @@
         }
 
         if (articleId) highlightFilter.articleId = articleId;
-        if (articleUrl) highlightFilter.url = articleUrl;
+        if (url) highlightFilter.url = url;
     }
 
     // Apply filter when it's ready
@@ -119,9 +118,10 @@
                 content: selection,
                 pubkey: $currentUser?.hexpubkey()!,
                 scope,
-                url: articleUrl,
                 context: sentence,
             };
+
+            if (url) newHighlightItem.url = url;
         }
     }
 
@@ -135,13 +135,8 @@
 </svelte:head>
 
 <div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
-    <div class="
-        rounded-b-lg shadow
-        text-lg p-8 text-justify leading-loose flex flex-col gap-2
-        bg-white rounded-xl md:w-7/12
-        overflow-auto
-    ">
-        {#if article || articleEvent}
+    <Card size="full" class="md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
+        {#if article}
             {#if article?.title}
                 <!-- Title -->
                 <h1 class="text-2xl font-bold font-sans leading-normal text-left">{article?.title}</h1>
@@ -152,22 +147,22 @@
                 {#if article?.author}
                     <h2 class="flex flex-row items-center text-sm sm:text-sm gap-4">
                         <div class="flex flex-row gap-4 items-start">
-                            <Avatar pubkey={article.author} klass="h-8" />
+                            <Avatar ndk={$ndk} user={article.author} class="w-10 h-10 rounded-full" />
                             <div class=" text-gray-500 text-lg">
-                                <Name pubkey={article.author} />
+                                <Name ndk={$ndk} user={article.author} />
                             </div>
                         </div>
                     </h2>
-                {:else if article?.url}
+                {:else if url}
                     <div class="text-slate-600 text-xs whitespace-nowrap">
-                        {article.url}
+                        {url}
                     </div>
                 {:else}
                     <div></div>
                 {/if}
 
                 <!-- Publisher -->
-                {#if article?.publisher != article?.author}
+                <!-- {#if publisher != article?.author}
                     <h2 class="flex flex-row items-center text-sm sm:text-sm gap-4">
                         Published by
                         <div class="flex flex-row items-center gap-2">
@@ -175,7 +170,7 @@
                             <Name pubkey={article.publisher} />
                         </div>
                     </h2>
-                {/if}
+                {/if} -->
             </div>
 
 
@@ -198,14 +193,14 @@
                             <CardContent
                                 note={content}
                                 tags={article.tags}
-                                addNewLines={articleEvent?.kind !== 30023}
+                                addNewLines={article.kind !== 30023}
                             />
                         {/if}
                     </Article>
                 </article>
             </HighlightWrapper>
         {/if}
-    </div>
+    </Card>
 
     <!-- Sidebar -->
     <div class="relative">
@@ -217,7 +212,7 @@
             {#if newHighlightItem}
                 <div class="mb-8" transition:fade>
                     <HighlightListItemForm
-                        {articleEvent}
+                        articleEvent={article.id ? article : undefined}
                         highlight={newHighlightItem}
                         on:close={onNewHighlightClose}
                     />
@@ -233,7 +228,6 @@
                         <HighlightList
                             skipTitle={true}
                             items={highlights}
-                            {article}
                         />
                     {/key}
                 {/if}
@@ -241,5 +235,3 @@
         </div>
     </div>
 </div>
-
-<!-- <Widget loadHighlights={false} position="bottom-5 left-5 flex-col-reverse" /> -->

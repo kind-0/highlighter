@@ -1,96 +1,128 @@
 <script lang="ts">
-	import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import Reader from '$lib/components/articles/reader.svelte';
 
     import { page } from '$app/stores';
-    import ArticleInterface, { articleFromEvent } from '$lib/interfaces/article';
+    import { NDKKind } from "$lib/ndk-kinds";
     import MarkdownIt from 'markdown-it';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import ndk from '$lib/stores/ndk';
-    import { filterFromNaddr, idFromNaddr } from '$lib/utils';
-    import { nip19 } from 'nostr-tools';
+    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import { Card, Skeleton, TestimonialPlaceholder } from 'flowbite-svelte';
 
     const { naddr } = $page.params;
-    const decoded = nip19.decode(naddr);
-    const { type } = decoded;
-    let articleId: string;
-    let articleEvent: NDKEvent;
+    let article: NDKEvent | NDKLongForm;
+    let articlePromise: Promise<NDKEvent | NDKLongForm | null> | undefined;
+
+
 
     let loadedId: string;
 
-    switch (type) {
-        case 'note': articleId = decoded.data as string; break;
-        case 'nevent': articleId = decoded.data.id; break;
-        case 'naddr': articleId = idFromNaddr(naddr); break;
-    }
-
-    let article: App.Article;
     let content: string = '';
     let unmarkedContent: string = '';
 
-    // Load article
-    $: if (type === 'note' || type === 'nevent' && !article) {
-        loadedId = articleId;
-        console.log('fetching', articleId);
-        setTimeout(async () => {
-            const e = await $ndk.fetchEvent({ids: [articleId]});
+    $: if (naddr !== loadedId) {
+        loadedId = naddr;
+        try {
+            articlePromise = new Promise(async (resolve, reject) => {
+                const e = await $ndk.fetchEvent(naddr);
+                if (!e) return reject("Unable to fetch event");
 
-            if (!e) return;
-
-            try {
-                if (e.kind === 1) {
-                    article = {
-                        id: e.id,
-                        title: "",
-                        tags: e.tags,
-                        publisher: e.pubkey,
-                        author: e.pubkey,
-                        content: e.content,
-                        event: JSON.stringify(e.rawEvent()),
-                    } as App.Article;
-                    console.log('article', article);
-                    articleEvent = e;
-                    content = e.content;
+                if (e.kind === NDKKind.LongForm) {
+                    article = new NDKLongForm($ndk, e.rawEvent());
+                    const md = new MarkdownIt();
+                    md.linkify?.set();
+                    unmarkedContent = md.render(article.content);
+                    content = unmarkedContent;
                 } else {
-                    articleEvent = e;
+                    article = e;
+
+                    content = article.content;
+                    unmarkedContent = article.content;
                 }
-            } catch (e) {
-                console.log(e);
-            }
-        });
+                resolve(article);
+            });
+        } catch (e) {
+            console.error(`layout error`, e);
+        }
     }
 
-    $: if (type === 'naddr' && !loadedId) {
-        loadedId = articleId;
-        $ndk.fetchEvent(filterFromNaddr(naddr)).then(e => {
-            if (!e) {
-                console.log('unable to find', naddr, filterFromNaddr(naddr))
-                return;
-            }
+    // Load article
+    // $: if (type === 'note' || type === 'nevent' && !loadedId) {
+    //     loadedId = articleId;
+    //     console.log('fetching', articleId);
+    //     setTimeout(async () => {
+    //         const e = await $ndk.fetchEvent({ids: [articleId]});
 
-            articleEvent = e;
-            article = articleFromEvent(e);
-            const md = new MarkdownIt();
-            md.linkify?.set();
-            unmarkedContent = md.render(article.content);
-            content = unmarkedContent;
-        });
-    }
+    //         if (!e) return;
+
+    //         try {
+    //             if (e.kind === 1) {
+    //                 article = {
+    //                     id: e.id,
+    //                     title: "",
+    //                     tags: e.tags,
+    //                     publisher: e.pubkey,
+    //                     author: e.pubkey,
+    //                     content: e.content,
+    //                     event: JSON.stringify(e.rawEvent()),
+    //                 } as App.Article;
+    //                 console.log('article', article);
+    //                 articleEvent = e;
+    //                 content = e.content;
+    //             } else {
+    //                 articleEvent = e;
+    //             }
+    //         } catch (e) {
+    //             console.log(e);
+    //         }
+    //     });
+    // }
+
+    // $: if (type === 'naddr' && !loadedId) {
+    //     loadedId = articleId;
+    //     $ndk.fetchEvent(filterFromNaddr(naddr)).then(e => {
+    //         if (!e) {
+    //             console.log('unable to find', naddr, filterFromNaddr(naddr))
+    //             return;
+    //         }
+
+    //         articleEvent = e;
+    //         article = articleFromEvent(e);
+    //         const md = new MarkdownIt();
+    //         md.linkify?.set();
+    //         unmarkedContent = md.render(article.content);
+    //         content = unmarkedContent;
+    //     });
+    // }
 </script>
 
-{#if article}
+{#await articlePromise}
+    <Card size="full relative">
+        <Card class="text-center flex flex-row gap-4 items-center absolute z-50 md:p-8" style="top: 40%; left: 40%;">
+            <h1 class="text-xl">
+                Loading article...
+            </h1>
+        </Card>
+
+        <div  class="flex flex-col items-start">
+            <TestimonialPlaceholder />
+        </div>
+
+        <Skeleton size='xxl' class='mt-8'/>
+        <Skeleton size='xxl' class='mt-8'/>
+        <Skeleton size='xxl' class='mt-8'/>
+    </Card>
+{:then}
     <Reader
         {article}
         {content}
         {unmarkedContent}
-        {articleEvent}
     />
-{:else if articleEvent}
-    <Reader
-        {content}
-        {unmarkedContent}
-        {articleEvent}
-    >
-        <GenericEventCard event={articleEvent} />
-    </Reader>
-{/if}
+{:catch}
+    <Card size="full">
+        <div class="text-center">
+            <h1>Article not found</h1>
+            <p>Unable to find article with id {naddr}</p>
+        </div>
+    </Card>
+{/await}

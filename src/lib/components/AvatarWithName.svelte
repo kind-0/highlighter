@@ -5,6 +5,7 @@
     import type { Observable } from 'dexie';
 
     export let pubkey: string | undefined;
+    export let user: NDKUser | undefined = undefined;
     export let userProfile: App.UserProfile | undefined = undefined;
     export let subtitle: string | undefined = undefined;
     export let size: "xs" | "sm" | "md" | "lg" | "xl" | undefined = undefined;

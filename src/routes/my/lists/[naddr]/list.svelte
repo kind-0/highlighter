@@ -62,6 +62,17 @@
 
     let dropZoneActive = false;
 
+    async function onDragEnter(e: DragEvent) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // set dropZoneActive if none of the tags have this id
+        const id = e.dataTransfer.getData('id');
+        const tag = JSON.parse(e.dataTransfer.getData('tag'));
+
+        dropZoneActive = !list.tags.find(t => t[1] === id);
+    }
+
     async function addToList(e: DragEvent) {
         const id = e.dataTransfer.getData('id');
         const tag = JSON.parse(e.dataTransfer.getData('tag'));
@@ -200,7 +211,7 @@
         <Tabs style="underline">
             <TabItem open title="Public">
                 <div
-                    on:dragenter={() => dropZoneActive = true}
+                    on:dragenter={onDragEnter}
                     on:dragleave={() => dropZoneActive = false}
                     on:drop={e => {addToList(e); dropZoneActive = false;}}
                     ondragover="return false"

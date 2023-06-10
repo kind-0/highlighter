@@ -58,7 +58,6 @@ const NoteInterface = {
 
         if (opts.articleId) {
             filter = { ...filterForId(opts.articleId), ...filter };
-            filter['#a'] = [opts.articleId];
         }
 
         const ndk: NDK = getStore(ndkStore);

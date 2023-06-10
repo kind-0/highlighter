@@ -4,6 +4,7 @@
     import type { NDKSubscription } from '@nostr-dev-kit/ndk';
     import HighlightInterface from '$lib/interfaces/highlights';
     import ArticleCardWithHighlights from '$lib/components/articles/cards/with-highlights.svelte';
+    import { onDestroy } from 'svelte';
 
     /**
      * Whether to skip showing the user who did the highlight
@@ -40,6 +41,10 @@
 
     let subs: NDKSubscription[] = [];
     let items: Observable<App.Highlight[]>;
+
+    onDestroy(() => {
+        for (const sub of subs) { sub.stop(); }
+    });
 
     async function loadArticlesGroupedByHighlights(filter: any = {}) {
         const oneMonthAgo = Math.floor(Date.now() / 1000) - 60 * 60 * 24 * 30;

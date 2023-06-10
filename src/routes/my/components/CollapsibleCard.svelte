@@ -38,33 +38,16 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={toggleCollapsed}>
-    {#key tag}
         {#if tag[0] === 'r'}
             <RelayCard relayUrl={tag[1]} />
         {:else if tag[0] === 'p'}
             <UserCard pubkey={tag[1]} />
-        {:else if tagIsList}
-            <div class="
-                shadow
-                flex flex-col h-full gap-4
-                border border-zinc-200 hover:border-zinc-200
-                px-6 pt-6 pb-4 rounded-xl
-                bg-white hover:bg-slate-50 transition duration-200 ease-in-out
-            " style="max-height: 40rem;">
-                <div class="flex-1 truncate px-4 py-2 text-sm">
-                    <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
-                        <Name pubkey={listData[1]} />'s
-                        {listData[2]} list
-                    </div>
-                </div>
-            </div>
         {:else}
             <GenericEventCard
-                {tag}
+                id={tag[1]}
                 skipFooter={collapsed}
             />
         {/if}
-    {/key}
 </div>
 {#if !collapsed}
     <div class="flex flex-row gap-2 items-center">

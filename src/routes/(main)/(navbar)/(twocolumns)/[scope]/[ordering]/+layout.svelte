@@ -25,7 +25,7 @@
         ">
             Most Highlighted
         </a>
-        <a href="#" on:click|preventDefault={()=>{}} class="
+        <a href="/" on:click|preventDefault={()=>{}} class="
             hidden sm:block text-zinc-400 cursor-default hsover:text-zinc-700 rounded-md px-3 py-2 text-sm font-medium
         ">
             Most Discussed

@@ -38,6 +38,7 @@ const HighlightInterface = {
     },
 
     startStream: (opts: ILoadOpts = {}) => {
+        console.log(`start highlight stream`, opts);
         let articleReference: string | undefined;
         const ndk: NDK = getStore(ndkStore);
         let filter: NDKFilter = { kinds: [9802 as number] };
@@ -65,8 +66,9 @@ const HighlightInterface = {
             // boostFilter['since'] = opts.since;
         }
 
-        const filterHasIds = filter['ids'] && filter['ids'].length > 0;
+        const filterHasIds = opts.ids;
         const closeOnEose = !!filterHasIds;
+        console.log(`filter for highlight stream:`, filter);
         const subs = ndk.subscribe(filter, { closeOnEose });
         // const boostSubs = ndk.subscribe(boostFilter, { closeOnEose: false });
 
@@ -90,9 +92,6 @@ const HighlightInterface = {
 
     load: (opts: ILoadOpts = {}): Observable<App.Highlight[]> => {
         if (!browser) return liveQuery(() => []);
-        console.log(`requesting highlights`, opts)
-
-        if (!browser) return liveQuery(() => Promise.resolve([]) );
 
         let query: Dexie.Collection<App.Highlight, string> = db.highlights.orderBy('timestamp').reverse();
 

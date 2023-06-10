@@ -78,7 +78,7 @@
     }
 </script>
 
-<ul role="list" class="space-y-3">
+<ul class="space-y-3">
     {#each taggedEventIds as articleId}
         <li class="overflow-hidden rounded-md bg-white px-6 py-4 shadow">
             <ArticleCardWithHighlights id={articleId} highlightsFrom={followPubkeys} />

@@ -13,7 +13,7 @@
 
     export let highlight: App.Highlight;
     export let disableClick: boolean = false;
-    export let articleEvent: NDKEvent;
+    export let articleEvent: NDKEvent | undefined = undefined;
 
     let articleLink: string;
     let highlightUser = new NDKUser({hexpubkey: highlight.pubkey});

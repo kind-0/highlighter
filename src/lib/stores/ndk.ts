@@ -1,9 +1,19 @@
 import { writable } from 'svelte/store';
 import NDK from '@nostr-dev-kit/ndk';
+import type { NDKCacheAdapter } from '@nostr-dev-kit/ndk';
 import DexieAdapter from '$lib/caches/dexie';
+// import NDKRedisCacheAdapter from '@nostr-dev-kit/ndk-cache-redis';
 import { browser } from '$app/environment';
 
-const dexieCacheAdaper = new DexieAdapter();
+let cacheAdapter: NDKCacheAdapter;
+
+if (browser) {
+    cacheAdapter = new DexieAdapter();
+    console.log(`Using cache DexieAdapter`);
+} else {
+    // cacheAdapter = new NDKRedisCacheAdapter();
+    // console.log(`Using cache NDKRedisCacheAdapter`);
+}
 
 // get relays from localstorage
 let relays;
@@ -38,7 +48,7 @@ const ndk = writable(new NDK({
     // devWriteRelayUrls: [
     //     'ws://localhost:8080',
     // ],
-    cacheAdapter: dexieCacheAdaper,
+    cacheAdapter
 }));
 
 export default ndk;

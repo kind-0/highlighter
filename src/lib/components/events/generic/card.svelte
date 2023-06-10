@@ -4,14 +4,13 @@
     import { handleEvent1 } from '$lib/interfaces/notes';
     import { handleEvent9802 } from '$lib/interfaces/highlights';
     import ndk from '$lib/stores/ndk';
-    import { nip19 } from 'nostr-tools';
     import { createEventDispatcher } from 'svelte';
-    import type { NDKEvent, NDKFilter, NDKTag } from '@nostr-dev-kit/ndk';
-    import { filterForId } from '$lib/utils';
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
-    import { Card, CardPlaceholder, Skeleton, TextPlaceholder } from 'flowbite-svelte'
+    import { Card } from 'flowbite-svelte'
+    import NDKList from '$lib/ndk-kinds/lists';
+    import { Name } from '@nostr-dev-kit/ndk-svelte-components';
 
-    export let tag: NDKTag | undefined = undefined;
     export let id: string | undefined = undefined;
     export let skipReplies: boolean = false;
     export let skipFooter: boolean = false;
@@ -19,31 +18,24 @@
 
     const dispatcher = createEventDispatcher();
 
-    let filter: NDKFilter | undefined = undefined;
-
-    if (tag) {
-        filter = filterForId(tag[1]);
-    }
-
     async function loadEvent(): Promise<NDKEvent | undefined> {
         if (event) return event;
 
         const p: Promise<NDKEvent | undefined> = new Promise((resolve, reject) => {
-            if (!id && !filter) {
-                throw new Error(`no id or filter`);
+            if (!id) {
+                throw new Error(`no id`);
             }
 
-            $ndk.fetchEvent(filter || id).then((e) => {
-                if (!e) return reject(`no event ${JSON.stringify(filter)}`);
+            $ndk.fetchEvent(id).then((e) => {
+                if (!e) return reject(`no event ${id}`);
 
                 if (e.kind === 4) {
-                    console.log('decrypting')
                     setTimeout(async () => {
                         await e.decrypt($currentUser!);
                         resolve(e);
-                    }, 1000 * Math.random())
+                    }, 500 * Math.random())
                 } else {
-                    setTimeout(() => {resolve(e)}, 1000 * Math.random());
+                    resolve(e);
                 }
 
                 dispatcher('event:load', e);
@@ -92,6 +84,23 @@
                     {skipReplies}
                     {skipFooter}
                 />
+            {:else if e.kind >= 30000 && e.kind < 40000}
+                <div class="
+                    shadow
+                    flex flex-col h-full gap-4
+                    border border-zinc-200 hover:border-zinc-200
+                    px-6 pt-6 pb-4 rounded-xl
+                    bg-white hover:bg-slate-50 transition duration-200 ease-in-out
+                " style="max-height: 40rem;">
+                    <div class="flex-1 truncate px-4 py-2 text-sm">
+                        <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
+                            <Name ndk={$ndk} pubkey={e.pubkey} />'s
+                            {(new NDKList($ndk, e.rawEvent())).name} list
+                        </div>
+                    </div>
+                </div>
+            {:else}
+                @{e.kind}
             {/if}
         </div>
     {:else}

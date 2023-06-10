@@ -2,16 +2,10 @@
 	import Highlight from '$lib/components/HighlightListItem.svelte';
     import { page } from '$app/stores';
     import { fetchArticle } from '$lib/article';
-    import ArticleInterface from '$lib/interfaces/article';
-    import HighlightInterface from '$lib/interfaces/highlights';
-    import NoteInterface from '$lib/interfaces/notes';
-    import { onMount } from 'svelte';
-    import Widget from '../../../../Widget.svelte';
-    import Avatar from '$lib/components/Avatar.svelte';
-    import Name from '$lib/components/Name.svelte';
     import Reader from '$lib/components/articles/reader.svelte';
     import Article from '$lib/components/Article.svelte';
     import { NDKSubscription, NDKUser } from '@nostr-dev-kit/ndk';
+  import { Card } from 'flowbite-svelte';
 
     let url = $page.url.searchParams.get('url') || '';
     let author = $page.url.searchParams.get('author') || '';
@@ -71,13 +65,16 @@
 </script>
 
 {#await fetchArticle(url)}
-    Loading {url}
+    <Card size="full">
+        Loading {url}
+    </Card>
 {:then article}
     {#if article}
         <Reader
             {article}
             content={article.content||""}
             unmarkedContent={article.content||""}
+            url={article.url}
         />
     {:else}
         <p>Article not found</p>

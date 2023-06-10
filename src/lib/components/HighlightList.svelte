@@ -8,7 +8,6 @@
     import { onDestroy, onMount } from "svelte";
     import type { NDKSubscription } from "@nostr-dev-kit/ndk";
 
-    export let article: App.Article | undefined = undefined;
     export let items: Observable<App.Highlight[]> | undefined = undefined;
     export let filter: ILoadOpts | undefined = undefined;
 
@@ -34,8 +33,7 @@
                 highlight={item}
                 {skipTitle}
                 disableClick={true}
-                {article}
-                />
+            />
         {/each}
     {/if}
 </div>

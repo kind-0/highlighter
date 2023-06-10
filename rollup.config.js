@@ -10,10 +10,6 @@ import serve from "rollup-plugin-serve";
 import json from "@rollup/plugin-json";
 import typescript from '@rollup/plugin-typescript';
 import livereload from "rollup-plugin-livereload";
-import alias from '@rollup/plugin-alias';
-import { terser } from "rollup-plugin-terser";
-import esformatter from "rollup-plugin-esformatter";
-import postcss from "rollup-plugin-postcss";
 
 const production = true; //false;// !process.env.ROLLUP_WATCH;
 

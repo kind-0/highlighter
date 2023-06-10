@@ -8,7 +8,6 @@
     import { browser } from '$app/environment';
 
     let { scope, ordering } = $page.params;
-    let followsPromise: Promise<void> | undefined = undefined;
 
     $: {
         scope = $page.params.scope;
@@ -17,7 +16,7 @@
 
     $: if (scope === 'network' && browser) {
         if (!$currentUserFollowPubkeys) {
-            followsPromise = fetchFollowers();
+            fetchFollowers();
         }
     }
 </script>

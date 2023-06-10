@@ -106,6 +106,7 @@
             <NoteEditor
                 expandEditor={true}
                 {delegatedName}
+                delegatedSigner={listSigner}
                 delegatedUser={listSignerUser}
                 bind:title={addNewItemValue}
                 on:keyup={onNewItemChange}
@@ -117,7 +118,7 @@
         <div class="
             px-4 py-2 text-lg
             h-14
-            sm:mb-12
+            sm:mb-4
             shadow
             w-full
             border border-zinc-200

@@ -30,10 +30,11 @@
     </div>
 {/if}
 
-{#each feed as event}
-    {JSON.stringify(event.kind)}
-    <GenericEventCard
-        event={event}
-        skipReplies={true}
-    />
-{/each}
+<div class="flex flex-col gap-8">
+    {#each feed as event}
+        <GenericEventCard
+            event={event}
+            skipReplies={true}
+        />
+    {/each}
+</div>

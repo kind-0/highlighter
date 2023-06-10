@@ -98,7 +98,6 @@
             }
         }
     }
-
 </script>
 
 <EventCard
@@ -106,13 +105,20 @@
     {highlight}
     {skipButtons}
     byString={"highlighted by"}
-    skipHeader={skipTitle}
+    skipHeader={skipTitle||(!article?.title && !highlight?.url)}
     {skipFooter}
 >
     <div slot="header">
-        <div class="text-xl font-semibold truncate">
-            {article?.title||highlight.url||highlight.id||'untitled'}
-        </div>
+        {#if !!article?.title}
+            <div class="text-xl font-semibold truncate">
+                {article.title}
+            </div>
+        {:else if !!highlight?.url}
+            <div class="text-xl font-semibold truncate flex flex-row items-center gap-2">
+                <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
+                {new URL(highlight.url).hostname}
+            </div>
+        {/if}
     </div>
 
     <a href={articleLink} on:click={onContentClick} class="

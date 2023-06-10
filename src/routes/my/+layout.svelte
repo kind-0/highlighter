@@ -123,7 +123,7 @@
                                 </NavigationButton>
 
                                 <NavigationButton route="/my/notes">
-                                    <NoteIcon klass='w-6 h-6' />
+                                    <NoteIcon class='w-6 h-6' />
                                     Private Notes
                                 </NavigationButton>
                             </li>
@@ -132,7 +132,7 @@
 
                     <li>
                         <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
-                        <ul role="list" class="-mx-2 mt-2 space-y-1">
+                        <ul class="-mx-2 mt-2 space-y-1">
                             {#each _bookmarkLists as bookmarkList}
                                 {#if isTopLevel(bookmarkList)}
                                     <ListItem list={bookmarkList} allLists={_bookmarkLists} />
