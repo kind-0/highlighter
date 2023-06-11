@@ -102,12 +102,16 @@
 
     function onSelectionChange(e: Event) {
         let {selection, sentence, paragraph } = e.detail;
+        let context: string | undefined;
 
         selection = selection.trim();
+        paragraph = paragraph.trim();
         sentence = sentence.trim();
 
-        if (selection.length >= sentence.length) {
-            sentence = undefined;
+        context = paragraph;
+
+        if (selection.length >= paragraph.length) {
+            context = undefined;
         }
 
         if (selection.trim() === '') return;
@@ -119,7 +123,7 @@
                 content: selection,
                 pubkey: $currentUser?.hexpubkey()!,
                 scope,
-                context: sentence,
+                context,
             };
 
             if (url) newHighlightItem.url = url;

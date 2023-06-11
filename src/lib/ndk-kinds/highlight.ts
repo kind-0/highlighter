@@ -14,6 +14,11 @@ class NDKHighlight extends NDKEvent {
         this.kind = NDKKind.Highlight;
     }
 
+    get url(): string | undefined {
+        console.log(`querying for url`)
+        return this.tagValue('r');
+    }
+
     /**
      * Context tag.
      */

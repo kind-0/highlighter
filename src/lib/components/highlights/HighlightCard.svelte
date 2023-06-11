@@ -3,7 +3,7 @@
     import HighlightContent from '$lib/components/highlights/HighlightContent.svelte';
 
     import ndk from '$lib/stores/ndk';
-    import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import { NDKEvent } from '@nostr-dev-kit/ndk';
     import {nip19} from 'nostr-tools';
     import type { ILoadOpts } from '$lib/interfaces/highlights';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
@@ -90,12 +90,16 @@
                 } catch (e) {
                 }
             }
+        }
+    }
 
-            const pubkeyFilter: ILoadOpts = {}; // XXX filter by selected pubkeys
-
-            // if ($currentScope.pubkeys) {
-            //     pubkeyFilter.pubkeys = $currentScope.pubkeys;
-            // }
+    function linkTo(article?: NDKEvent | NDKLongForm) {
+        if (article?.encode) {
+            return `/a/${article.encode()}`;
+        } else if (article?.url) {
+            return `/load?url=${encodeURIComponent(article.url)}`;
+        } else {
+            return '#';
         }
     }
 </script>
@@ -105,21 +109,20 @@
     {highlight}
     {skipButtons}
     byString={"highlighted by"}
-    skipHeader={skipTitle||false}
     {skipFooter}
 >
     <div slot="header">
         {#if article instanceof NDKLongForm && article.title}
             <div class="text-xl font-semibold truncate">
-                {article.title}
+                <a href={linkTo(article)}>{article.title}</a>
             </div>
-        {:else if !!highlight?.url}
+        {:else if highlight?.url}
             <div class="text-xl font-semibold truncate flex flex-row items-center gap-2">
                 <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
-                {new URL(highlight.url).hostname}
+                <a href={linkTo(highlight)}>{new URL(highlight.url).hostname}</a>
             </div>
         {:else if article?.author}
-            <AvatarWithName pubkey={article.author.hexpubkey()} />
+            <a href={linkTo(article)}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
         {/if}
     </div>
 
