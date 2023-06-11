@@ -45,11 +45,19 @@
 
     // move to NDK's nip-07 signer
     async function attemptNip07SignIn() {
+        const storedNpub = localStorage.getItem('currentUserNpub');
+
+        if (storedNpub) {
+            $currentUser = new NDKUser({ npub: storedNpub });
+            $currentUser.ndk = $ndk;
+        }
+
         if (window.nostr) {
             try {
                 $ndk.signer = new NDKNip07Signer();
                 $currentUser = await $ndk.signer.user();
                 $currentUser.ndk = $ndk;
+                localStorage.setItem('currentUserNpub', $currentUser.npub);
                 $ndk = $ndk;
                 dispatch('signIn');
             } catch (e) {

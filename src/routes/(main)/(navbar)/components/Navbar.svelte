@@ -16,14 +16,6 @@
     import { fetchFollowers } from '$lib/currentUser';
     import RelaysButton from '$lib/components/RelaysButton.svelte';
 
-    async function onSignIn() {
-        if (!$ndk.signer) return;
-
-        if ($currentUser) {
-            fetchFollowers();
-        }
-    }
-
     let isOpen = false;
 </script>
 
@@ -93,7 +85,7 @@
                                 class="w-10 h-10 border-2 border-slate-200"
                             />
                         {:else}
-                            <LoginButton on:signIn={onSignIn} />
+                            <LoginButton />
                         {/if}
                     </div>
                 </div>

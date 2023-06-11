@@ -10,7 +10,7 @@
                 <div class="w-32"><FullLogo /></div>
             </div>
             <div class="flex flex-row items-center">
-                <RoundedButton href="/network/highlights">Get Started</RoundedButton>
+                <RoundedButton href="/global/highlights">Get Started</RoundedButton>
             </div>
         </div>
     </header>
@@ -31,7 +31,7 @@
             </div>
 
             <div>
-                <RoundedButton href="/network/highlights">Start Highlighting</RoundedButton>
+                <RoundedButton href="/global/highlights">Start Highlighting</RoundedButton>
             </div>
         </div>
 
