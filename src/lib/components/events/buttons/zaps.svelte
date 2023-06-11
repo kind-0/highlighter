@@ -25,11 +25,13 @@
 
         onMount(() => {
             zaps = ZapInterface.load({eventId});
+            console.log({eventId})
         });
     }
 
     $: if ($zaps) {
         zappedAmount = $zaps.reduce((acc: number, zap: App.Zap) => {
+            console.log('here', zap);
             return acc + zap.amount;
         }, 0);
     }

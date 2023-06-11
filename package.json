@@ -48,7 +48,6 @@
 		"@tailwindcss/typography": "^0.5.9",
 		"@types/turndown": "^5.0.1",
 		"add": "^2.0.6",
-		"bytemd": "^1.21.0",
 		"dexie": "^3.2.4",
 		"eventemitter3": "^5.0.0",
 		"flowbite": "^1.6.5",

@@ -1,14 +1,9 @@
 import {Readability, isProbablyReaderable } from '@mozilla/readability';
 
-export async function fetchArticle(url: string): Promise<App.Article | null> {
+export async function fetchArticle(html: string, url: string, contentType: string): Promise<App.Article | null> {
     // Fetch the HTML content of the URL and parse it with JSDOM
-    const response = await fetch(`https://api.allorigins.win/get?url=${url}`);
-    const json = await response.json();
-
-    const html = json.contents;
-
     const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
+    const doc = parser.parseFromString(html, contentType as DOMParserSupportedType);
 
     // Check if the content is suitable for Readability
     if (!isProbablyReaderable(doc)) {

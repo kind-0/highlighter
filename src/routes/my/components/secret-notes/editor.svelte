@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     import ndk from '$lib/stores/ndk';
     import { NDKEvent, NDKPrivateKeySigner, type NostrEvent } from "@nostr-dev-kit/ndk";
     import { Editor, Viewer } from 'bytemd';
@@ -75,4 +75,4 @@
 
 <div class="w-24">
     <RoundedButton on:click={save}>Save</RoundedButton>
-</div>
+</div> -->

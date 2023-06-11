@@ -70,8 +70,14 @@
                         {/if}
                     {/each}
                 {:else if type === "link"}
-                    {value.replace(/https?:\/\/(www\.)?/, "")}
-                    <!-- <img src="{value}" /> -->
+                    <!-- if it looks like this URL ends with an image filetype, load it as an image -->
+                    {#if value.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)}
+                        <img src="{value}" />
+                    {:else}
+                        <a href="{value}" target="_blank" rel="noopener noreferrer">
+                            {value.replace(/https?:\/\/(www\.)?/, "")}
+                        </a>
+                    {/if}
                 {:else if type.startsWith("nostr:")}
                     {#if value.pubkey || value.entity.startsWith('npub')}
                         <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
@@ -90,7 +96,6 @@
                 {/if}
             {/each}
         {:else}
-            Empty content?
         {/if}
     </div>
 </div>

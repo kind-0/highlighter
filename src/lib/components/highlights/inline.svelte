@@ -10,11 +10,12 @@
     import LinkIcon from '$lib/icons/Link.svelte';
     import ndk from "$lib/stores/ndk";
 
-    import HighlightContent from "./content.svelte";
+    import HighlightContent from "./HighlightContent.svelte";
 
     import { Tooltip } from "flowbite-svelte";
     import { NDKEvent, NDKUser } from "@nostr-dev-kit/ndk";
     import NoteInterface from "$lib/interfaces/notes";
+    import NDKHighlight from '$lib/ndk-kinds/highlight';
 
     export let highlight: App.Highlight;
     export let skipHighlighter = false;
@@ -24,7 +25,7 @@
      */
     export let url: string;
 
-    let highlightEvent = new NDKEvent($ndk, JSON.parse(highlight.event));
+    let highlightEvent = new NDKHighlight($ndk, JSON.parse(highlight.event));
     let replies: any;
     let quotes: any;
     let npub = (new NDKUser({hexpubkey: highlight.pubkey})).npub;
@@ -43,7 +44,7 @@
     <div class="flex flex-col gap-4">
         <div class="
         ">
-            <HighlightContent {highlight} />
+            <HighlightContent highlight={highlightEvent} />
         </div>
 
         <div class="

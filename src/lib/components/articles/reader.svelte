@@ -18,6 +18,7 @@
     import CardContent from '$lib/components/events/content.svelte';
     import type NDKLongForm from '$lib/ndk-kinds/long-form';
     import { Card } from 'flowbite-svelte';
+    import NewUserInstruction from '../NewUserInstruction.svelte';
 
     export let article: NDKEvent | NDKLongForm | App.Article | undefined = undefined;
     export let content: string | undefined = undefined;
@@ -208,6 +209,8 @@
             <div class="flex flex-row justify-end mb-4">
                 <ScopeDropdown bind:scope />
             </div>
+
+            <NewUserInstruction />
 
             {#if newHighlightItem}
                 <div class="mb-8" transition:fade>

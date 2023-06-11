@@ -75,7 +75,7 @@
 
 <div class="flex flex-col w-full gap-6">
     <div draggable={true} on:dragstart={dragStart}>
-        <Card class="flex flex-col gap-4 group" size="full">
+        <Card class="flex flex-col gap-4 group h-full" size="full">
             {#if !skipHeader}
                 <!-- Header -->
                 <div class="flex flex-row justify-between items-start relative">
@@ -100,6 +100,7 @@
                 <div class="
                     leading-relaxed h-full flex flex-col
                     overflow-auto
+                    {$$props.class}
                 ">
                     <CardContent
                         note={event.content}

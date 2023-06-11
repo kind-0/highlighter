@@ -50,12 +50,12 @@ export function parseContent(content: string = "", tags = []) {
     }
 
     const parseTopic = () => {
-    const topic = first(text.match(/^#[\w-]+/i))
+        const topic = first(text.match(/^#[\w-]+/i))
 
-    // Skip numeric topics
-    if (topic && !topic.match(/^#\d+$/)) {
-        return ["topic", topic, topic.slice(1)]
-    }
+        // Skip numeric topics
+        if (topic && !topic.match(/^#\d+$/)) {
+            return ["topic", topic, topic.slice(1)]
+        }
     }
 
     const parseBech32 = () => {
@@ -78,7 +78,7 @@ export function parseContent(content: string = "", tags = []) {
     const parseUrl = () => {
         const raw = first(
             text.match(
-            /^((http|ws)s?:\/\/)?[-a-z0-9:%_\+~#=\.\*]+\.[a-z]{1,6}[-a-z0-9:%_\+~#\?&\/=;\.\*]*/gi
+                /^((http|ws)s?:\/\/)?[-a-z0-9:%_\+~#=\.\*]+\.[a-z]{1,6}[-a-z0-9:%_\+~#\?&\/=;\.\*]*/gi
             )
         )
 
@@ -94,45 +94,45 @@ export function parseContent(content: string = "", tags = []) {
 
             // Skip ellipses and very short non-urls
             if (!url.match(/\.\./) && url.length > 4) {
-            // It's common for punctuation to end a url, trim it off
-            if (url.match(/[\.\?,:]$/)) {
-                url = url.slice(0, -1)
-            }
+                // It's common for punctuation to end a url, trim it off
+                if (url.match(/[\.\?,:]$/)) {
+                    url = url.slice(0, -1)
+                }
 
-            if (!url.match("://")) {
-                url = "https://" + url
-            }
+                if (!url.match("://")) {
+                    url = "https://" + url
+                }
 
-            return ["link", raw, url]
+                return ["link", raw, url]
             }
         }
     }
 
     while (text) {
-    const part = parseNewline() || parseMention() || parseTopic() || parseBech32()
+        const part = parseNewline() || parseMention() || parseTopic() || parseBech32() || parseUrl()
 
-    if (part) {
-        if (buffer) {
-        result.push({type: "text", value: buffer})
-        buffer = ""
+        if (part) {
+            if (buffer) {
+                result.push({type: "text", value: buffer})
+                buffer = ""
+            }
+
+            const [type, raw, value] = part
+
+            result.push({type, value})
+            text = text.slice(raw.length)
+        } else {
+            // Instead of going character by character and re-running all the above regular expressions
+            // a million times, try to match the next word and add it to the buffer
+            const match = first(text.match(/^[\w\d]+ ?/i)) || text[0]
+
+            buffer += match
+            text = text.slice(match.length)
         }
-
-        const [type, raw, value] = part
-
-        result.push({type, value})
-        text = text.slice(raw.length)
-    } else {
-        // Instead of going character by character and re-running all the above regular expressions
-        // a million times, try to match the next word and add it to the buffer
-        const match = first(text.match(/^[\w\d]+ ?/i)) || text[0]
-
-        buffer += match
-        text = text.slice(match.length)
-    }
     }
 
     if (buffer) {
-    result.push({type: "text", value: buffer})
+        result.push({type: "text", value: buffer})
     }
 
     return result

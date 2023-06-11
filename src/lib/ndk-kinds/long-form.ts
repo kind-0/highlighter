@@ -2,7 +2,7 @@ import NDK, { NDKEvent, type NostrEvent } from "@nostr-dev-kit/ndk";
 import { NDKKind } from "./index.js";
 
 class NDKLongForm extends NDKEvent {
-    constructor(ndk: NDK, rawEvent?: NostrEvent) {
+    constructor(ndk: NDK | undefined, rawEvent?: NostrEvent) {
         super(ndk, rawEvent);
         this.kind = NDKKind.LongForm;
     }

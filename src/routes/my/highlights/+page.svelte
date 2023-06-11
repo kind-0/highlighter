@@ -2,8 +2,9 @@
     import ndk from "$lib/stores/ndk";
 
     import HighlightInterface from '$lib/interfaces/highlights';
-    import HighlightList from '$lib/components/highlights/card.svelte';
+    import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
     import { onMount } from 'svelte';
+    import NDKHighlight from "$lib/ndk-kinds/highlight";
 
     let highlights, _highlights: App.Highlight[] = [];
 
@@ -37,6 +38,10 @@
 
 <div class="grid grid-flow-row md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
     {#each _highlights as highlight}
-        <HighlightList {highlight} disableClick={true} />
+        <HighlightCard
+            class="max-h-96 overflow-auto"
+            highlight={new NDKHighlight($ndk, JSON.parse(highlight.event))}
+            disableClick={true}
+        />
     {/each}
 </div>

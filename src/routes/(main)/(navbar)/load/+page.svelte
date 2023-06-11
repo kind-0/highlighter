@@ -1,11 +1,15 @@
 <script lang="ts">
 	import Highlight from '$lib/components/HighlightListItem.svelte';
     import { page } from '$app/stores';
+    import EventContent from '$lib/components/events/content.svelte';
     import { fetchArticle } from '$lib/article';
     import Reader from '$lib/components/articles/reader.svelte';
     import Article from '$lib/components/Article.svelte';
     import { NDKSubscription, NDKUser } from '@nostr-dev-kit/ndk';
-  import { Card } from 'flowbite-svelte';
+    import { Card } from 'flowbite-svelte';
+
+    export let data;
+    const { text, contentType } = data;
 
     let url = $page.url.searchParams.get('url') || '';
     let author = $page.url.searchParams.get('author') || '';
@@ -64,19 +68,38 @@
     }
 </script>
 
-{#await fetchArticle(url)}
-    <Card size="full">
-        Loading {url}
-    </Card>
-{:then article}
-    {#if article}
+{#if text}
+    {#if contentType === 'text/plain'}
         <Reader
-            {article}
-            content={article.content||""}
-            unmarkedContent={article.content||""}
-            url={article.url}
+            article={{}}
+            content={text.replace(/  /g, ' ')}
+            unmarkedContent={text.replace(/  /g, ' ')}
+            url={url}
         />
     {:else}
-        <p>Article not found</p>
+        {#await fetchArticle(text, url, contentType)}
+            <Card size="full">
+                Loading {url}
+            </Card>
+        {:then article}
+            {#if article}
+                <Reader
+                    {article}
+                    content={article.content||""}
+                    unmarkedContent={article.content||""}
+                    url={article.url}
+                >
+                    {@html article.content}
+                </Reader>
+            {:else}
+                <p>Article not found</p>
+            {/if}
+        {:catch error}
+            <Card size="full">
+                {error.message}
+            </Card>
+        {/await}
     {/if}
-{/await}
+{:else}
+        here
+{/if}

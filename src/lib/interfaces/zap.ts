@@ -23,6 +23,7 @@ const ZapInterface = {
 
         subs.on('event', async (event: NDKEvent) => {
             const zapInvoice: NDKZapInvoice | null = zapInvoiceFromEvent(event);
+            console.log('event', event)
 
             if (zapInvoice) {
                 const zap: App.Zap = {
@@ -30,6 +31,7 @@ const ZapInterface = {
                     ...zapInvoice
                 };
                 await db.zaps.put(zap);
+                console.log(zap);
             }
         });
 

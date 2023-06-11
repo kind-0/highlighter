@@ -1,16 +1,16 @@
 <script lang="ts">
-    import HighlightCard from '$lib/components/highlights/card.svelte';
+    import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
 
     import NoteInterface from '$lib/interfaces/notes';
 
     import Avatar from '$lib/components/Avatar.svelte';
 
     import ndk from '$lib/stores/ndk';
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
     import {nip19} from 'nostr-tools';
     import NoteCard from '$lib/components/notes/card.svelte';
     import type { ILoadOpts } from '$lib/interfaces/highlights';
     import { currentScope } from '$lib/store';
+    import NDKHighlight from '$lib/ndk-kinds/highlight';
 
     export let highlight: App.Highlight;
     export let skipTitle: boolean = false;
@@ -23,7 +23,7 @@
     let pubkey: string;
     let showComments = false;
     let showReplies = false;
-    let event: NDKEvent;
+    let event: NDKHighlight;
     let articleLink: string;
     let naddr: string;
     let highlightNoteId = '';
@@ -59,7 +59,7 @@
             } else if (highlight.event) {
                 // see if this highlight.event has a p tag
                 try {
-                    const event = new NDKEvent(undefined, JSON.parse(highlight.event));
+                    event = new NDKHighlight($ndk, JSON.parse(highlight.event));
                     const pTag = event.getMatchingTags('p')[0];
 
                     articleLink = `/load?url=${encodeURIComponent(highlight.url)}`
@@ -83,7 +83,7 @@
 
         if (!event || event.id !== highlight.id) {
             try {
-                event = new NDKEvent($ndk, JSON.parse(highlight.event));
+                event = new NDKHighlight($ndk, JSON.parse(highlight.event));
             } catch (e) {
                 console.error(e);
             }
@@ -108,8 +108,7 @@
     {#if shouldDisplayQuote(highlight, $quotes||[])}
         <div class="text-lg">
             <HighlightCard
-                {event}
-                {highlight}
+                highlight={event}
                 {skipButtons}
                 {skipTitle}
                 {disableClick}
@@ -153,13 +152,3 @@
         {/each}
     {/if}
 </div>
-
-<style>
-    /* .quote-card {
-        @apply text-lg;
-    }
-
-    :global(.embedded-card) {
-        @apply text-base;
-    } */
-</style>

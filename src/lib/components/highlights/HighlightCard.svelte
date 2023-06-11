@@ -1,23 +1,24 @@
 <script lang="ts">
     import EventCard from '$lib/components/events/card.svelte';
-    import HighlightContent from '$lib/components/highlights/content.svelte';
+    import HighlightContent from '$lib/components/highlights/HighlightContent.svelte';
 
     import ndk from '$lib/stores/ndk';
-    import { NDKEvent, NDKUser } from '@nostr-dev-kit/ndk';
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import {nip19} from 'nostr-tools';
     import type { ILoadOpts } from '$lib/interfaces/highlights';
-    import ArticleInterface from '$lib/interfaces/article';
-    import type { Observable } from 'dexie';
+    import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import { onMount } from 'svelte';
+    import AvatarWithName from '../AvatarWithName.svelte';
 
-    export let article: App.Article | undefined = undefined;
-    export let highlight: App.Highlight;
+    export let highlight: NDKHighlight;
+    export let article: NDKLongForm | NDKEvent | string | undefined = undefined;
     export let skipTitle: boolean = false;
     export let skipButtons: boolean = false;
     export let skipFooter: boolean = false;
     export let disableClick: boolean = false;
     let prevHighlightId: string | undefined = undefined;
 
-    let event: NDKEvent;
     let articleLink: string;
     let naddr: string;
 
@@ -42,15 +43,22 @@
         }
     }
 
-    let articles: Observable<App.Article[]> | undefined = undefined;
+    onMount(async () => {
+        if (!article) {
+            const articleTag = highlight.getArticleTag();
+            article = await highlight.getArticle();
+        }
+    })
 
-    $: if (highlight?.articleId && !articles && highlight.articleId.match(/:/)) {
-        articles = ArticleInterface.load({id: highlight.articleId});
-    }
+    // let articles: Observable<App.Article[]> | undefined = undefined;
 
-    $: if (articles && $articles && $articles.length > 0) {
-        article = $articles[0];
-    }
+    // $: if (highlight?.articleId && !articles && highlight.articleId.match(/:/)) {
+    //     articles = ArticleInterface.load({id: highlight.articleId});
+    // }
+
+    // $: if (articles && $articles && $articles.length > 0) {
+    //     article = $articles[0];
+    // }
 
     $: {
         if (prevHighlightId !== highlight.id && highlight.id) {
@@ -68,10 +76,10 @@
                     naddr = nip19.noteEncode(highlight.articleId);
                 }
                 articleLink = `/a/${naddr}`;
-            } else {
+            } else if (highlight.event) {
                 // see if this highlight.event has a p tag
                 try {
-                    const event = new NDKEvent(undefined, JSON.parse(highlight.event));
+                    const event = new NDKHighlight($ndk, JSON.parse(highlight.event));
                     const pTag = event.getMatchingTags('p')[0];
 
                     articleLink = `/load?url=${encodeURIComponent(highlight.url)}`
@@ -89,27 +97,19 @@
             //     pubkeyFilter.pubkeys = $currentScope.pubkeys;
             // }
         }
-
-        if (!event || event.id !== highlight.id) {
-            try {
-                event = new NDKEvent($ndk, JSON.parse(highlight.event));
-            } catch (e) {
-                console.error(e);
-            }
-        }
     }
 </script>
 
 <EventCard
-    {event}
+    event={highlight}
     {highlight}
     {skipButtons}
     byString={"highlighted by"}
-    skipHeader={skipTitle||(!article?.title && !highlight?.url)}
+    skipHeader={skipTitle||false}
     {skipFooter}
 >
     <div slot="header">
-        {#if !!article?.title}
+        {#if article instanceof NDKLongForm && article.title}
             <div class="text-xl font-semibold truncate">
                 {article.title}
             </div>
@@ -118,6 +118,8 @@
                 <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
                 {new URL(highlight.url).hostname}
             </div>
+        {:else if article?.author}
+            <AvatarWithName pubkey={article.author.hexpubkey()} />
         {/if}
     </div>
 
@@ -125,8 +127,9 @@
         leading-relaxed h-full flex flex-col
         py-2
         overflow-auto
+        {$$props.class}
     ">
-        <HighlightContent {highlight} />
+        <HighlightContent {highlight} {article} />
     </a>
 </EventCard>
 

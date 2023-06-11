@@ -1,5 +1,4 @@
 <script lang="ts">
-	import CopyJson from './buttons/copy-json.svelte';
     import NoteInterface from '$lib/interfaces/notes';
     import NoteContent from '$lib/components/events/content.svelte';
     import Bookmark from '$lib/components/events/buttons/bookmark.svelte';
