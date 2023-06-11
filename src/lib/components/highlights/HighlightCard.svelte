@@ -98,6 +98,8 @@
             return `/a/${article.encode()}`;
         } else if (article?.url) {
             return `/load?url=${encodeURIComponent(article.url)}`;
+        } else if (article.length > 0) {
+            return `/load?url=${encodeURIComponent(article)}`;
         } else {
             return '#';
         }
@@ -119,7 +121,7 @@
         {:else if highlight?.url}
             <div class="text-xl font-semibold truncate flex flex-row items-center gap-2">
                 <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
-                <a href={linkTo(highlight)}>{new URL(highlight.url).hostname}</a>
+                <a href={linkTo(highlight.url)}>{new URL(highlight.url).hostname}</a>
             </div>
         {:else if article?.author}
             <a href={linkTo(article)}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
