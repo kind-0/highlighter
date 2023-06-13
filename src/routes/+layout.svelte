@@ -8,6 +8,7 @@
 
     onMount(async () => {
         try {
+            console.log(`connecting to ndk from layout`);
             $ndk.connect();
         } catch (e) {
             console.error(`layout error`, e);

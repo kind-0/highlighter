@@ -24,15 +24,17 @@
     export let unmarkedContent: string;
     export let url: string | undefined = undefined;
 
-    let scope = $currentScope.label;
+    let scope: string;
 
     let highlightFilter: any;
-    let currentHighlightFilter: any;
+    let needsFilterUpdate: boolean;
 
     let highlights: NDKEventStore<NDKHighlight>;
 
     // Set filter for current view
-    $: if (scope !== currentScope.label) {
+    $: if (scope !== $currentScope.label) {
+        console.log(`scope changed from ${scope} to ${$currentScope.label}`);
+        scope = $currentScope.label;
         let pubkeys: string[] | undefined | null = null;
 
         if (scope === 'network') {
@@ -53,14 +55,20 @@
         if (pubkeys !== null) {
             highlightFilter = {pubkeys};
         }
+
+        needsFilterUpdate = true;
     }
 
     let deduppedHighlights: Readable<NDKHighlight[]> | undefined;
 
     // Apply filter when it's ready
-    $: if (highlightFilter !== currentHighlightFilter) {
-        console.log({highlightFilter, currentHighlightFilter});
-        currentHighlightFilter = highlightFilter;
+    $: if (needsFilterUpdate) {
+        console.log(`Updating filter for ${scope}`, highlightFilter);
+        needsFilterUpdate = false;
+
+        if (highlights) {
+            highlights.unsubscribe();
+        }
 
         let articleFilter: NDKFilter;
 

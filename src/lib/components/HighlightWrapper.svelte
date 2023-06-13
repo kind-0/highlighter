@@ -15,6 +15,7 @@
         listener = () => {
             // get the selection
             const sel = window.getSelection();
+            if (!sel) return;
             var selectedRange = sel.getRangeAt(0);
             // get the text content of the selection
             selection = sel.toString();
