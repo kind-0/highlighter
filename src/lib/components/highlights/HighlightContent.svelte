@@ -5,7 +5,8 @@
     import NoteContent from '$lib/components/events/content.svelte';
 
     export let highlight: NDKHighlight;
-    export let article: NDKLongForm | NDKEvent | undefined = undefined;
+    export let article: NDKLongForm | NDKEvent | string | undefined = undefined;
+    export let expandedContext: boolean = true;
 
     let highlightedId: string;
     let floatedHighlightBorder: boolean = false;
@@ -16,7 +17,7 @@
         highlightedId = article.id;
 
         try {
-            if (article && article.content?.length < 2000) {
+            if (expandedContext && article && article.content?.length < 2000) {
                 floatedHighlightBorder = true;
                 contextWithHighlight = article.content.replace(highlight.content, `<span class='mark-wrapper'><span class="mark-wrapper-inner"></span><mark>${highlight.content}</mark></span>`);
             }

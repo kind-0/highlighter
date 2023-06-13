@@ -25,8 +25,6 @@
     import { Tooltip } from "flowbite-svelte";
 
     export let event: NDKEvent;
-    export let note: App.Note | undefined = undefined;
-    export let highlight: App.Highlight | undefined = undefined;
 
     export let skipHeader = false;
     export let skipFooter = false;
@@ -35,14 +33,13 @@
     export let byString: string | undefined = undefined;
     export let expandReplies = false;
 
-    export let replies: App.Note[] | undefined = undefined;
+    export let replies: NDKEvent[];
 
     if (!userPubkey) userPubkey = event.pubkey;
 
     let copiedEventId = false;
     let copiedEventJSON = false;
     let niceTime = event.created_at ? new Date(event.created_at * 1000).toLocaleString() : undefined;
-    let noteId = event.encode();
 
     function copyId(e: Event) {
         e.stopPropagation();
@@ -157,14 +154,14 @@
                             <BookmarkButton {event} />
 
                             {#if $currentUser?.hexpubkey() !== event.pubkey}
-                                <ZapsButton {highlight} {event} />
+                                <ZapsButton {event} />
                             {/if}
                             <BoostButton {event} />
                             {#if replies}
-                                <RepliesButton {note} {event} {replies} />
+                                <RepliesButton {event} />
                             {/if}
 
-                            <a href={`/e/${noteId}`} class="
+                            <a href={`/e/${event.encode()}`} class="
                                 text-slate-500 hover:text-orange-500
                                 flex flex-row items-center gap-2
                             ">
@@ -197,7 +194,7 @@
         {#if !expandReplies}
             {#each replies as reply}
                 <div class="ml-6">
-                    <NoteCard note={reply} {expandReplies} />
+                    <NoteCard event={reply} {expandReplies} />
                 </div>
             {/each}
         {:else}

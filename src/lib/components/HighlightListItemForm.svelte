@@ -8,12 +8,10 @@
     import { NDKEvent, NDKUser, type NostrEvent } from '@nostr-dev-kit/ndk';
     import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
     import { createEventDispatcher } from 'svelte';
-    import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import type NDKHighlight from '$lib/ndk-kinds/highlight';
 
 
-    export let highlight: App.Highlight;
-    export let disableClick: boolean = false;
-    export let articleEvent: NDKEvent | undefined = undefined;
+    export let highlight: NDKHighlight;
 
     let articleLink: string;
     let highlightUser = new NDKUser({hexpubkey: highlight.pubkey});
@@ -21,8 +19,8 @@
 
     const dispatch = createEventDispatcher();
 
-    function altTag(event: NDKEvent) {
-        const content = `"${event.content}"\n\nThis is a highlight created on https://highlighter.com`;
+    function altTag(h: NDKEvent) {
+        const content = `"${h.content}"\n\nThis is a highlight created on https://highlighter.com`;
 
         return ['alt', content];
     }
@@ -33,26 +31,19 @@
 
     async function save() {
         saving = true;
-        const event = new NDKHighlight($ndk);
-        event.content = highlight.content;
-
-        if (articleEvent) {
-            event.article = articleEvent;
-        } else if (highlight.url) {
-            event.article = highlight.url;
-        }
+        highlight.content = highlight.content;
 
         // NIP-31
-        event.tags.push(altTag(event));
+        highlight.tags.push(altTag(highlight));
 
-        await event.publish();
+        await highlight.publish();
 
         if (comment) {
             const commentEvent = new NDKEvent($ndk, {
                 kind: 1,
-                content: `nostr:${event.encode()}\n${comment}`,
+                content: `nostr:${highlight.encode()}\n${comment}`,
                 tags: [
-                    ['q', event.tagId(), 'quote']
+                    ['q', highlight.tagId(), 'quote']
                 ]
             } as NostrEvent)
             await commentEvent.publish();

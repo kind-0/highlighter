@@ -2,25 +2,19 @@
     import EventCard from '$lib/components/events/card.svelte';
     import HighlightContent from '$lib/components/highlights/HighlightContent.svelte';
 
-    import ndk from '$lib/stores/ndk';
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
-    import {nip19} from 'nostr-tools';
-    import type { ILoadOpts } from '$lib/interfaces/highlights';
-    import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import type NDKHighlight from '$lib/ndk-kinds/highlight';
     import NDKLongForm from '$lib/ndk-kinds/long-form';
     import { onMount } from 'svelte';
     import AvatarWithName from '../AvatarWithName.svelte';
 
     export let highlight: NDKHighlight;
-    export let article: NDKLongForm | NDKEvent | string | undefined = undefined;
+    export let article: NDKLongForm | NDKEvent | string | undefined;
     export let skipTitle: boolean = false;
     export let skipButtons: boolean = false;
     export let skipFooter: boolean = false;
     export let disableClick: boolean = false;
-    let prevHighlightId: string | undefined = undefined;
-
-    let articleLink: string;
-    let naddr: string;
+    export let expandedContext: boolean = true;
 
     function onContentClick(e: Event) {
         if (disableClick) return;
@@ -43,62 +37,12 @@
         }
     }
 
-    onMount(async () => {
-        if (!article) {
-            const articleTag = highlight.getArticleTag();
-            article = await highlight.getArticle();
-        }
-    })
-
-    // let articles: Observable<App.Article[]> | undefined = undefined;
-
-    // $: if (highlight?.articleId && !articles && highlight.articleId.match(/:/)) {
-    //     articles = ArticleInterface.load({id: highlight.articleId});
-    // }
-
-    // $: if (articles && $articles && $articles.length > 0) {
-    //     article = $articles[0];
-    // }
-
-    $: {
-        if (prevHighlightId !== highlight.id && highlight.id) {
-            prevHighlightId = highlight.id;
-
-            if (highlight.articleId) {
-                if (highlight.articleId.match(/:/)) {
-                    const [kind, pubkey, identifier] = highlight.articleId.split(':');
-                    naddr = nip19.naddrEncode({
-                        kind: parseInt(kind),
-                        pubkey,
-                        identifier
-                    })
-                } else {
-                    naddr = nip19.noteEncode(highlight.articleId);
-                }
-                articleLink = `/a/${naddr}`;
-            } else if (highlight.event) {
-                // see if this highlight.event has a p tag
-                try {
-                    const event = new NDKHighlight($ndk, JSON.parse(highlight.event));
-                    const pTag = event.getMatchingTags('p')[0];
-
-                    articleLink = `/load?url=${encodeURIComponent(highlight.url)}`
-
-                    if (pTag && pTag[1]) {
-                        articleLink += `&author=${encodeURIComponent(pTag[1])}`;
-                    }
-                } catch (e) {
-                }
-            }
-        }
-    }
-
-    function linkTo(article?: NDKEvent | NDKLongForm) {
+    function linkToArticle() {
         if (article?.encode) {
             return `/a/${article.encode()}`;
         } else if (article?.url) {
             return `/load?url=${encodeURIComponent(article.url)}`;
-        } else if (article.length > 0) {
+        } else if (article?.length > 0) {
             return `/load?url=${encodeURIComponent(article)}`;
         } else {
             return '#';
@@ -108,7 +52,7 @@
 
 <EventCard
     event={highlight}
-    {highlight}
+    skipHeader={skipTitle}
     {skipButtons}
     byString={"highlighted by"}
     {skipFooter}
@@ -116,25 +60,29 @@
     <div slot="header">
         {#if article instanceof NDKLongForm && article.title}
             <div class="text-xl font-semibold truncate">
-                <a href={linkTo(article)}>{article.title}</a>
+                <a href={linkToArticle()}>{article.title}</a>
             </div>
-        {:else if highlight?.url}
+        {:else if highlight?.url && highlight.url.startsWith('https://')}
             <div class="text-xl font-semibold truncate flex flex-row items-center gap-2">
                 <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
-                <a href={linkTo(highlight.url)}>{new URL(highlight.url).hostname}</a>
+                <a href={linkToArticle()}>{new URL(highlight.url).hostname}</a>
             </div>
         {:else if article?.author}
-            <a href={linkTo(article)}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
+            <a href={linkToArticle()}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
         {/if}
     </div>
 
-    <a href={articleLink} on:click={onContentClick} class="
+    <a href={linkToArticle()} on:click={onContentClick} class="
         leading-relaxed h-full flex flex-col
         py-2
         overflow-auto
         {$$props.class}
     ">
-        <HighlightContent {highlight} {article} />
+        <HighlightContent
+            {highlight}
+            {article}
+            {expandedContext}
+        />
     </a>
 </EventCard>
 

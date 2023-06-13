@@ -2,8 +2,8 @@
 	import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import { page } from '$app/stores';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
-    import NoteInterface from '$lib/interfaces/notes';
-    import NoteCard from '$lib/components/notes/card.svelte';
+    import ndk from '$lib/stores/ndk';
+    import { onDestroy } from 'svelte';
 
     let { note } = $page.params;
 
@@ -12,14 +12,13 @@
 
     $: note = $page.params.note;
 
-    function eventLoaded(e) {
-        event = e.detail as NDKEvent;
+    onDestroy(() => {
+        if (quotes) quotes.unsubscribe();
+    });
 
-        if (event?.kind === 9802) {
-            quotes = NoteInterface.load({ quotes: [event.id] });
-        } else {
-            quotes = undefined;
-        }
+    function eventLoaded(e: CustomEvent) {
+        event = e.detail as NDKEvent;
+        // quotes = $ndk.storeSubscribe({'#q': [event.id]}, { closeOnEose: true });
     }
 </script>
 
@@ -35,12 +34,12 @@
             on:event:load={eventLoaded}
         />
 
-        {#key $quotes}
+        <!-- {#key $quotes}
             {#if event && $quotes?.length > 0}
                 {#each $quotes as quote}
                     <NoteCard note={quote} />
                 {/each}
             {/if}
-        {/key}
+        {/key} -->
     </main>
 {/key}

@@ -37,7 +37,7 @@
 		"@bytemd/plugin-gfm": "^1.21.0",
 		"@mozilla/readability": "^0.4.4",
 		"@neodrag/svelte": "^2.0.3",
-		"@nostr-dev-kit/ndk": "^0.4.6",
+		"@nostr-dev-kit/ndk": "^0.5.1",
 		"@nostr-dev-kit/ndk-cache-redis": "^1.3.0",
 		"@nostr-dev-kit/ndk-svelte-components": "^0.2.1",
 		"@popperjs/core": "^2.11.7",

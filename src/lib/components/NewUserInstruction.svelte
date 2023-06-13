@@ -17,7 +17,9 @@
         show = await checkForHighlightingEvent();
     })
 
-    async function checkForHighlightingEvent(): boolean {
+    async function checkForHighlightingEvent(): Promise<boolean> {
+        if (!$currentUser) { return false; }
+
         const event = await $ndk.fetchEvent({
             kinds: [NDKKind.Highlight],
             authors: [$currentUser.hexpubkey()],

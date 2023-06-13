@@ -1,98 +1,74 @@
 <script lang="ts">
     import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
 
-    import NoteInterface from '$lib/interfaces/notes';
-
     import Avatar from '$lib/components/Avatar.svelte';
 
-    import ndk from '$lib/stores/ndk';
-    import {nip19} from 'nostr-tools';
+    import ndk, { type NDKEventStore } from '$lib/stores/ndk';
     import NoteCard from '$lib/components/notes/card.svelte';
-    import type { ILoadOpts } from '$lib/interfaces/highlights';
-    import { currentScope } from '$lib/store';
-    import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import type NDKHighlight from '$lib/ndk-kinds/highlight';
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
 
-    export let highlight: App.Highlight;
+    export let highlight: NDKHighlight;
     export let skipTitle: boolean = false;
     export let skipButtons: boolean = false;
     export let disableClick: boolean = false;
     export let collapsedQuotes: boolean = true;
+
+    /**
+     * When the tagged event allows (e.g. kind:1) expand the context
+     * to be the full tagged event instead of the context embedded in the highlight.
+     */
+    export let expandedContext: boolean = true;
     let prevHighlightId: string | undefined = undefined;
 
-    let replies, quotes;
+    let replies;
+    let quotes: NDKEventStore<NDKEvent>;
     let pubkey: string;
     let showComments = false;
     let showReplies = false;
-    let event: NDKHighlight;
-    let articleLink: string;
-    let naddr: string;
     let highlightNoteId = '';
     let niceTime: string;
     let quotePubkeys: string[] = [];
 
     // Set the quote pubkeys
     $: if ($quotes && $quotes.length > 0 && quotes.length != quotePubkeys.length) {
-        quotePubkeys = $quotes.map((q: App.Note) => q.pubkey);
+        quotePubkeys = $quotes.map((q: NDKEvent) => q.pubkey);
     }
 
-    $: {
-        if (prevHighlightId !== highlight.id && highlight.id) {
-            showComments = false;
-            showReplies = false;
-            prevHighlightId = highlight.id;
-            niceTime = new Date(highlight.timestamp * 1000).toLocaleString();
+    // replies = $ndk.storeSubscribe({ '#e': [highlight.id] }, { closeOnEose: false });
+    quotes = $ndk.storeSubscribe({ '#q': [highlight.id] }, { closeOnEose: false, groupableDelay: 500 });
 
-            highlightNoteId = nip19.noteEncode(highlight.id);
+    // $: {
+    //     if (prevHighlightId !== highlight.id && highlight.id) {
+    //         showComments = false;
+    //         showReplies = false;
+    //         prevHighlightId = highlight.id;
+    //         niceTime = new Date(highlight.timestamp * 1000).toLocaleString();
 
-            if (highlight.articleId) {
-                if (highlight.articleId.match(/:/)) {
-                    const [kind, pubkey, identifier] = highlight.articleId.split(':');
-                    naddr = nip19.naddrEncode({
-                        kind: parseInt(kind),
-                        pubkey,
-                        identifier
-                    })
-                } else {
-                    naddr = nip19.noteEncode(highlight.articleId);
-                }
-                articleLink = `/a/${naddr}`;
-            } else if (highlight.event) {
-                // see if this highlight.event has a p tag
-                try {
-                    event = new NDKHighlight($ndk, JSON.parse(highlight.event));
-                    const pTag = event.getMatchingTags('p')[0];
+    //         highlightNoteId = nip19.noteEncode(highlight.id);
 
-                    articleLink = `/load?url=${encodeURIComponent(highlight.url)}`
+    //         const pubkeyFilter: ILoadOpts = {};
 
-                    if (pTag && pTag[1]) {
-                        articleLink += `&author=${encodeURIComponent(pTag[1])}`;
-                    }
-                } catch (e) {
-                }
-            }
+    //         if ($currentScope.pubkeys) {
+    //             pubkeyFilter.pubkeys = $currentScope.pubkeys;
+    //         }
 
-            const pubkeyFilter: ILoadOpts = {};
+    //         replies = NoteInterface.load({ replies: [highlight.id], ...pubkeyFilter });
+    //         quotes = NoteInterface.load({ quotes: [highlight.id], ...pubkeyFilter });
+    //     }
 
-            if ($currentScope.pubkeys) {
-                pubkeyFilter.pubkeys = $currentScope.pubkeys;
-            }
+    //     if (!event || event.id !== highlight.id) {
+    //         try {
+    //             event = new NDKHighlight($ndk, JSON.parse(highlight.event));
+    //         } catch (e) {
+    //             console.error(e);
+    //         }
+    //     }
 
-            replies = NoteInterface.load({ replies: [highlight.id], ...pubkeyFilter });
-            quotes = NoteInterface.load({ quotes: [highlight.id], ...pubkeyFilter });
-        }
+    //     pubkey = highlight.pubkey;
+    // }
 
-        if (!event || event.id !== highlight.id) {
-            try {
-                event = new NDKHighlight($ndk, JSON.parse(highlight.event));
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        pubkey = highlight.pubkey;
-    }
-
-    function shouldDisplayQuote(highlight: App.Highlight, quotes: App.Note[]) {
+    function shouldDisplayQuote(highlight: NDKHighlight, quotes: NDKEvent[]) {
         if (!quotes || quotes.length !== 1) {
             return true;
         }
@@ -107,12 +83,16 @@
 ">
     {#if shouldDisplayQuote(highlight, $quotes||[])}
         <div class="text-lg">
-            <HighlightCard
-                highlight={event}
-                {skipButtons}
-                {skipTitle}
-                {disableClick}
-            />
+            {#await highlight.article then article}
+                <HighlightCard
+                    {highlight}
+                    {article}
+                    {expandedContext}
+                    {skipButtons}
+                    {skipTitle}
+                    {disableClick}
+                />
+            {/await}
         </div>
 
         {#if ($quotes||[]).length > 0}
@@ -138,7 +118,7 @@
                 <div class="ml-6 flex flex-col gap-6 quote-card">
                     {#each ($quotes||[]) as quote}
                         <div class="text-lg">
-                            <NoteCard note={quote} {highlight} />
+                            <NoteCard event={quote} />
                         </div>
                     {/each}
                 </div>
@@ -147,7 +127,7 @@
     {:else}
         {#each ($quotes||[]) as quote}
             <div class="text-lg">
-                <NoteCard note={quote} {highlight} />
+                <NoteCard event={quote} />
             </div>
         {/each}
     {/if}

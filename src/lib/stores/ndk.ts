@@ -1,15 +1,14 @@
-import { writable } from 'svelte/store';
-import NDK from '@nostr-dev-kit/ndk';
+import { writable, type Unsubscriber, type Writable } from 'svelte/store';
+import NDK, { NDKEvent, type NDKFilter, type NDKFilterOptions, type NDKSubscriptionOptions } from '@nostr-dev-kit/ndk';
 import type { NDKCacheAdapter } from '@nostr-dev-kit/ndk';
 import DexieAdapter from '$lib/caches/dexie';
 // import NDKRedisCacheAdapter from '@nostr-dev-kit/ndk-cache-redis';
 import { browser } from '$app/environment';
 
-let cacheAdapter: NDKCacheAdapter;
+let cacheAdapter: NDKCacheAdapter | undefined;
 
 if (browser) {
     cacheAdapter = new DexieAdapter();
-    console.log(`Using cache DexieAdapter`);
 } else {
     // cacheAdapter = new NDKRedisCacheAdapter();
     // console.log(`Using cache NDKRedisCacheAdapter`);
@@ -43,13 +42,60 @@ if (!relayList || !Array.isArray(relayList) || relayList.length === 0) {
     ];
 }
 
-const ndk = writable(new NDK({
+type UnsubscribableStore<T> = Writable<T> & {
+    unsubscribe: Unsubscriber;
+    onEose: (cb: () => void) => void;
+};
+
+export type NDKEventStore<T> = UnsubscribableStore<T[]>;
+
+export type NDKSvelte = NDK & {
+    storeSubscribe: <T>(
+        filter: NDKFilter,
+        opts?: NDKSubscriptionOptions,
+        klass?: classWithConvertFunction
+    ) => NDKEventStore<T>;
+}
+
+const _ndk: NDKSvelte = new NDK({
     explicitRelayUrls: relayList,
-    // devWriteRelayUrls: [
-    //     'ws://localhost:8080',
-    // ],
     cacheAdapter
-}));
+}) as NDKSvelte;
+
+type classWithConvertFunction = {
+    from: (event: NDKEvent) => any;
+}
+
+_ndk.storeSubscribe = <T>(
+    filter: NDKFilter,
+    opts?: NDKSubscriptionOptions,
+    klass?: classWithConvertFunction
+): NDKEventStore<T> => {
+    console.log(`subscribe`, filter, opts);
+
+    const sub = _ndk.subscribe(filter, opts);
+    const events: T[] = [];
+    const store: UnsubscribableStore<T[]> = {
+        ...writable([]),
+        unsubscribe: () => { sub.stop(); },
+        onEose: (cb) => { sub.on('eose', cb); },
+    };
+
+    sub.on('event', (event: NDKEvent) => {
+        let e = event;
+        if (klass) {
+            e = klass.from(event);
+        }
+        e.ndk = _ndk;
+
+        events.push(e as unknown as T);
+        store.set(events);
+    });
+
+    return store;
+}
+
+const ndk = writable(_ndk);
 
 export default ndk;
 

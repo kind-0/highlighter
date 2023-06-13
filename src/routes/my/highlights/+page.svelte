@@ -1,47 +1,33 @@
 <script lang="ts">
-    import ndk from "$lib/stores/ndk";
+    import ndk, { type NDKEventStore } from "$lib/stores/ndk";
 
     import HighlightInterface from '$lib/interfaces/highlights';
     import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
     import { onMount } from 'svelte';
     import NDKHighlight from "$lib/ndk-kinds/highlight";
+  import type { NDKEvent } from "@nostr-dev-kit/ndk";
 
-    let highlights, _highlights: App.Highlight[] = [];
-
-    async function loadHighlights() {
-        const user = await $ndk.signer?.user();
-
-		if (!user) {
-            setTimeout(() => {
-                loadHighlights();
-            }, 100);
-            return;
-		}
-
-		const opts = { pubkeys: [user.hexpubkey()] };
-		highlights = HighlightInterface.load(opts);
-		return HighlightInterface.startStream(opts);
-    }
+    const highlights: NDKEventStore<NDKHighlight>;
 
     onMount(async () => {
-        loadHighlights();
+        const user = await $ndk.signer?.user();
+
+        highlights = $ndk.storeSubscribe({
+            kinds: [9802],
+            authors: [user.hexpubkey()]
+        }, { closeOnEose: false });
     })
-
-    $: {
-		_highlights = (($highlights || []) as App.Highlight[]).sort((a, b) => {
-			return b.timestamp - a.timestamp;
-		});
-
-		_highlights = _highlights;
-	}
 </script>
 
 <div class="grid grid-flow-row md:grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
-    {#each _highlights as highlight}
-        <HighlightCard
-            class="max-h-96 overflow-auto"
-            highlight={new NDKHighlight($ndk, JSON.parse(highlight.event))}
-            disableClick={true}
-        />
+    {#each $highlights as highlight}
+        {#await highlight.getArticle() then article}
+            <HighlightCard
+                class="max-h-96 overflow-auto"
+                {highlight}
+                {article}
+                disableClick={true}
+            />
+        {/await}
     {/each}
 </div>

@@ -28,18 +28,16 @@
     }
 </script>
 
-{#key $currentScope.pubkeys}
-    {#if $page.params.scope === 'network'}
-        {#if $currentUserFollowPubkeys === undefined}
-            {#await fetchFollowers()}
-                Loading follow List
-            {:then}
-                <slot />
-            {/await}
-        {:else}
+{#if $page.params.scope === 'network'}
+    {#if $currentUserFollowPubkeys === undefined}
+        {#await fetchFollowers()}
+            Loading follow List
+        {:then}
             <slot />
-        {/if}
+        {/await}
     {:else}
         <slot />
     {/if}
-{/key}
+{:else}
+    <slot />
+{/if}

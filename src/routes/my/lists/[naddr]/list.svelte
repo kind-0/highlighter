@@ -19,7 +19,7 @@
     import ListsFeed from './ListsFeed.svelte';
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
     import listSigners, { getSigner, type SignerStoreItem } from '$lib/stores/signer';
-  import { saveEphemeralSigner } from '$lib/signers/ephemeral';
+    import { saveEphemeralSigner } from '$lib/signers/ephemeral';
 
     export let list: NDKList;
     let listId;

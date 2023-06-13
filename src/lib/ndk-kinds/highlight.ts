@@ -9,13 +9,16 @@ import NDKLongForm from "./long-form.js";
 class NDKHighlight extends NDKEvent {
     private _article: NDKEvent | string | undefined;
 
-    constructor(ndk: NDK, rawEvent?: NostrEvent) {
+    constructor(ndk?: NDK, rawEvent?: NostrEvent) {
         super(ndk, rawEvent);
         this.kind = NDKKind.Highlight;
     }
 
+    static from(event: NDKEvent) {
+        return new NDKHighlight(event.ndk, event.rawEvent());
+    }
+
     get url(): string | undefined {
-        console.log(`querying for url`)
         return this.tagValue('r');
     }
 
@@ -53,7 +56,7 @@ class NDKHighlight extends NDKEvent {
             this.getMatchingTags('r')[0];
     }
 
-    async getArticle(): Promise<NDKEvent | string | undefined> {
+    async getArticle(): Promise<NDKLongForm | NDKEvent | string | undefined> {
         if (this._article !== undefined) return this._article;
 
         // check for 'a' tag

@@ -26,6 +26,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 }
 
                 const ndkEvent = new NDKEvent(undefined, rawEvent);
+                // console.log(`cache hit by authors`, subscription.filter);
                 subscription.eventReceived(ndkEvent, undefined, true);
             }
 
@@ -56,6 +57,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 }
 
                 const ndkEvent = new NDKEvent(undefined, rawEvent);
+                // console.log(`cache hit by ids`, subscription.filter);
                 subscription.eventReceived(ndkEvent, undefined, true);
             }
 
@@ -94,6 +96,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
                         }
 
                         const ndkEvent = new NDKEvent(undefined, rawEvent);
+                        // console.log(`cache hit by NIP-33`, subscription.filter);
                         subscription.eventReceived(ndkEvent, undefined, true);
                     }
                 }
@@ -128,6 +131,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
                     }
 
                     const ndkEvent = new NDKEvent(undefined, rawEvent);
+                    // console.log(`cache hit by kind and author`, subscription.filter);
                     subscription.eventReceived(ndkEvent, undefined, true);
 
                     // Return true if the condition is met to stop execution
@@ -139,14 +143,76 @@ export default class DexieAdapter implements NDKCacheAdapter {
         return false;
     }
 
+    /**
+     * Searches by tags and optionally filters by tags
+     */
+    private async byTagsAndOptionallyKinds(filterKeys: string[], subscription: NDKSubscription): Promise<boolean> {
+        for (const filterKey of filterKeys) {
+            const isKind = filterKey === 'kinds';
+            const isTag = filterKey.startsWith('#') && filterKey.length === 2;
+
+            if (!isKind && !isTag) return false;
+        }
+
+        // console.log(`will try to check for cache hit by kind and tags`, subscription.filter);
+
+        const events = await this.filterByTag(filterKeys, subscription.filter);
+        const kinds = subscription.filter.kinds as number[];
+
+        for (const event of events) {
+            if (!kinds.includes(event.kind!)) continue;
+
+            // console.log(`cache hit by kind and tags`, subscription.filter);
+            subscription.eventReceived(event, undefined, true);
+        }
+    }
+
+    private async filterByTag(filterKeys: string[], filter: NDKFilter): Promise<NDKEvent[]> {
+        const retEvents: NDKEvent[] = [];
+
+        for (const filterKey of filterKeys) {
+            if (filterKey.length !== 2) continue;
+            const tag = filterKey.slice(1);
+            const values = filter![filterKey] as string[];
+
+            // console.log(`will try to check for cache hit by tag ${tag} and values ${values}`, filter);
+
+            for (const value of values) {
+                const eventTags = await db.eventTags.where({ tagvalue: tag+value }).toArray();
+                if (!eventTags.length) continue;
+
+                // console.log(`found ${eventTags.length} events with tag ${tag+value}`)
+
+                const eventIds = eventTags.map(t => t.eventId);
+
+                const events = await db.events.where('id').anyOf(eventIds).toArray();
+                for (const event of events) {
+                    let rawEvent;
+                    try {
+                        rawEvent = JSON.parse(event.json);
+                    } catch (e) {
+                        // console.log('failed to parse event', e);
+                        continue;
+                    }
+
+                    const ndkEvent = new NDKEvent(undefined, rawEvent);
+                    retEvents.push(ndkEvent);
+                }
+            }
+        }
+
+        return retEvents;
+    }
 
     public async query(subscription: NDKSubscription): Promise<void> {
+        // console.log(JSON.stringify(subscription.filter));
         const filterKeys = Object.keys(subscription.filter || {}).sort();
 
         (await this.byAuthors(filterKeys, subscription)) ||
         (await this.byIdsQuery(filterKeys, subscription)) ||
-        (await this.byNip33Query(filterKeys, subscription))
-        // (await this.byKindAndAuthor(filterKeys, subscription));
+        (await this.byNip33Query(filterKeys, subscription)) ||
+        (await this.byKindAndAuthor(filterKeys, subscription)) ||
+        (await this.byTagsAndOptionallyKinds(filterKeys, subscription));
     }
 
     public async setEvent(event: NDKEvent, filter: NDKFilter): Promise<void> {
@@ -184,6 +250,18 @@ export default class DexieAdapter implements NDKCacheAdapter {
                     kind: event.kind as number,
                     createdAt: event.created_at as number,
                     json: JSON.stringify(event.rawEvent()),
+                });
+
+                event.tags.forEach(tag => {
+                    if (tag[0].length !== 1) return;
+
+                    db.eventTags.put({
+                        id: `${event.id}:${tag[0]}:${tag[1]}`,
+                        eventId: event.id,
+                        tag: tag[0],
+                        value: tag[1],
+                        tagvalue: tag[0]+tag[1],
+                    });
                 });
             }
         }

@@ -1,40 +1,31 @@
 <script lang="ts">
-    import ndk from '$lib/stores/ndk';
+    import ndk, { type NDKEventStore } from '$lib/stores/ndk';
 
     import EventCard from '$lib/components/events/card.svelte';
 
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
-    import { onMount } from 'svelte';
-    import NoteInterface from '$lib/interfaces/notes';
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import { onDestroy, onMount } from 'svelte';
 
-    export let note: App.Note;
-    export let highlight: App.Note | App.Highlight | undefined = undefined;
-    export let event: NDKEvent | undefined = undefined;
+    export let event: NDKEvent;
     export let skipFooter = false;
     export let skipButtons = false;
     export let skipReplies = false;
     export let expandReplies = true
 
-    if (!event) event = new NDKEvent($ndk, JSON.parse(note.event));
-
-    let replies;
-    let noteQuery;
+    let replies: NDKEventStore<NDKEvent>;
 
     onMount(() => {
-        if (note.id) {
-            // send null so a kind won't be autoset to 1
-            noteQuery = NoteInterface.load({ ids: [note.id], kind: null });
-
-            if (!skipReplies) {
-                replies = NoteInterface.load({ replies: [note.id] });
-            }
+        if (!skipReplies) {
+            replies = $ndk.storeSubscribe({ kinds: [1], '#e': [event.id] });
         }
+    });
+
+    onDestroy(() => {
+        if (replies) replies.unsubscribe();
     });
 </script>
 
 <EventCard
-    {note}
-    {highlight}
     {event}
     skipHeader={true}
     {skipFooter}

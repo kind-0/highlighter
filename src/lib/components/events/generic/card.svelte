@@ -1,8 +1,6 @@
 <script lang="ts">
     import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
     import NoteCard from '$lib/components/notes/card.svelte';
-    import { handleEvent1 } from '$lib/interfaces/notes';
-    import { handleEvent9802 } from '$lib/interfaces/highlights';
     import ndk from '$lib/stores/ndk';
     import { createEventDispatcher } from 'svelte';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
@@ -10,7 +8,7 @@
     import { Card } from 'flowbite-svelte'
     import NDKList from '$lib/ndk-kinds/lists';
     import { Name } from '@nostr-dev-kit/ndk-svelte-components';
-  import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import NDKHighlight from '$lib/ndk-kinds/highlight';
 
     export let id: string | undefined = undefined;
     export let skipReplies: boolean = false;
@@ -69,14 +67,17 @@
             >
                 {#if e.kind === 9802}
                     <div class="border rounded-lg border-zinc-300">
-                        <HighlightCard
-                            highlight={new NDKHighlight($ndk, e.rawEvent())}
-                            skipTitle={true}
-                        />
+                        {#await NDKHighlight.from(e).article then article}
+                            <HighlightCard
+                                highlight={NDKHighlight.from(e)}
+                                {article}
+                                skipTitle={true}
+                            />
+                        {/await}
                     </div>
                 {:else if e.kind === 1}
                     <NoteCard
-                        note={handleEvent1(e)}
+                        event={e}
                         {skipReplies}
                         {skipFooter}
                     />

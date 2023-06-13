@@ -1,15 +1,25 @@
 <script lang="ts">
     import { currentUser, currentUserFollowPubkeys } from '$lib/store';
-    import type { ILoadOpts } from '$lib/interfaces/highlights';
     import HighlightList from '$lib/components/HighlightList.svelte';
+    import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+    import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import type { Writable } from 'svelte/store';
+    import type { NDKEventStore } from '$lib/stores/ndk';
+    import ndk from '$lib/stores/ndk';
 
     export let scope: string;
     let prevScope: string;
 
-    let filter: ILoadOpts | undefined = undefined;
+    let filter: NDKFilter | undefined = undefined;
+
+    let items: NDKEventStore;
 
     $: if (prevScope !== scope) {
         prevScope = scope;
+
+        if (items) {
+            items.unsubscribe();
+        }
 
         let pubkeys: string[] | undefined;
 
@@ -22,12 +32,14 @@
                 break;
         }
 
-        filter = { pubkeys, sortBy: 'timestamp', limit: 100 };
+        filter = { authors: pubkeys, kinds: [9802 as number], limit: 100 };
+
+        items = $ndk.storeSubscribe(filter);
     }
 </script>
 
 {#key filter}
     {#if filter}
-        <HighlightList {filter} />
+        <HighlightList items={$items.map(e => NDKHighlight.from(e))} />
     {/if}
 {/key}

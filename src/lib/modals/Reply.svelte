@@ -9,7 +9,6 @@
     import ModalButton from '$lib/components/ModalButton.svelte';
 
     export let event: NDKEvent;
-    export let note: App.Note | undefined = undefined;
 
     let comment: string;
 
@@ -46,7 +45,7 @@
 
         <div class="flex flex-col gap-8">
             <NoteCard
-                {note}
+                {event}
                 skipTitle={true}
                 skipButtons={true}
                 skipReplies={true}

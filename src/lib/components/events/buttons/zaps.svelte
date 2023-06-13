@@ -2,47 +2,56 @@
     import { openModal } from 'svelte-modals'
     import { Tooltip } from 'flowbite-svelte';
 
-    import ZapInterface from '$lib/interfaces/zap';
-
     import ZapIcon from '$lib/icons/Zap.svelte';
 
     import ZapModal from '$lib/modals/Zap.svelte';
-    import { onMount } from 'svelte';
-    import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import { onDestroy, onMount } from 'svelte';
+    import { type NDKEvent, zapInvoiceFromEvent } from '@nostr-dev-kit/ndk';
     import { nicelyFormattedSatNumber } from '$lib/utils';
+    import { currentUser } from '$lib/store';
+    import ndk, { type NDKEventStore } from '$lib/stores/ndk';
 
     export let event: NDKEvent;
-    export let note: App.Note | undefined = undefined;
-    export let highlight: App.Highlight | undefined = undefined;
-    let zaps;
+    let zaps: NDKEventStore<NDKEvent>;
     let zappedAmount: number = 0;
 
     if (event?.id) {
         let eventId = event.id;
 
-
         let zaps;
 
         onMount(() => {
-            zaps = ZapInterface.load({eventId});
-            console.log({eventId})
+            zaps = $ndk.storeSubscribe(
+                { kinds: [ 9735 ], '#e': [eventId] },
+                { closeOnEose: false, groupableDelay: 2500 }
+            );
+            // console.log(`querying for zaps for event ${eventId}`);
         });
     }
 
+    onDestroy(() => {
+        if (zaps) zaps.unsubscribe();
+    });
+
+
     $: if ($zaps) {
-        zappedAmount = $zaps.reduce((acc: number, zap: App.Zap) => {
-            console.log('here', zap);
-            return acc + zap.amount;
+        zappedAmount = $zaps.reduce((acc: number, zap: NDKEvent) => {
+            const zapInvoice = zapInvoiceFromEvent(zap);
+            if (!zapInvoice) return acc;
+
+            console.log('zaps loaNing', zapInvoice);
+            return acc + zapInvoice.amount;
         }, 0);
     }
 </script>
 
-{#if event?.id}
+{#if event?.id && $currentUser}
     <button class="
         text-slate-500 hover:text-orange-500
-        flex flex-row items-center gap-2 w-4 h-4
-    " on:click={() => { openModal(ZapModal, { event, note, highlight }) }}>
-        <ZapIcon />
+        flex flex-row items-center gap-2
+        {$$props.class}
+    " on:click={() => { openModal(ZapModal, { event }) }}>
+        <ZapIcon class="w-4 h-4" />
         {#if zappedAmount > 0}
             <div class="text-sm">{nicelyFormattedSatNumber(zappedAmount)}</div>
         {/if}

@@ -1,10 +1,12 @@
 <script lang="ts">
     import { currentScope } from '$lib/store';
-    import type { Observable } from "dexie";
-    import type { NDKSubscription } from '@nostr-dev-kit/ndk';
-    import HighlightInterface from '$lib/interfaces/highlights';
-    import ArticleCardWithHighlights from '$lib/components/articles/cards/with-highlights.svelte';
-    import { onDestroy } from 'svelte';
+    import ArticleCardWithHighlights from '$lib/components/articles/cards/ArticleCardWithHighlights.svelte';
+    import { onDestroy, onMount } from 'svelte';
+    import type { NDKEventStore } from '$lib/stores/ndk';
+    import ndk from '$lib/stores/ndk';
+    import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+  import type NDKLongForm from '$lib/ndk-kinds/long-form';
 
     /**
      * Whether to skip showing the user who did the highlight
@@ -22,11 +24,11 @@
 
     let pubkeys: string[] | undefined = undefined;
 
-    $: if (scope !== prevScope && scope) {
+    $: if (scope !== prevScope && scope && prevScope && highlights) {
         prevScope = scope;
 
         switch (scope) {
-            case "pubkey":
+            case "personal":
                 if (!pubkey) throw new Error('pubkey is required for scope "pubkey"');
                 pubkeys = [pubkey];
                 break;
@@ -34,67 +36,111 @@
                 pubkeys = $currentScope.pubkeys;
         }
 
-        console.log(`current scope pubkeys has ${$currentScope.pubkeys?.length}`)
-
-        loadArticlesGroupedByHighlights({pubkeys});
+        loadArticlesGroupedByHighlights({authors: pubkeys});
     }
 
-    let subs: NDKSubscription[] = [];
-    let items: Observable<App.Highlight[]>;
+    let highlights: NDKEventStore<NDKHighlight>;
 
-    onDestroy(() => {
-        for (const sub of subs) { sub.stop(); }
+    onMount(() => {
+        prevScope = scope!;
+        const opts: NDKFilter = {};
+
+        if (pubkeys && pubkeys.length > 0) { opts.authors = pubkeys }
+
+        loadArticlesGroupedByHighlights(opts);
     });
 
+    onDestroy(() => {
+        highlights?.unsubscribe();
+    });
+
+    let activeFilter: any;
+    let eosed = false;
+
     async function loadArticlesGroupedByHighlights(filter: any = {}) {
+        highlights?.unsubscribe();
+
         const oneMonthAgo = Math.floor(Date.now() / 1000) - 60 * 60 * 24 * 30;
         filter = {
             limit: 500,
-            since: oneMonthAgo,
+            // since: oneMonthAgo,
+            kinds: [9802],
             ...filter
         };
+        console.log({filter});
 
-        items = HighlightInterface.load(filter);
-		subs = HighlightInterface.startStream(filter);
+        activeFilter = filter;
 
-        return items;
+        highlights = $ndk.storeSubscribe<NDKHighlight>(filter, { closeOnEose: true }, NDKHighlight);
+        highlights.onEose(() => {
+            console.log(`eosed`);
+            eosed = true
+        });
     }
 
-    let processedItemCount = 0;
-    let taggedEvents: Record<string, number> = {};
+    /**
+     * Marker to react when the number of highlights changes
+     */
+    let processedHighlightCount = 0;
+
+    /**
+     * Marker of highlight ids that have been counted
+    */
+    let processedHighlightIds: Set<string> = new Set();
+
+    /**
+     * Used to keep track of the total number of times an article was highlighted (for sorting)
+     */
+    let taggedEvents: Record<string, NDKHighlight[]> = {};
+
+    /**
+     * Sorted list of article ids by the number of times they were highlighted
+     */
     let taggedEventIds: string[] = [];
 
-    $: if ($items?.length !== processedItemCount) {
-        processedItemCount = $items?.length ?? 0;
+    $: if (eosed && $highlights && $highlights?.length !== processedHighlightCount) {
+        processedHighlightCount = $highlights?.length ?? 0;
+        console.log(`starting to process with ${processedHighlightCount} highlights`);
 
-        // go through all the items and get the tagged event
-        for (const item of $items ?? []) {
-            const taggedEventId = item.articleId;
-            if (!taggedEventId) { console.log('item without articleId', item); continue; }
+        // go through all the highlights and get the tagged event
+        for (const highlight of $highlights ?? []) {
+            if (processedHighlightIds.has(highlight.id)) continue;
+            processedHighlightIds.add(highlight.id);
+
+            const tag = highlight.getArticleTag();
+            if (!tag) continue;
+
+            const taggedEventId = tag[1];
 
             if (!taggedEvents[taggedEventId]) {
-                taggedEvents[taggedEventId] = 0;
+                taggedEvents[taggedEventId] = [];
             }
 
-            taggedEvents[taggedEventId]++;
+            taggedEvents[taggedEventId].push(highlight);
         }
 
         // sort the tagged events by count
-        taggedEventIds = Object.entries(taggedEvents)
+        const sortedIds = Object.entries(taggedEvents)
+            .map(([id, highlights]) => [id, highlights.length] as [string, number])
             .sort((a, b) => b[1] - a[1])
-            .map((a) => a[0]);
+            .map((a) => a[0])
+            .slice(0, 10);
+
+        if (sortedIds.length !== taggedEventIds.length || sortedIds.some((id, i) => id !== taggedEventIds[i])) {
+            taggedEventIds = sortedIds;
+        }
     }
 </script>
 
-<ul class="flex flex-col gap-8">
+<div class="flex flex-col gap-8">
     {#each taggedEventIds as articleId}
-        <li class="overflow-hidden rounded-md bg-white px-6 py-4 shadow">
+        {#if taggedEvents[articleId]}
             <ArticleCardWithHighlights
-                id={articleId}
+                highlights={taggedEvents[articleId]}
                 highlightsFrom={pubkeys}
                 {maxHighlightCountToShow}
                 {skipHighlighter}
             />
-        </li>
+        {/if}
     {/each}
-</ul>
+</div>

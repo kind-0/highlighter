@@ -14,10 +14,9 @@
 
     import { Tooltip } from "flowbite-svelte";
     import { NDKEvent, NDKUser } from "@nostr-dev-kit/ndk";
-    import NoteInterface from "$lib/interfaces/notes";
-    import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import type NDKHighlight from '$lib/ndk-kinds/highlight';
 
-    export let highlight: App.Highlight;
+    export let highlight: NDKHighlight;
     export let skipHighlighter = false;
 
     /**
@@ -25,17 +24,16 @@
      */
     export let url: string;
 
-    let highlightEvent = new NDKHighlight($ndk, JSON.parse(highlight.event));
     let replies: any;
     let quotes: any;
     let npub = (new NDKUser({hexpubkey: highlight.pubkey})).npub;
 
     $: if (highlight?.id && !replies) {
-        replies = NoteInterface.load({ replies: [highlight.id] });
-        quotes = NoteInterface.load({ quotes: [highlight.id] });
+        // replies = NoteInterface.load({ replies: [highlight.id] });
+        // quotes = NoteInterface.load({ quotes: [highlight.id] });
     }
 
-    function shouldDisplayQuote(highlight: App.Highlight, quotes: App.Note[]) {
+    function shouldDisplayQuote(highlight: NDKHighlight, quotes: NDKEvent[]) {
         return true;
     }
 </script>
@@ -44,7 +42,7 @@
     <div class="flex flex-col gap-4">
         <div class="
         ">
-            <HighlightContent highlight={highlightEvent} />
+            <HighlightContent {highlight} />
         </div>
 
         <div class="
@@ -66,39 +64,35 @@
             <div class="
                 flex flex-row items-center gap-4
             ">
-                <div class="duration-200 opacity-0 group-hover:opacity-100">
-                    <BoostButton
-                        event={highlightEvent}
-                        {highlight}
-                    />
-                </div>
+                <BoostButton
+                    event={highlight}
+                    {highlight}
+                    class="duration-200 opacity-0 group-hover:opacity-100"
+                />
 
-                <div class="duration-200 opacity-0 group-hover:opacity-100">
-                    <BookmarkButton
-                        event={highlightEvent}
-                    />
-                </div>
+                <BookmarkButton
+                    event={highlight}
+                    class="duration-200 opacity-0 group-hover:opacity-100"
+                />
+                <Zaps {highlight} event={highlight}
+                    class="duration-200 opacity-0 group-hover:opacity-100"
+                />
 
-                <div class="duration-200 opacity-0 group-hover:opacity-100">
-                    <Zaps {highlight} event={highlightEvent} />
-                </div>
-
-                <div class="duration-200 opacity-0 group-hover:opacity-100">
-                    <a href={`/e/${highlightEvent.encode()}`} class="
-                        text-slate-500 hover:text-orange-500
-                        flex flex-row items-center gap-2
-                    ">
-                        <LinkIcon />
-                    </a>
-                    <Tooltip color="black">Link to this highlight</Tooltip>
-                </div>
+                <a href={`/e/${highlight.encode()}`} class="
+                    text-slate-500 hover:text-orange-500
+                    flex flex-row items-center gap-2
+                    duration-200 opacity-0 group-hover:opacity-100
+                ">
+                    <LinkIcon class="w-4 h-4" />
+                </a>
+                <Tooltip color="black">Link to this highlight</Tooltip>
 
                 <a href={url} class="
                     {$quotes?.length > 0 ? 'text-orange-400 hover:text-orange-500' : 'text-slate-500 hover:text-orange-500'}
                     flex flex-row items-center gap-2
                     {$quotes?.length > 0 ? '' : 'duration-200 opacity-0 group-hover:opacity-100'}
                 ">
-                    <div class="w-6 h-6"><CommentIcon /></div>
+                    <div class="w-4 h-4"><CommentIcon /></div>
                     {($quotes||[]).length}
                 </a>
                 <Tooltip color="black">View Notes</Tooltip>
