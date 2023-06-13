@@ -1,5 +1,5 @@
-import NDK, { NDKEvent, type NostrEvent } from "@nostr-dev-kit/ndk";
-import { NDKKind } from "./index.js";
+import NDK, { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
+import { NDKKind } from './index.js';
 
 class NDKLongForm extends NDKEvent {
     constructor(ndk: NDK | undefined, rawEvent?: NostrEvent) {

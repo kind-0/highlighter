@@ -1,7 +1,7 @@
-import NDK, { NDKEvent, NDKPrivateKeySigner, type NDKFilter, type NDKSigner, type NDKUserProfile } from "@nostr-dev-kit/ndk";
-import type { NDKTag, NostrEvent } from "@nostr-dev-kit/ndk/lib/src/events";
-import {sha256} from '@noble/hashes/sha256'
-import {bytesToHex} from '@noble/hashes/utils'
+import NDK, { NDKEvent, NDKPrivateKeySigner, type NDKFilter, type NDKSigner, type NDKUserProfile } from '@nostr-dev-kit/ndk';
+import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
+import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex } from '@noble/hashes/utils';
 
 const CURRENT_PRIVATE_NOTE_VERSION = '2';
 
@@ -19,14 +19,14 @@ export async function findEphemeralSigner(
     opts: IFindEphemeralSignerLookups
 ): Promise<NDKPrivateKeySigner | undefined> {
     const mainUser = await mainSigner.user();
-    const filter: NDKFilter = {kinds:[2600 as number], '#p': [mainUser.hexpubkey()]};
+    const filter: NDKFilter = { kinds: [2600 as number], '#p': [mainUser.hexpubkey()] };
 
     if (opts.name) {
         const hashedName = await getHashedKeyName(opts.name);
-        filter["#e"] = [hashedName];
+        filter['#e'] = [hashedName];
     } else if (opts.associatedEventNip19) {
         const hashedEventReference = await getHashedKeyName(opts.associatedEventNip19);
-        filter["#e"] = [hashedEventReference];
+        filter['#e'] = [hashedEventReference];
     }
 
     const event = await ndk.fetchEvent(filter);
@@ -43,7 +43,7 @@ type EphemeralKeyEventContent = {
     event?: string;
     version: string;
     metadata?: object;
-}
+};
 
 interface ISaveOpts {
     associatedEvent?: NDKEvent;
@@ -57,8 +57,8 @@ function generateContent(targetSigner: NDKPrivateKeySigner, opts: ISaveOpts = {}
     const content: EphemeralKeyEventContent = {
         key: targetSigner.privateKey!,
         version: CURRENT_PRIVATE_NOTE_VERSION,
-        ...opts.metadata
-    }
+        ...opts.metadata,
+    };
 
     if (opts.associatedEvent) content.event = opts.associatedEvent.encode();
 
@@ -73,8 +73,8 @@ async function getHashedKeyName(name: string) {
 async function generateTags(mainSigner: NDKSigner, opts: ISaveOpts = {}) {
     const mainUser = await mainSigner.user();
     const tags = [
-        ['p', mainUser.hexpubkey() ],
-        ['client', 'atlas']
+        ['p', mainUser.hexpubkey()],
+        ['client', 'atlas'],
     ];
 
     if (opts.associatedEvent) {
@@ -100,11 +100,7 @@ async function generateTags(mainSigner: NDKSigner, opts: ISaveOpts = {}) {
  * @param associatedEvent An event to associate with the ephemeral signer
  * @param name The name to save the ephemeral signer as -- this name will be encrypted with the main signer's public key
  */
-export async function saveEphemeralSigner(
-    ndk: NDK,
-    targetSigner: NDKPrivateKeySigner,
-    opts: ISaveOpts = {}
-) {
+export async function saveEphemeralSigner(ndk: NDK, targetSigner: NDKPrivateKeySigner, opts: ISaveOpts = {}) {
     const mainSigner = opts.mainSigner || ndk.signer;
 
     if (!mainSigner) throw new Error('No main signer provided');
@@ -113,7 +109,7 @@ export async function saveEphemeralSigner(
     const event = new NDKEvent(ndk, {
         kind: 2600,
         content: generateContent(targetSigner, opts),
-        tags: await generateTags(mainSigner, opts)
+        tags: await generateTags(mainSigner, opts),
     } as NostrEvent);
     event.pubkey = mainUser.hexpubkey();
     await event.encrypt(mainUser, mainSigner);
@@ -125,8 +121,8 @@ export async function saveEphemeralSigner(
         const event = new NDKEvent(ndk, {
             kind: 0,
             content: JSON.stringify(opts.keyProfile),
-            tags: [] as NDKTag[]
-        } as NostrEvent)
+            tags: [] as NDKTag[],
+        } as NostrEvent);
         event.pubkey = user.hexpubkey();
         await event.sign(targetSigner);
         await event.publish();

@@ -11,7 +11,7 @@ class NDKRelayList extends NDKList {
         if (tagValue.startsWith('wss://')) return true;
         if (tagValue.startsWith('nrelay')) return true;
 
-        return "Invalid relay URL";
+        return 'Invalid relay URL';
     }
 }
 

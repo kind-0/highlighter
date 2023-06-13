@@ -19,8 +19,7 @@ let relays;
 
 try {
     relays = localStorage.getItem('relays');
-} catch (e) {
-}
+} catch (e) {}
 
 let relayList: string[] = [];
 
@@ -38,7 +37,7 @@ if (!relayList || !Array.isArray(relayList) || relayList.length === 0) {
         'wss://relay.snort.social',
         'wss://nostr.mom',
         // 'wss://atlas.nostr.land/',
-        'wss://offchain.pub/'
+        'wss://offchain.pub/',
     ];
 }
 
@@ -50,33 +49,29 @@ type UnsubscribableStore<T> = Writable<T> & {
 export type NDKEventStore<T> = UnsubscribableStore<T[]>;
 
 export type NDKSvelte = NDK & {
-    storeSubscribe: <T>(
-        filter: NDKFilter,
-        opts?: NDKSubscriptionOptions,
-        klass?: classWithConvertFunction
-    ) => NDKEventStore<T>;
-}
+    storeSubscribe: <T>(filter: NDKFilter, opts?: NDKSubscriptionOptions, klass?: classWithConvertFunction) => NDKEventStore<T>;
+};
 
 const _ndk: NDKSvelte = new NDK({
     explicitRelayUrls: relayList,
-    cacheAdapter
+    cacheAdapter,
 }) as NDKSvelte;
 
 type classWithConvertFunction = {
     from: (event: NDKEvent) => any;
-}
+};
 
-_ndk.storeSubscribe = <T>(
-    filter: NDKFilter,
-    opts?: NDKSubscriptionOptions,
-    klass?: classWithConvertFunction
-): NDKEventStore<T> => {
+_ndk.storeSubscribe = <T>(filter: NDKFilter, opts?: NDKSubscriptionOptions, klass?: classWithConvertFunction): NDKEventStore<T> => {
     const sub = _ndk.subscribe(filter, opts);
     const events: T[] = [];
     const store: UnsubscribableStore<T[]> = {
         ...writable([]),
-        unsubscribe: () => { sub.stop(); },
-        onEose: (cb) => { sub.on('eose', cb); },
+        unsubscribe: () => {
+            sub.stop();
+        },
+        onEose: (cb) => {
+            sub.on('eose', cb);
+        },
     };
 
     sub.on('event', (event: NDKEvent) => {
@@ -91,17 +86,14 @@ _ndk.storeSubscribe = <T>(
     });
 
     return store;
-}
+};
 
 const ndk = writable(_ndk);
 
 export default ndk;
 
 const _bunkerNDK = new NDK({
-    explicitRelayUrls: [
-        'wss://relay.nsecbunker.com',
-        'wss://nostr.vulpem.com',
-    ],
+    explicitRelayUrls: ['wss://relay.nsecbunker.com', 'wss://nostr.vulpem.com'],
 });
 
 export const bunkerNDK = writable(_bunkerNDK);

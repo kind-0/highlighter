@@ -3,13 +3,15 @@
     import NoteCard from '$lib/components/notes/card.svelte';
     import ndk from '$lib/stores/ndk';
     import { createEventDispatcher } from 'svelte';
-    import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
     import { Card } from 'flowbite-svelte'
     import NDKList from '$lib/ndk-kinds/lists';
     import { Name } from '@nostr-dev-kit/ndk-svelte-components';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import { filterForId, filterFromNaddr } from '$lib/utils';
 
+    export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
     export let skipReplies: boolean = false;
     export let skipFooter: boolean = false;
@@ -21,11 +23,21 @@
         if (event) return event;
 
         const p: Promise<NDKEvent | undefined> = new Promise((resolve, reject) => {
-            if (!id) {
-                throw new Error(`no id`);
+            if (!id && !bech32) {
+                throw new Error(`no id or bech32`);
             }
 
-            $ndk.fetchEvent(id).then((e) => {
+            let filter: NDKFilter;
+
+            if (id) {
+                filter = filterForId(id);
+            } else if (bech32) {
+                filter = filterFromNaddr(bech32);
+            }
+
+            console.log(`query with`, filter);
+
+            $ndk.fetchEvent(filter).then((e) => {
                 if (!e) return reject(`no event ${id}`);
 
                 if (e.kind === 4) {

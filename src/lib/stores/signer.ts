@@ -1,9 +1,9 @@
-import { findEphemeralSigner } from "$lib/signers/ephemeral";
-import { NDKPrivateKeySigner, type NDKUser } from "@nostr-dev-kit/ndk";
-import { writable, get as getStore } from "svelte/store";
+import { findEphemeralSigner } from '$lib/signers/ephemeral';
+import { NDKPrivateKeySigner, type NDKUser } from '@nostr-dev-kit/ndk';
+import { writable, get as getStore } from 'svelte/store';
 import ndkStore from './ndk';
-import { currentUser as currentUserStore } from "../store";
-import type NDKList from "$lib/ndk-kinds/lists";
+import { currentUser as currentUserStore } from '../store';
+import type NDKList from '$lib/ndk-kinds/lists';
 
 export type SignerStoreItem = {
     signer: NDKPrivateKeySigner;
@@ -42,13 +42,9 @@ export async function getSigner(list: NDKList): Promise<SignerStoreItem> {
     if (item) return item;
 
     const ndk = getStore(ndkStore);
-    let signer = await findEphemeralSigner(
-        ndk,
-        ndk.signer!,
-        {
-            associatedEventNip19: list.encode(),
-        }
-    );
+    let signer = await findEphemeralSigner(ndk, ndk.signer!, {
+        associatedEventNip19: list.encode(),
+    });
 
     if (signer) {
         console.log(`found a signer for list ${list.name}`);
@@ -56,7 +52,7 @@ export async function getSigner(list: NDKList): Promise<SignerStoreItem> {
             signer: signer!,
             user: await signer.user(),
             saved: true,
-            id
+            id,
         };
     } else {
         signer = NDKPrivateKeySigner.generate();
@@ -65,7 +61,7 @@ export async function getSigner(list: NDKList): Promise<SignerStoreItem> {
             user: await signer.user(),
             saved: false,
             name: await getDelegatedSignerName(list),
-            id
+            id,
         };
     }
     item.user.ndk = ndk;

@@ -1,4 +1,4 @@
-import {Readability, isProbablyReaderable } from '@mozilla/readability';
+import { Readability, isProbablyReaderable } from '@mozilla/readability';
 import type NDKLongForm from './ndk-kinds/long-form';
 
 export async function fetchArticle(html: string, url: string, contentType: string): Promise<NDKLongForm | null> {
@@ -8,7 +8,7 @@ export async function fetchArticle(html: string, url: string, contentType: strin
 
     // Check if the content is suitable for Readability
     if (!isProbablyReaderable(doc)) {
-        throw new Error("The page is not reader-friendly.");
+        throw new Error('The page is not reader-friendly.');
     }
 
     // Extract the main content using Readability

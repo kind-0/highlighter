@@ -2,10 +2,7 @@ export class EncryptedLongForm {
     public title: string;
     public content: string;
 
-    constructor() {
-    }
+    constructor() {}
 }
 
-export async function loadEncryptedLongForm(ndk, naddr): Promise<EncryptedLongForm | undefined> {
-
-}
+export async function loadEncryptedLongForm(ndk, naddr): Promise<EncryptedLongForm | undefined> {}

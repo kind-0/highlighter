@@ -1,7 +1,7 @@
-import NDK, { NDKEvent, type NDKTag, type NostrEvent } from "@nostr-dev-kit/ndk";
-import { NDKKind } from "./index.js";
-import { nip19 } from "nostr-tools";
-import NDKLongForm from "./long-form.js";
+import NDK, { NDKEvent, type NDKTag, type NostrEvent } from '@nostr-dev-kit/ndk';
+import { NDKKind } from './index.js';
+import { nip19 } from 'nostr-tools';
+import NDKLongForm from './long-form.js';
 
 /**
  * Highlight as defined by NIP-84 (kind:9802).
@@ -51,9 +51,7 @@ class NDKHighlight extends NDKEvent {
     }
 
     getArticleTag(): NDKTag | undefined {
-        return this.getMatchingTags('a')[0] ||
-            this.getMatchingTags('e')[0] ||
-            this.getMatchingTags('r')[0];
+        return this.getMatchingTags('a')[0] || this.getMatchingTags('e')[0] || this.getMatchingTags('r')[0];
     }
 
     async getArticle(): Promise<NDKLongForm | NDKEvent | string | undefined> {
@@ -67,7 +65,7 @@ class NDKHighlight extends NDKEvent {
 
         switch (articleTag[0]) {
             case 'a':
-                const [ kind, pubkey, identifier ] = articleTag[1].split(':');
+                const [kind, pubkey, identifier] = articleTag[1].split(':');
                 taggedBech32 = nip19.naddrEncode({ kind: parseInt(kind), pubkey, identifier });
                 break;
             case 'e':
@@ -89,7 +87,7 @@ class NDKHighlight extends NDKEvent {
             }
         }
 
-console.log("returning this._article", this._article)
+        console.log('returning this._article', this._article);
 
         return this._article;
     }

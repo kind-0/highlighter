@@ -4,7 +4,7 @@ import { liveQuery } from 'dexie';
 import { db } from '$lib/interfaces/db';
 import type NDK from '@nostr-dev-kit/ndk';
 import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
-import {nip19} from 'nostr-tools';
+import { nip19 } from 'nostr-tools';
 
 function valueFromTag(event: NDKEvent, tag: string): string | undefined {
     const matchingTag = event.tags.find((t: string[]) => t[0] === tag);
@@ -14,19 +14,15 @@ function valueFromTag(event: NDKEvent, tag: string): string | undefined {
 
 interface ILoadOpts {
     recipient?: string;
-};
+}
 
 const EncryptedNoteInterface = {
     fromCacheRepliesTo: (eventId: string) => {
-        return liveQuery(() =>
-            db.notes.where({replyToEventId: eventId}).toArray()
-        );
+        return liveQuery(() => db.notes.where({ replyToEventId: eventId }).toArray());
     },
 
     fromIds: (ids: string[]) => {
-        return liveQuery(() =>
-            db.notes.where('id').anyOf(ids).toArray()
-        );
+        return liveQuery(() => db.notes.where('id').anyOf(ids).toArray());
     },
 
     load: (opts: ILoadOpts = {}) => {
@@ -48,7 +44,7 @@ const EncryptedNoteInterface = {
                     pubkey: event.pubkey,
                     encryptedContent: event.content,
                     isAtlasMessage,
-                    event: JSON.stringify(await event.toNostrEvent())
+                    event: JSON.stringify(await event.toNostrEvent()),
                 };
 
                 await db.encryptedNotes.put(note);
@@ -58,11 +54,9 @@ const EncryptedNoteInterface = {
         });
 
         if (opts.recipient) {
-            return liveQuery(() =>
-                db.encryptedNotes.where({pubkey: opts.recipient}).toArray()
-            );
+            return liveQuery(() => db.encryptedNotes.where({ pubkey: opts.recipient }).toArray());
         }
-    }
+    },
 };
 
 export default EncryptedNoteInterface;

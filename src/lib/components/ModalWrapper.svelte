@@ -24,8 +24,9 @@
         flex flex-col gap-8
         relative
         max-w-prose w-full
+        overflow-y-auto
         {klass}
-    " style="pointer-events: auto;" on:click|stopPropagation={()=>{}}>
+    " style="pointer-events: auto; max-height: 80vh;" on:click|stopPropagation={()=>{}}>
         <slot />
     </div>
 </div>

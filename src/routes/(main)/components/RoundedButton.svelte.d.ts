@@ -1,4 +1,4 @@
-import { SvelteComponentTyped } from "svelte";
+import { SvelteComponentTyped } from 'svelte';
 declare const __propDef: {
     props: {
         [x: string]: any;
@@ -16,6 +16,5 @@ declare const __propDef: {
 export type RoundedButtonProps = typeof __propDef.props;
 export type RoundedButtonEvents = typeof __propDef.events;
 export type RoundedButtonSlots = typeof __propDef.slots;
-export default class RoundedButton extends SvelteComponentTyped<RoundedButtonProps, RoundedButtonEvents, RoundedButtonSlots> {
-}
+export default class RoundedButton extends SvelteComponentTyped<RoundedButtonProps, RoundedButtonEvents, RoundedButtonSlots> {}
 export {};

@@ -1,8 +1,7 @@
-
 import sanitizeHtml from 'sanitize-html';
 import MarkdownIt from 'markdown-it';
-import {nip19} from 'nostr-tools';
-import type { NDKFilter } from '@nostr-dev-kit/ndk';
+import { nip19 } from 'nostr-tools';
+import { filterFromId, type NDKFilter } from '@nostr-dev-kit/ndk';
 
 export function nicelyFormattedSatNumber(amount: number) {
     // if the number is less than 1000, just return it
@@ -18,22 +17,18 @@ export function nicelyFormattedSatNumber(amount: number) {
 }
 
 export function filterForId(id: string): NDKFilter {
+
+
     if (!!id.match(/:/)) {
         const [kind, pubkey, identifier] = id.split(':');
-        return { kinds: [parseInt(kind)], authors: [pubkey], "#d": [identifier] };
+        return { kinds: [parseInt(kind)], authors: [pubkey], '#d': [identifier] };
     } else {
         return { ids: [id] };
     }
 }
 
 export function filterFromNaddr(naddr: string): NDKFilter {
-    const ndecode = nip19.decode(naddr).data as any;
-
-    return {
-        kinds: [ndecode.kind],
-        authors: [ndecode.pubkey],
-        "#d": [ndecode.identifier],
-    }
+    return filterFromId(naddr);
 }
 
 export function idFromNaddr(naddr: string) {
@@ -42,17 +37,17 @@ export function idFromNaddr(naddr: string) {
 }
 
 export function prettifyContent(content: string) {
-    const bitcoinImage = "<img src=\"https://abs.twimg.com/hashflags/Bitcoin_evergreen/Bitcoin_evergreen.png\" style=\"width: 1.2em; vertical-align: -20%; margin-right: 0.075em; height: 1.2em; margin-left: 2px; display: inline-block;\">";
+    const bitcoinImage =
+        '<img src="https://abs.twimg.com/hashflags/Bitcoin_evergreen/Bitcoin_evergreen.png" style="width: 1.2em; vertical-align: -20%; margin-right: 0.075em; height: 1.2em; margin-left: 2px; display: inline-block;">';
 
-    content = content
-        .replace(/#bitcoin/i, `#bitcoin${bitcoinImage}`);
+    content = content.replace(/#bitcoin/i, `#bitcoin${bitcoinImage}`);
 
     const md = new MarkdownIt({
         html: true,
         linkify: true,
         typographer: true,
         autolink: true,
-        image: true
+        image: true,
     });
     md.linkify?.set();
     content = md.render(content);
@@ -74,7 +69,7 @@ function flattenText(node: string) {
 export function highlightText(targetText: string, highlightId: string) {
     const regex = new RegExp(escapeRegExp(targetText), 'g');
     const textNodes = flattenText(document.body);
-    const marks: HTMLElement[]  = [];
+    const marks: HTMLElement[] = [];
 
     textNodes.forEach((textNode) => {
         let match;
@@ -110,13 +105,12 @@ export function highlightText(targetText: string, highlightId: string) {
 
     return marks;
 
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
 }
 
 // Usage example: highlightText("your target text here");
-
 
 // export function modifyDocument(content: string) {
 //     const regex = new RegExp(content, 'gi');
@@ -147,7 +141,6 @@ function escapeRegExp(string) {
 //             const after = node.splitText(match[0].length);
 
 //             console.log({before, after});
-
 
 //             const mark = document.createElement("mark");
 

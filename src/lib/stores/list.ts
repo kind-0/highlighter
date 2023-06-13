@@ -1,5 +1,5 @@
 import NDKList from '../ndk-kinds/lists';
-import {NDKListKinds} from '../ndk-kinds/index.js';
+import { NDKListKinds } from '../ndk-kinds/index.js';
 import { NDKKind, type NDKEvent, type NDKUser } from '@nostr-dev-kit/ndk';
 import { writable, derived, get as getStore } from 'svelte/store';
 import ndk from './ndk';
@@ -20,13 +20,13 @@ export const sortedLists = derived(lists, ($lists) => {
 
 export function getLists(user: NDKUser) {
     const $ndk = getStore(ndk);
-    const sub = $ndk.subscribe({
-        kinds: [
-            NDKKind.EventDeletion,
-            ...(NDKListKinds as number[])
-        ],
-        authors: [user.hexpubkey()],
-    }, { closeOnEose: true, groupable: false });
+    const sub = $ndk.subscribe(
+        {
+            kinds: [NDKKind.EventDeletion, ...(NDKListKinds as number[])],
+            authors: [user.hexpubkey()],
+        },
+        { closeOnEose: true, groupable: false }
+    );
 
     let eosed = true;
     const preEoseLists: Map<string, NDKList> = new Map();
@@ -42,28 +42,26 @@ export function getLists(user: NDKUser) {
 
         lists.set(preEoseLists);
         deletions.set(preEoseDeletions);
-    })
+    });
 
     sub.on('event', (event: NDKEvent) => {
         if (!shouldProcess(event)) return;
 
         // if (!eosed) {
-            if (event.kind === NDKKind.EventDeletion) {
-                const tag = event.tagValue('a');
-                if (tag) {
-
-                    console.log(`marking ${tag} as deleted`);
-                    preEoseDeletions.add(tag);
-                }
-            } else {
-                event.ndk = $ndk;
-                const list = NDKList.from(event);
-                preEoseLists.set(list.tagId(), list);
+        if (event.kind === NDKKind.EventDeletion) {
+            const tag = event.tagValue('a');
+            if (tag) {
+                preEoseDeletions.add(tag);
             }
+        } else {
+            event.ndk = $ndk;
+            const list = NDKList.from(event);
+            preEoseLists.set(list.tagId(), list);
+        }
 
-            updateList();
+        updateList();
 
-            return;
+        return;
         // }
 
         // if (event.kind === NDKKind.EventDeletion) {
@@ -116,10 +114,9 @@ function shouldProcess(event: NDKEvent) {
     if (event.kind !== NDKKind.EventDeletion) {
         const name = NDKList.from(event).name!;
 
-        if (
-            !name ||
-            name.startsWith('chats/')
-        ) { return; }
+        if (!name || name.startsWith('chats/')) {
+            return;
+        }
     }
 
     return true;

@@ -13,10 +13,10 @@ function valueFromTag(event: NDKEvent, tag: string): string | undefined {
 }
 
 interface ILoadOpts {
-    naddr?: string,
-    id?: string,
-    url?: string
-};
+    naddr?: string;
+    id?: string;
+    url?: string;
+}
 
 const ArticleInterface = {
     load: (opts: ILoadOpts = {}) => {
@@ -27,17 +27,17 @@ const ArticleInterface = {
             filter['kinds'] = [decode.kind];
             filter['#d'] = [decode.identifier];
             filter['authors'] = [decode.pubkey];
-            queryId = `${decode.kind}:${decode.pubkey}:${decode.identifier}`
+            queryId = `${decode.kind}:${decode.pubkey}:${decode.identifier}`;
         } else if (opts.id) {
-            const [ kind, pubkey, identifier ] = opts.id.split(':');
+            const [kind, pubkey, identifier] = opts.id.split(':');
             filter['kinds'] = [parseInt(kind)];
             filter['#d'] = [identifier];
             filter['authors'] = [pubkey];
-            queryId = opts.id
+            queryId = opts.id;
         } else if (opts.url) {
             filter['kinds'] = [30023];
             filter['#r'] = [opts.url];
-            queryId = opts.url
+            queryId = opts.url;
         }
 
         const ndk: NDK = getStore(ndkStore);
@@ -56,8 +56,8 @@ const ArticleInterface = {
                     publisher: event.pubkey,
                     content: event.content,
                     author: valueFromTag(event, 'author') || event.pubkey,
-                    tags: event.tags.filter(t => t[0] === 't').map(t => t[1]),
-                    event: JSON.stringify(await event.toNostrEvent())
+                    tags: event.tags.filter((t) => t[0] === 't').map((t) => t[1]),
+                    event: JSON.stringify(await event.toNostrEvent()),
                 };
 
                 await db.articles.put(article);
@@ -67,13 +67,9 @@ const ArticleInterface = {
         });
 
         if (opts.url) {
-            return liveQuery(() =>
-                db.articles.where({url: opts.url}).toArray()
-            );
+            return liveQuery(() => db.articles.where({ url: opts.url }).toArray());
         } else if (queryId) {
-            return liveQuery(() =>
-                db.articles.where({id: queryId}).toArray()
-            );
+            return liveQuery(() => db.articles.where({ id: queryId }).toArray());
         } else {
             console.error('not know how to reply to article load', opts);
         }
@@ -88,7 +84,7 @@ export function articleFromEvent(event: NDKEvent): App.Article {
         id: event.tagId(),
         url,
         title,
-        tags: event.tags.filter(t => t[0] === 't').map(t => t[1]),
+        tags: event.tags.filter((t) => t[0] === 't').map((t) => t[1]),
         author: valueFromTag(event, 'author') || event.pubkey,
         publisher: event.pubkey,
         content: event.content,

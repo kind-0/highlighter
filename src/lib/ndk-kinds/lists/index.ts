@@ -1,5 +1,5 @@
-import NDK, { NDKEvent, NDKUser, type NDKTag, type NostrEvent, NDKRelay, type NDKSigner } from "@nostr-dev-kit/ndk";
-import { NDKKind } from "../index.js";
+import NDK, { NDKEvent, NDKUser, type NDKTag, type NostrEvent, NDKRelay, type NDKSigner } from '@nostr-dev-kit/ndk';
+import { NDKKind } from '../index.js';
 
 /**
  * Represents any NIP-33 list kind.
@@ -15,7 +15,6 @@ class NDKList extends NDKEvent {
     static from(ndkEvent: NDKEvent): NDKList {
         return new NDKList(ndkEvent.ndk, ndkEvent.rawEvent());
     }
-
 
     get name(): string | undefined {
         return this.tagValue('d');
@@ -75,10 +74,7 @@ class NDKList extends NDKEvent {
 
     public items(): NDKTag[] {
         return this.tags.filter((t) => {
-            return ![
-                'd',
-                'description',
-            ].includes(t[0]);
+            return !['d', 'description'].includes(t[0]);
         });
     }
 
@@ -86,11 +82,7 @@ class NDKList extends NDKEvent {
     async addItem(event: NDKEvent, mark?: string, encrypted?: boolean): Promise<void>;
     async addItem(user: NDKUser, mark?: string, encrypted?: boolean): Promise<void>;
     async addItem(tag: NDKTag, mark?: string, encrypted?: boolean): Promise<void>;
-    async addItem(
-        obj: NDKUser | NDKEvent | NDKRelay | NDKTag,
-        mark: string | undefined = undefined,
-        encrypted: boolean = false
-    ): Promise<void> {
+    async addItem(obj: NDKUser | NDKEvent | NDKRelay | NDKTag, mark: string | undefined = undefined, encrypted: boolean = false): Promise<void> {
         if (!this.ndk) throw new Error('NDK instance not set');
         if (!this.ndk.signer) throw new Error('NDK signer not set');
 
@@ -102,7 +94,8 @@ class NDKList extends NDKEvent {
             tag = obj.tagReference();
         } else if (obj instanceof NDKRelay) {
             tag = ['r', (obj as NDKRelay).url];
-        } else if (Array.isArray(obj)) { // NDKTag
+        } else if (Array.isArray(obj)) {
+            // NDKTag
             tag = obj;
         } else {
             throw new Error('Invalid object type');

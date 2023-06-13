@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type {NDKUser} from '@nostr-dev-kit/ndk';
+import type { NDKUser } from '@nostr-dev-kit/ndk';
 
 export const currentUser = writable<NDKUser | null>(null);
 export const currentUserFollowPubkeys = writable<string[] | undefined>(undefined);

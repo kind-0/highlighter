@@ -48,9 +48,10 @@
 
         <div class="flex flex-col gap-8">
             <GenericEventCard
-                {id}
+                bech32={id}
                 skipTitle={true}
                 skipButtons={true}
+                skipReplies={true}
             />
 
             <ClickToAddComment bind:value={comment} />

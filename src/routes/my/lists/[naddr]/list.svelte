@@ -3,13 +3,12 @@
 
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
-    import BookmarkListInterface, { deleteList } from '$lib/interfaces/bookmark-list';
 
     import PageTitle from '../../components/PageTitle.svelte';
     import { Tabs, TabItem } from 'flowbite-svelte';
 
     import Tags from './tags.svelte';
-    import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
+    import type { NDKTag } from '@nostr-dev-kit/ndk';
     import FilterFeed from '$lib/components/FilterFeed.svelte';
     import { goto } from '$app/navigation';
     import AddListItem from '$lib/components/lists/AddListItem.svelte';
@@ -18,7 +17,7 @@
     import NDKRelayList from '$lib/ndk-kinds/lists/relay-list';
     import ListsFeed from './ListsFeed.svelte';
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
-    import listSigners, { getSigner, type SignerStoreItem } from '$lib/stores/signer';
+    import { getSigner, type SignerStoreItem } from '$lib/stores/signer';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
 
     export let list: NDKList;
@@ -56,7 +55,7 @@
             return;
         }
 
-        await deleteList(list);
+        await list.delete();
         goto('/my/lists');
     }
 
