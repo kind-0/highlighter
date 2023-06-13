@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { NDKEventStore } from '$lib/stores/ndk.ts';
     import LogoIcon from '$lib/icons/Logo.svelte';
     import HighlightIcon from '$lib/icons/Highlight.svelte';
     import BookmarkIcon from '$lib/icons/Bookmark.svelte';
@@ -16,58 +17,47 @@
     import { Modals, closeModal } from 'svelte-modals'
     import { fade } from 'svelte/transition'
 
-    import BookmarkListInterface from '$lib/interfaces/bookmark-list';
     import { onMount } from 'svelte';
     import ListItem from './components/navigation/list-item.svelte';
     import { NDKEvent } from '@nostr-dev-kit/ndk';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import { NavHamburger } from 'flowbite-svelte';
 
-    let bookmarkLists, _bookmarkLists: App.BookmarkList[] = [];
+    import { NDKListKinds } from '$lib/ndk-kinds';
+    import NDKList from '$lib/ndk-kinds/lists';
 
-    async function loadbookmarkLists() {
-        const user = await $ndk.signer?.user();
+    import { lists, sortedLists, getLists } from '$lib/stores/list';
 
-		if (!user) {
-            setTimeout(() => {
-                loadbookmarkLists();
-            }, 100);
-            return;
-		}
+    let subscribed = false;
 
-		const opts = { pubkeys: [user.hexpubkey()] };
-		bookmarkLists = BookmarkListInterface.load(opts);
-		return BookmarkListInterface.startStream(opts);
+    $: if (!subscribed && $currentUser) {
+        subscribed = true;
+        getLists($currentUser);
     }
 
-    onMount(async () => {
-        loadbookmarkLists();
-    })
 
-    function isTopLevel(_list: App.BookmarkList) {
-        for (const list of _bookmarkLists) {
-            // check if a list has _list's id in its tags
-            const listEvent = new NDKEvent($ndk, JSON.parse(list.event));
-            if (listEvent.tags.find(t => (
-                t[1] === _list.id) && // if this list is referenced by another list
-                t[1] !== listEvent.id // that is not itself
-            )) {
-                return false;
-            }
-        }
+    // function isTopLevel(list: NDKList) {
+    //     for (const list of _bookmarkLists) {
+    //         // check if a list has _list's id in its tags
+    //         const listEvent = new NDKEvent($ndk, JSON.parse(list.event));
+    //         if (listEvent.tags.find(t => (
+    //             t[1] === _list.id) && // if this list is referenced by another list
+    //             t[1] !== listEvent.id // that is not itself
+    //         )) {
+    //             return false;
+    //         }
+    //     }
 
-        return true;
-    }
+    //     return true;
+    // }
 
-    $: {
-		_bookmarkLists = (($bookmarkLists || []) as App.BookmarkList[]).sort((a, b) => {
-			return b.createdAt - a.createdAt;
-		});
+    // $: {
+	// 	_bookmarkLists = (($bookmarkLists || []) as NDKList[]).sort((a, b) => {
+	// 		return b.createdAt - a.createdAt;
+	// 	});
 
-        _bookmarkLists = _bookmarkLists.filter(l => !l.title.startsWith('chats/'));
-
-		_bookmarkLists = _bookmarkLists;
-	}
+    //     _bookmarkLists = _bookmarkLists.filter(l => !l.title.startsWith('chats/'));
+	// }
 
     let isOpen = false;
 </script>
@@ -132,14 +122,13 @@
                     <li>
                         <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
                         <ul class="-mx-2 mt-2 space-y-1">
-                            {#each _bookmarkLists as bookmarkList}
-                                {#if isTopLevel(bookmarkList)}
-                                    <ListItem list={bookmarkList} allLists={_bookmarkLists} />
-                                {/if}
+                            {#each $sortedLists??[] as item}
+                                <!-- {#if isTopLevel(bookmarkList)} -->
+                                    <ListItem {item} lists={$sortedLists} />
+                                <!-- {/if} -->
                             {/each}
                         </ul>
                     </li>
-
 
                     {#if !$currentUser}
                         <li class="w-full">

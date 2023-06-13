@@ -3,15 +3,10 @@
     import { NDKEvent, type NDKTag } from '@nostr-dev-kit/ndk';
 
     import NavigationButton from './Button.svelte';
-    import BookmarkListInterface from '$lib/interfaces/bookmark-list';
     import NDKList from '$lib/ndk-kinds/lists';
 
-    export let allLists: App.BookmarkList[];
-    export let list: App.BookmarkList;
-
-    let loadedListId: string;
-    let listEvent = new NDKList($ndk, JSON.parse(list.event));
-    let childrenLists;
+    export let item: NDKList;
+    export let lists: NDKList[];
 
     let hover = false;
 
@@ -47,22 +42,7 @@
         );
     }
 
-    $: {
-        if (loadedListId !== list.id && list.id) {
-            const ids = [];
-            for (const tag of listEvent.tags) {
-                if (tagIsList(tag)) {
-                    ids.push(tag[1]);
-                }
-            }
-
-            if (ids.length > 0) {
-                childrenLists = BookmarkListInterface.load({decodedNaddrs: ids});
-            }
-        }
-    }
-
-    function decendants(list: App.BookmarkList) {
+    function decendants(list: NDKList) {
         const decendants = [];
 
         for (const tag of listEvent.tags) {
@@ -77,7 +57,7 @@
         return decendants;
     }
 
-    const children = decendants(list);
+    // const children = decendants(list);
 
     function dragStart(event: DragEvent) {
         if (!event.dataTransfer) return;
@@ -102,18 +82,18 @@
             {hover ? 'bg-gray-100' : ''}
         "
     >
-        <NavigationButton route="/my/lists/{list.naddr}">
-            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600">{list.title.slice(0,1)}</span>
-                <span class="truncate">{list.title}</span>
+        <NavigationButton route="/my/lists/{item.encode()}">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600">{item.name.slice(0,1)}</span>
+                <span class="truncate">{item.name}</span>
         </NavigationButton>
     </div>
 
-    {#if children.length > 0}
+    <!-- {#if children.length > 0}
         <ul class="ml-4">
             {#each children as child}
-                <svelte:self list={child} {allLists} />
+                <svelte:self item={child} {allLists} />
             {/each}
         </ul>
-    {/if}
+    {/if} -->
 
 </li>

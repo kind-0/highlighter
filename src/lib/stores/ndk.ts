@@ -30,7 +30,7 @@ if (relays) {
 
 if (!relayList || !Array.isArray(relayList) || relayList.length === 0) {
     relayList = [
-        'wss://purplepag.es',
+        // 'wss://purplepag.es',
         // 'ws://localhost:8080',
         'wss://nos.lol',
         'wss://relay.f7z.io',
@@ -71,8 +71,6 @@ _ndk.storeSubscribe = <T>(
     opts?: NDKSubscriptionOptions,
     klass?: classWithConvertFunction
 ): NDKEventStore<T> => {
-    console.log(`subscribe`, filter, opts);
-
     const sub = _ndk.subscribe(filter, opts);
     const events: T[] = [];
     const store: UnsubscribableStore<T[]> = {

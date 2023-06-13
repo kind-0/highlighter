@@ -33,7 +33,6 @@
 
     // Set filter for current view
     $: if (scope !== $currentScope.label) {
-        console.log(`scope changed from ${scope} to ${$currentScope.label}`);
         scope = $currentScope.label;
         let pubkeys: string[] | undefined | null = null;
 
@@ -63,7 +62,6 @@
 
     // Apply filter when it's ready
     $: if (needsFilterUpdate) {
-        console.log(`Updating filter for ${scope}`, highlightFilter);
         needsFilterUpdate = false;
 
         if (highlights) {

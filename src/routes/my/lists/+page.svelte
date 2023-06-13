@@ -1,47 +1,33 @@
 <script lang="ts">
-    import ndk from "$lib/stores/ndk";
-    import BookmarkListInterface from '$lib/interfaces/bookmark-list';
+    import ndk, { type NDKEventStore } from "$lib/stores/ndk";
 
     import NewIcon from '$lib/icons/New.svelte';
 
-    import { Button, Dropdown, DropdownItem, Chevron } from 'flowbite-svelte'
     import ToolbarButton from '../components/toolbar/button.svelte';
-    import BookmarkList from '../components/bookmark-list/Card.svelte';
+    import ListCard from '$lib/components/lists/ListCard.svelte';
 
     import NewListModal from '$lib/modals/lists/New.svelte'
 
     import { openModal } from 'svelte-modals'
 
-    import { onMount } from 'svelte';
+    import { onDestroy } from 'svelte';
+    import type NDKList from "$lib/ndk-kinds/lists";
+    import { NDKListKinds } from "$lib/ndk-kinds";
+    import { currentUser } from "$lib/store";
 
-    let bookmarkLists, _bookmarkLists: App.BookmarkList[] = [];
 
-    async function loadbookmarkLists() {
-        const user = await $ndk.signer?.user();
+    let lists: NDKEventStore<NDKList>;
 
-		if (!user) {
-            setTimeout(() => {
-                loadbookmarkLists();
-            }, 100);
-            return;
-		}
-
-		const opts = { pubkeys: [user.hexpubkey()] };
-		bookmarkLists = BookmarkListInterface.load(opts);
-		return BookmarkListInterface.startStream(opts);
+    $: if (!lists && $currentUser) {
+        lists = $ndk.storeSubscribe({
+            kinds: NDKListKinds as number[],
+            authors: [$currentUser.hexpubkey()]
+        }, { closeOnEose: false });
     }
 
-    onMount(async () => {
-        loadbookmarkLists();
-    })
-
-    $: {
-		_bookmarkLists = (($bookmarkLists || []) as App.BookmarkList[]).sort((a, b) => {
-			return b.createdAt - a.createdAt;
-		});
-
-		_bookmarkLists = _bookmarkLists;
-	}
+    onDestroy(() => {
+        if (lists) lists.unsubscribe();
+    });
 
     let openMenu = false;
 </script>
@@ -79,9 +65,9 @@
     </div>
 
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {#each _bookmarkLists as bookmarkList}
+        {#each $lists??[] as list}
             <div>
-                <BookmarkList {bookmarkList} />
+                <ListCard {list} />
             </div>
         {/each}
     </div>

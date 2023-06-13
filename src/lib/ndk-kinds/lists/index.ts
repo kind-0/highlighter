@@ -7,10 +7,15 @@ import { NDKKind } from "../index.js";
 class NDKList extends NDKEvent {
     private _encryptedTags: NDKTag[] | undefined;
 
-    constructor(ndk: NDK, rawEvent?: NostrEvent) {
+    constructor(ndk?: NDK, rawEvent?: NostrEvent) {
         super(ndk, rawEvent);
         if (!this.kind) this.kind = NDKKind.GenericList;
     }
+
+    static from(ndkEvent: NDKEvent): NDKList {
+        return new NDKList(ndkEvent.ndk, ndkEvent.rawEvent());
+    }
+
 
     get name(): string | undefined {
         return this.tagValue('d');

@@ -1,53 +1,22 @@
 <script lang="ts">
     import ndk from '$lib/stores/ndk';
-    import BookmarkListInterface from '$lib/interfaces/bookmark-list';
     import CloseIcon from '$lib/icons/Close.svelte';
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
+    import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
 
     import { closeModal } from 'svelte-modals';
     import { fade } from 'svelte/transition';
     import { onMount } from 'svelte';
-    import type { NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Input from '$lib/components/Input.svelte';
     import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
+    import { lists } from '$lib/stores/list';
 
     export let event: NDKEvent;
 
     let currentNpub;
-    let bookmarkLists, _bookmarkLists: App.BookmarkList[] = [];
     let newListName: string;
 
-    async function loadbookmarkLists() {
-        const user = await $ndk.signer?.user();
-
-		if (!user) {
-            setTimeout(() => {
-                loadbookmarkLists();
-            }, 100);
-            return;
-		}
-
-		currentNpub = user.npub;
-
-		const opts = { pubkeys: [user.hexpubkey()] };
-		bookmarkLists = BookmarkListInterface.load(opts);
-		return BookmarkListInterface.startStream(opts);
-    }
-
-    onMount(async () => {
-        loadbookmarkLists();
-    })
-
-    $: {
-		_bookmarkLists = (($bookmarkLists || []) as App.BookmarkList[]).sort((a, b) => {
-			return b.createdAt - a.createdAt;
-		});
-
-		_bookmarkLists = _bookmarkLists;
-	}
-
-    async function addToBookmarkList(list: App.BookmarkList) {
+    async function addToList(list: NDKList) {
         const event = new NDKEvent($ndk, JSON.parse(list.event));
 
         // check if event is already in list
@@ -105,14 +74,14 @@
             w-full
             max-h-96
         ">
-            {#each _bookmarkLists as bookmarkList}
+            {#each $lists as list}
                 <li>
                     <button class="
                         p-3 truncate
                         hover:bg-zinc-100
                         w-full
                         text-left
-                    " on:click={()=>{addToBookmarkList(bookmarkList)}}>{bookmarkList.title}</button>
+                    " on:click={()=>{addToList(list)}}>{list.name}</button>
                 </li>
             {/each}
         </ul>
