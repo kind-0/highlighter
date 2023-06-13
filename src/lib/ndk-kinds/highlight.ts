@@ -89,6 +89,8 @@ class NDKHighlight extends NDKEvent {
             }
         }
 
+console.log("returning this._article", this._article)
+
         return this._article;
     }
 }

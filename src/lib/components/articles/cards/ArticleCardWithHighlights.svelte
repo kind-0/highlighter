@@ -79,7 +79,7 @@
         <div class="flex flex-row items-center gap-4 justify-between">
             <a href={articleUrl(article)}
                 class="text-xl font-semibold whitespace-nowrap">
-                {articleTitle(article)}
+                {articleTitle(article)} 
             </a>
             <div class="flex flex-row items-center gap-2 overflow-auto">
                 <!-- {#each (article.tags||[]).slice(0, 3) as tag}
