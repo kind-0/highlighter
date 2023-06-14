@@ -6,4 +6,8 @@ export enum NDKKind {
     LongForm = 30023,
 }
 
-export const NDKListKinds = [NDKKind.UserList, NDKKind.GenericList, NDKKind.LongForm, NDKKind.RelayList];
+export const NDKListKinds = [
+    NDKKind.UserList,
+    NDKKind.GenericList,
+    NDKKind.RelayList
+];

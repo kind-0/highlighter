@@ -7,9 +7,9 @@ export class Database extends Dexie {
 
     constructor() {
         super('highlighterV2');
-        this.version(36).stores({
+        this.version(37).stores({
             users: '++id, name, displayName, image, banner, bio, nip05, lud16, about, zapService, event',
-            events: '[kind+pubkey], id, pubkey, kind',
+            events: 'id, pubkey, kind',
             eventTags: 'id, tagvalue, tag, value, eventId',
         });
     }
