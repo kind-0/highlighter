@@ -37,17 +37,17 @@
     }
 
     function isTopLevel(thisList: NDKList) {
-        console.log('this list id', thisList.id);
+        console.log('this list id', thisList.tagId());
         for (const _list of $sortedLists) {
             // check if a list has _list's id in its tags
             // console.log('list tags', _list.tags);
         
-console.log("_list.tags ids", _list.tags)
-            const referenced = _list.tags.find((t) => t[1] === thisList.id);
+// console.log("_list.tags ids", _list.tags)
+            const referenced = _list.tags.find((t) => t[1] === thisList.tagId());
 
-            // console.log("referenced", referenced)
-            const notReferencedByItself = _list.tags.find((t) => t[1] !== _list.id); // that is not itself
-            // console.log("notReferencedByItself", notReferencedByItself)
+            console.log("referenced", referenced)
+            const notReferencedByItself = _list.tags.find((t) => t[1] !== _list.tagId()); // that is not itself
+            console.log("notReferencedByItself", notReferencedByItself)
 
             if (referenced && notReferencedByItself) {
 console.log("not at top level ")
