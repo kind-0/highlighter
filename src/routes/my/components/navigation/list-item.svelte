@@ -62,11 +62,7 @@
 
     function dragStart(event: DragEvent) {
         if (!event.dataTransfer) return;
-   
-   
-        const e = new NDKEvent($ndk, JSON.parse(item.event));
-        const tag = e.tagReference();
-
+         const tag = item.tagReference();
         event.dataTransfer.setData('id', item.id as string);
         event.dataTransfer.setData('tag', JSON.stringify(tag));
     }
