@@ -23,23 +23,15 @@
 </script>
 
 <svelte:head>
-	<title>HIGHLIGHTER.com</title>
+	<title>{note ?? "HIGHLIGHTER.com"}</title>
 	<meta name="description" content="Unleash valuable words from their artificial silos" />
 </svelte:head>
 
 {#key note}
     <main class="max-w-xl mx-auto pb-32 flex flex-col gap-6">
         <GenericEventCard
-            id={note}
+            bech32={note}
             on:event:load={eventLoaded}
         />
-
-        <!-- {#key $quotes}
-            {#if event && $quotes?.length > 0}
-                {#each $quotes as quote}
-                    <NoteCard note={quote} />
-                {/each}
-            {/if}
-        {/key} -->
     </main>
 {/key}

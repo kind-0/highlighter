@@ -34,10 +34,10 @@
         listId = list.id;
         publicTags = list.tags;
 
-        encryptedTagsPromise = new Promise(async (resolve) => {
-            encryptedTags = await list.encryptedTags();
-            resolve(encryptedTags);
-        });
+        // encryptedTagsPromise = new Promise(async (resolve) => {
+        //     encryptedTags = await list.encryptedTags();
+        //     resolve(encryptedTags);
+        // });
     }
 
     /**
@@ -97,8 +97,7 @@
      * key has not been saved yet, we save it here.
      */
     async function onNoteEditorSaved(e: CustomEvent) {
-        const { event, visibility } = e.detail;
-        const tag = event.tagReference();
+        const { tag, visibility } = e.detail;
 
         // check if we need to save an ephemeral key
         if (visibility === 'Delegated' && !listSignerData?.saved) {
@@ -121,36 +120,6 @@
                 throw e;
             }
         }
-
-        if (visibility === 'Delegated' || visibility === 'Public') {
-            list.tags.push(tag)
-        } else if (visibility === 'Secret') {
-            // if the current list has a content, decrypt it
-            if (list?.content) {
-                let tags;
-
-                try {
-                    tags = JSON.parse(list.content);
-                } catch (e) {
-                    console.error('trying to parse list content as JSON', e);
-                    return;
-                }
-
-                if (!tags || !tags) tags = [];
-
-                tags.push(tag);
-
-                list.content = JSON.stringify(tags);
-            } else {
-                list.content = JSON.stringify([tag]);
-            }
-
-            await list.encrypt($currentUser!);
-        }
-
-        list.created_at = Math.floor(Date.now() / 1000);
-        await list.sign();
-        await list.publish();
     }
 
     $: if (list && listSignerData?.id !== list.encode()) {
@@ -225,10 +194,10 @@
                 </div>
             </TabItem>
 
-            {#await encryptedTagsPromise then encryptedTags}
+            {#await list.encryptedTags() then encryptedTags}
                 {#if encryptedTags.length > 0}
                     <TabItem title="Secret">
-                        <Tags {list} tags={encryptedTags} kind={4} {currentUserPubkeys} />
+                        <Tags {list} tags={encryptedTags} {currentUserPubkeys} />
                     </TabItem>
                 {/if}
             {/await}

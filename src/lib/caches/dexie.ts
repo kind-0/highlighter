@@ -199,6 +199,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
     }
 
     public async query(subscription: NDKSubscription): Promise<void> {
+        // return;
         if (!subscription.filter?.kinds || subscription.filter?.kinds?.length === 1) return;
         const filterKeys = Object.keys(subscription.filter || {}).sort();
 
@@ -210,6 +211,10 @@ export default class DexieAdapter implements NDKCacheAdapter {
     }
 
     public async setEvent(event: NDKEvent, filter: NDKFilter): Promise<void> {
+        if (event.kind === 30001) {
+            console.log(`dexie setEvent updating cache with`, event.rawEvent());
+        }
+
         if (event.kind === 0) {
             let profile = profileFromEvent(event, {});
 

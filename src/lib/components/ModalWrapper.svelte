@@ -1,17 +1,14 @@
 <script lang="ts">
-  import { closeModal } from "svelte-modals";
+    import { closeModal } from "svelte-modals";
     import { fade } from "svelte/transition";
-
-    export let klass: string = '';
 </script>
 
 <div class="
     fixed
-    modal
-    h-screen top-0
-    bottom-0
+    h-screen top-0 bottom-0
     flex justify-center items-center
     z-10
+    bg-zinc-100
     w-screen
 " transition:fade on:click={closeModal}>
     <div class="
@@ -25,7 +22,7 @@
         relative
         max-w-prose w-full
         overflow-y-auto
-        {klass}
+        {$$props.class}
     " style="pointer-events: auto; max-height: 80vh;" on:click|stopPropagation={()=>{}}>
         <slot />
     </div>

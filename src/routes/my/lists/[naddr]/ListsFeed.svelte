@@ -22,7 +22,7 @@
 
             const list = new NDKList($ndk, e.rawEvent());
 
-            if (list.items().length > 0) lists.push(list);
+            if (list.items.length > 0) lists.push(list);
             lists = lists;
         });
 

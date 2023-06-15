@@ -32,7 +32,7 @@
     }
 </script>
 
-<ModalWrapper klass="bg-zinc-100">
+<ModalWrapper>
     <button class="
         text-zinc-500 hover:text-zinc-300 transition duration-300
         absolute top-2 right-2

@@ -30,6 +30,7 @@
     skipHeader={true}
     {skipFooter}
     {skipButtons}
+    {skipReplies}
     replies={($replies||[])}
     {expandReplies}
 >

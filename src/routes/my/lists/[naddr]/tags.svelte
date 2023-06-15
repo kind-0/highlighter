@@ -1,7 +1,6 @@
 <script lang="ts">
-    import type { NDKTag } from '@nostr-dev-kit/ndk/lib/src/events';
+    import type { NDKTag } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
-    import type { NDKSubscription } from '@nostr-dev-kit/ndk';
 
     import CollapsibleCard from '../../components/CollapsibleCard.svelte';
     import type NDKList from '$lib/ndk-kinds/lists/index.js';
@@ -58,7 +57,7 @@
 </script>
 
 <div class="flex flex-col gap-2.5">
-    {#each tags as tag}
+    {#each tags as tag, i (i)}
         {#if shouldDisplayTag(tag)}
             <CollapsibleCard {tag} on:removeItem={onRemoveItem} />
         {/if}

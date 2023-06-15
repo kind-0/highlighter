@@ -17,14 +17,16 @@ class NDKList extends NDKEvent {
     }
 
     get name(): string | undefined {
-        return this.tagValue('d');
+        return this.tagValue('name') ?? this.tagValue('d');
     }
 
     set name(name: string | undefined) {
+        this.removeTag('name');
+
         if (name) {
-            this.tags.push(['d', name]);
+            this.tags.push(['name', name]);
         } else {
-            this.removeTag('d');
+            throw new Error('Name cannot be empty');
         }
     }
 
@@ -72,9 +74,9 @@ class NDKList extends NDKEvent {
         return true;
     }
 
-    public items(): NDKTag[] {
+    get items(): NDKTag[] {
         return this.tags.filter((t) => {
-            return !['d', 'description'].includes(t[0]);
+            return !['d', 'name', 'description'].includes(t[0]);
         });
     }
 

@@ -3,7 +3,7 @@
     import CloseIcon from '$lib/icons/Close.svelte';
 
     import { closeModal } from 'svelte-modals';
-    import type { NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
+    import type { NostrEvent } from '@nostr-dev-kit/ndk';
     import { goto } from '$app/navigation';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Input from '$lib/components/Input.svelte';
@@ -25,14 +25,14 @@
         list.description = description;
         await list.publish();
         if ($currentUser) {
-        getLists($currentUser)
+            getLists($currentUser);
         }
         goto(`/my/lists/${list.encode()}`);
         closeModal();
     }
 </script>
 
-<ModalWrapper klass="max-w-sm">
+<ModalWrapper class="max-w-sm">
     <button class="
         text-zinc-500 hover:text-zinc-300 transition duration-300
         absolute top-2 right-2
