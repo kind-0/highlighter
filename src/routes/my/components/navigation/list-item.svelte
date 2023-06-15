@@ -48,7 +48,7 @@
 
         for (const tag of item.tags) {
             if (tagIsList(tag)) {
-                const list = $sortedLists.find((l) => l.id === tag[1]);
+                const list = $sortedLists.find((l) => l.tagId() === tag[1]);
                 if (list) {
                     decendants.push(list);
                 }
@@ -59,6 +59,8 @@
     }
 
     const children = decendants(item);
+
+    console.log("children", children)
 
     function dragStart(event: DragEvent) {
         if (!event.dataTransfer) return;
