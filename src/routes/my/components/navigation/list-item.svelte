@@ -8,10 +8,14 @@
     export let item: NDKList;
     // export let lists: NDKList[];
 
-    console.log('list to render:', item);
+
+    console.log("lists", $lists)
+    // console.log('list to render:', item);
     let hover = false;
 
     async function addToList(e: DragEvent) {
+
+        console.log("add to list !!")
         if (!e.dataTransfer) return;
 
         const id = e.dataTransfer.getData('id');
@@ -58,11 +62,12 @@
 
     function dragStart(event: DragEvent) {
         if (!event.dataTransfer) return;
-
-        const e = new NDKEvent($ndk, JSON.parse(list.event));
+   
+   
+        const e = new NDKEvent($ndk, JSON.parse(item.event));
         const tag = e.tagReference();
 
-        event.dataTransfer.setData('id', list.id as string);
+        event.dataTransfer.setData('id', item.id as string);
         event.dataTransfer.setData('tag', JSON.stringify(tag));
     }
 </script>
@@ -91,11 +96,11 @@
         </NavigationButton>
     </div>
 
-    <!-- {#if children.length > 0}
+    {#if children.length > 0}
         <ul class="ml-4">
             {#each children as child}
-                <svelte:self item={child} {allLists} />
+                <svelte:self item={child} />
             {/each}
         </ul>
-    {/if} -->
+    {/if}
 </li>
