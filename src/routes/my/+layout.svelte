@@ -124,7 +124,8 @@
                         <ul class="-mx-2 mt-2 space-y-1">
                             {#each $sortedLists??[] as item}
                                 <!-- {#if isTopLevel(bookmarkList)} -->
-                                    <ListItem {item} lists={$sortedLists} />
+                                    <ListItem {item}  />
+                                    <!-- removed: lists={$sortedLists} -->
                                 <!-- {/if} -->
                             {/each}
                         </ul>

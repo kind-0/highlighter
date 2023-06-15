@@ -8,6 +8,8 @@
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Input from '$lib/components/Input.svelte';
     import Textarea from '$lib/components/Textarea.svelte';
+    import {  getLists } from "$lib/stores/list";
+    import { currentUser } from "$lib/store";
 
     import NDKList from '$lib/ndk-kinds/lists/index.js';
     import ModalButton from '$lib/components/ModalButton.svelte';
@@ -22,6 +24,9 @@
         list.name = name;
         list.description = description;
         await list.publish();
+        if ($currentUser) {
+        getLists($currentUser)
+        }
         goto(`/my/lists/${list.encode()}`);
         closeModal();
     }

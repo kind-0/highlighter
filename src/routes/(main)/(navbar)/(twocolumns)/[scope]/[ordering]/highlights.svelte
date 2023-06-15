@@ -87,10 +87,10 @@
       NDKHighlight
     );
     highlights.onEose(() => {
+    
+      eosed = true;
       console.log(`eosed`, eosed);
       console.log("rendering ! as eosed")
-      eosed = true;
-    
 });
 
 
@@ -177,7 +177,7 @@ const allSortedIds = Object.entries(taggedEvents)
 
 
   const sortedIds = allSortedIds.map((a) => a[0])
-  .slice(0, 3);
+  .slice(0, 10);
 
 console.log("highlight count this iteration", allSortedIds[0][1], maxHighlightCount)
   if (allSortedIds[0][1] > maxHighlightCount ) {

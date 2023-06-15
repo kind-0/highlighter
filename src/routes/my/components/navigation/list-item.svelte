@@ -4,10 +4,12 @@
 
     import NavigationButton from './Button.svelte';
     import NDKList from '$lib/ndk-kinds/lists';
-
+    import { lists, sortedLists, getLists } from '$lib/stores/list';
     export let item: NDKList;
-    export let lists: NDKList[];
+    // export let lists: NDKList[];
 
+
+    console.log("list to render:", item)
     let hover = false;
 
     async function addToList(e: DragEvent) {
@@ -57,7 +59,7 @@
         return decendants;
     }
 
-    // const children = decendants(list);
+    const children = decendants(item);
 
     function dragStart(event: DragEvent) {
         if (!event.dataTransfer) return;

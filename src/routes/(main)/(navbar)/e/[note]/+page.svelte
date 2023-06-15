@@ -19,7 +19,7 @@
     function eventLoaded(e: CustomEvent) {
         event = e.detail as NDKEvent;
         // quotes = $ndk.storeSubscribe({'#q': [event.id]}, { closeOnEose: true });
-    }
+    }  
 </script>
 
 <svelte:head>

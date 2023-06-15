@@ -3,11 +3,12 @@
     import { Card } from "flowbite-svelte";
 
     export let list: NDKList;
+
 </script>
 
 <Card class={$$props.class}>
     <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
-        {list.name}
+        {list.tags.find( tag => tag[0] === 'd')[1]}
     </div>
 
     <div class="flex flex-row gap-4 items-start text-sm text-zinc-400">

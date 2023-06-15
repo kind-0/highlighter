@@ -14,20 +14,23 @@
     import type NDKList from "$lib/ndk-kinds/lists";
     import { NDKListKinds } from "$lib/ndk-kinds";
     import { currentUser } from "$lib/store";
+import { lists, getLists } from "$lib/stores/list";
 
-
-    let lists: NDKEventStore<NDKList>;
+    // let lists: NDKEventStore<NDKList>;
 
     $: if (!lists && $currentUser) {
-        lists = $ndk.storeSubscribe({
-            kinds: NDKListKinds as number[],
-            authors: [$currentUser.hexpubkey()]
-        }, { closeOnEose: false });
+        getLists($currentUser)
+        // lists = $ndk.storeSubscribe({
+        //     kinds: NDKListKinds as number[],
+        //     authors: [$currentUser.hexpubkey()]
+        // }, { closeOnEose: false });
     }
 
-    onDestroy(() => {
-        if (lists) lists.unsubscribe();
-    });
+
+    $: console.log("new lists data", [...$lists].map( list => list[1]))
+    // onDestroy(() => {
+    //     if (lists) lists.unsubscribe();
+    // });
 
     let openMenu = false;
 </script>
@@ -65,7 +68,7 @@
     </div>
 
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {#each $lists??[] as list}
+        {#each [...$lists].map( list => list[1])??[] as list}
             <div>
                 <ListCard {list} />
             </div>
