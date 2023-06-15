@@ -35,8 +35,6 @@
                 filter = filterFromNaddr(bech32);
             }
 
-            console.log(`query with`, filter);
-
             $ndk.fetchEvent(filter).then((e) => {
                 if (!e) return reject(`no event ${id}`);
 
@@ -95,7 +93,7 @@
                     />
                 {:else if e.kind === 4}
                     <NoteCard
-                        note={handleEvent1(e)}
+                        event={e}
                         {skipReplies}
                         {skipFooter}
                     />

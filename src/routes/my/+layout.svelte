@@ -29,10 +29,11 @@
     import { lists, sortedLists, getLists } from '$lib/stores/list';
 
     let subscribed = false;
+    let listSub;
 
     $: if (!subscribed && $currentUser) {
         subscribed = true;
-        getLists($currentUser);
+        listSub = getLists($currentUser);
     }
 
 

@@ -4,24 +4,39 @@
     import { lists } from "$lib/stores/list";
     import type NDKList from "$lib/ndk-kinds/lists";
     import { page } from "$app/stores";
+    import { derived, type Readable } from "svelte/store";
+    import ndk from "$lib/stores/ndk";
 
     let naddr: string;
     let prevNaddr: string;
 
     $: naddr = $page.params.naddr;
 
-    let list: NDKList | undefined;
+    let list: Readable<NDKList | undefined>;
 
     $: if (naddr !== prevNaddr || !list) {
         prevNaddr = naddr;
-        list = $lists.get(idFromNaddr(naddr));
+
+        const id = idFromNaddr(naddr);
+
+        list = derived(lists, ($lists) => {
+            const list = $lists.get(id);
+            if (!list) return undefined;
+
+            // de-duplicate list items
+            const tags = [...new Set(list.tags)];
+            list.tags = tags;
+            list.ndk = $ndk;
+
+            return list;
+        });
     }
 
 
 </script>
 
 {#key naddr}
-    {#if list}
-        <List {list} />
+    {#if $list}
+        <List list={$list} />
     {/if}
 {/key}

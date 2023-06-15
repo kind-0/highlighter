@@ -1,6 +1,6 @@
 import NDKList from '../ndk-kinds/lists';
 import { NDKListKinds } from '../ndk-kinds/index.js';
-import { NDKKind, type NDKEvent, type NDKUser } from '@nostr-dev-kit/ndk';
+import { NDKKind, type NDKEvent, type NDKUser, NDKSubscriptionCacheUsage } from '@nostr-dev-kit/ndk';
 import { writable, derived, get as getStore } from 'svelte/store';
 import ndk from './ndk';
 import { throttle, debounce } from 'throttle-debounce';
@@ -25,88 +25,41 @@ export function getLists(user: NDKUser) {
             kinds: [NDKKind.EventDeletion, ...(NDKListKinds as number[])],
             authors: [user.hexpubkey()],
         },
-        { closeOnEose: true, groupable: false }
+        {
+            closeOnEose: false,
+            groupable: false,
+            cacheUsage: NDKSubscriptionCacheUsage.PARALLEL
+        }
     );
-
-    let eosed = true;
-    const preEoseLists: Map<string, NDKList> = new Map();
-    const preEoseDeletions: Set<string> = new Set();
-
-    const updateList = throttle(250, () => {
-        // remove all lists that have been deleted
-        preEoseLists.forEach((list, id) => {
-            if (preEoseDeletions.has(id)) {
-                preEoseLists.delete(id);
-            }
-        });
-
-        lists.set(preEoseLists);
-        deletions.set(preEoseDeletions);
-    });
 
     sub.on('event', (event: NDKEvent) => {
         if (!shouldProcess(event)) return;
 
-        // if (!eosed) {
+        if (event.tagValue('d') === '3e57m2ngxkn2jlbv') {
+            console.log(`list subscription received event`, event.created_at, event.tags.length, 'items')
+        }
+
         if (event.kind === NDKKind.EventDeletion) {
             const tag = event.tagValue('a');
             if (tag) {
-                preEoseDeletions.add(tag);
+                deletions.update((deletions) => {
+                    deletions.add(tag);
+                    return deletions;
+                });
             }
         } else {
-            event.ndk = $ndk;
+            event.ndk = $ndk; // #ndk-bug? this should be already set when it's called from the subscription
             const list = NDKList.from(event);
-            preEoseLists.set(list.tagId(), list);
+            lists.update((lists) => {
+                lists.set(list.tagId(), list);
+                return lists;
+            });
         }
 
-        updateList();
-
         return;
-        // }
-
-        // if (event.kind === NDKKind.EventDeletion) {
-        //     deletions.update((deletions) => {
-        //         deletions.add(event.tagValue('a')!);
-
-        //         // remove the list from the lists store
-        //         if (getStore(lists).has(event.id)) {
-        //             lists.update((lists) => {
-        //                 lists.delete(event.id);
-        //                 return lists;
-        //             });
-        //         }
-
-        //         return deletions;
-        //     });
-        // } else {
-        //     const $deletion = getStore(deletions);
-
-        //     lists.update((lists) => {
-        //         event.ndk = $ndk;
-        //         const list = NDKList.from(event);
-
-        //         // if it hasn't been marked as deleted
-        //         if ($deletion.has(list.encode())) {
-        //             return lists;
-        //         } else {
-        //             // ad it to the list
-        //             lists.set(list.encode(), list);
-        //         }
-
-        //         return lists;
-        //     });
-        // }
     });
 
-    sub.on('eose', () => {
-        eosed = true;
-
-        console.log(`eosed`);
-
-        // add the pre-eose lists
-        lists.set(preEoseLists);
-        deletions.set(preEoseDeletions);
-    });
+    return sub;
 }
 
 function shouldProcess(event: NDKEvent) {

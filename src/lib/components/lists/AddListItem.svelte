@@ -1,11 +1,13 @@
 <script lang="ts">
     import type NDKList from "$lib/ndk-kinds/lists";
-    import type { NDKPrivateKeySigner, NDKUser, NDKTag } from "@nostr-dev-kit/ndk";
+    import { type NDKPrivateKeySigner, type NDKUser, type NDKTag, NDKEvent, type NostrEvent, type NDKSigner, NDKKind } from "@nostr-dev-kit/ndk";
     import { nip19 } from "nostr-tools";
-    import NoteEditor from "../../../routes/my/components/note-editor.svelte";
-    import NoteVisibility from "../../../routes/my/components/note/visibility.svelte";
+    import ndk from "$lib/stores/ndk";
+    import EventVisibility from '$lib/components/events/editor/EventVisibility.svelte';
     import NDKRelayList from "$lib/ndk-kinds/lists/relay-list";
     import { createEventDispatcher } from 'svelte';
+    import RoundedButton from "../../../routes/(main)/components/RoundedButton.svelte";
+    import EventEditorTextarea from "../events/editor/EventEditorTextarea.svelte";
 
     export let list: NDKList;
     export let delegatedName: string | undefined = undefined;
@@ -13,14 +15,22 @@
     export let listSignerUser: NDKUser | undefined = undefined;
 
     const dispatch = createEventDispatcher();
-    let addNewItemValue = '';
+    let value = '';
     let newItemType: string | undefined;
     let showSaveButton = false;
-    let newItemVisibility = 'Delegated';
+    let visibility = 'Delegated';
     let validationError: string | undefined;
 
     function onNewItemChange() {
-        const validation = list.validateTag(addNewItemValue);
+        console.log(`change`)
+        if (value.length === 0) {
+            showSaveButton = false;
+            newItemType = undefined;
+            visibility = 'Delegated';
+            return;
+        }
+
+        const validation = list.validateTag(value);
 
         if (validation !== true) {
             validationError = validation as string;
@@ -37,32 +47,125 @@
         let isNotMatching = true;
 
         for (const pattern of patterns) {
-            if (addNewItemValue.startsWith(pattern.slice(0, addNewItemValue.length))) {
+            if (value.startsWith(pattern.slice(0, value.length))) {
                 isNotMatching = false;
                 break;
             }
         }
 
-        if (addNewItemValue.match(/ /) || isNotMatching) {
+        if (value.match(/ /) || isNotMatching) {
             newItemType = 'note'
         } else {
             newItemType = undefined;
         }
 
-        if (newItemType !== 'note' && addNewItemValue.length > 3) {
+        if (newItemType !== 'note' && value.length > 3) {
             showSaveButton = true;
-            newItemVisibility = 'Public';
+            visibility = 'Public';
+        }
+    }
+
+    function getKind(): NDKKind {
+        switch (visibility) {
+            case 'Public':
+            case 'Delegated':
+                return 1;
+            case 'Secret':
+                return 4;
+        }
+
+        return 1;
+    }
+
+    function getSigner(): NDKSigner {
+        if (visibility === 'Delegated') {
+            return listSigner!;
+        }
+
+        return $ndk.signer!;
+    }
+
+    async function generateEvent(): Promise<NDKTag | undefined> {
+        let event: NDKEvent;
+        let _value = value.trim();
+
+        // if this a relay URL, nrelay-encode it
+        if (_value.startsWith('wss://')) {
+            _value = nip19.nrelayEncode(_value);
+        }
+
+        try {
+            const decode = nip19.decode(_value);
+
+            switch (decode.type) {
+                case 'naddr':
+                case 'note':
+                case 'nevent':
+                    // We were able to decode something that looks like an event
+                    // fetch it
+                    const _event = await $ndk.fetchEvent(_value);
+                    if (_event) {
+                        // we were able to fetch it, let's return it
+                        return _event.tagReference();
+                    } else {
+                        // TODO: Generate a NDKTag based on the values
+                        return undefined;
+                    }
+                case "nrelay":
+                    return ['r', decode.data as string];
+                case "npub":
+                    return ['p', decode.data as string];
+                case "nprofile":
+                    const d = ['p', decode.data.pubkey];
+                    if (decode.data.relays && decode.data.relays[0]) d.push(decode.data.relays[0]);
+                    return d;
+            }
+
+        } catch (e) {
+            const signer = getSigner();
+            const user = await signer.user();
+            event = new NDKEvent($ndk, {
+                content: _value || "",
+                kind: getKind(),
+                tags: [ ['client', 'highlighter'] ],
+                pubkey: user.hexpubkey(),
+            } as NostrEvent);
+
+            if (visibility === 'Secret') {
+                event.tag(user);
+                await event.encrypt(user, signer);
+            }
+
+            await event.sign(signer);
+
+            await event.publish();
+
+            return event.tagReference();
         }
     }
 
     async function save() {
-        if (!addNewItemValue || addNewItemValue.length === 0) {
+        const tag = await generateEvent();
+
+        if (!tag) return;
+
+        await list.addItem(tag, undefined, visibility === 'Secret');
+        await list.sign();
+        await list.publish();
+
+        dispatch('saved', { tag, visibility });
+
+        value = '';
+    }
+
+    async function _save() {
+        if (!value || value.length === 0) {
             return;
         }
 
         let tag: NDKTag = [];
 
-        const decode = nip19.decode(addNewItemValue);
+        const decode = nip19.decode(value);
         switch (decode.type) {
             case 'note':
                 tag = ['e', decode.data as string];
@@ -85,69 +188,34 @@
                 return;
         }
 
-        list.created_at = Math.floor(Date.now() / 1000);
-        list.tags.push(tag);
+        await list.addItem(tag, undefined, visibility === 'Secret');
         await list.sign();
         await list.publish();
-        addNewItemValue = '';
-    }
-
-    function onNewItemSaved(e: CustomEvent) {
-        newItemType = undefined;
-        addNewItemValue = '';
-
-        dispatch('saved', e.detail);
+        value = '';
     }
 </script>
 
-<div class="relative flex flex-row items-center justify-center">
-    {#if newItemType === 'note'}
-        <div class="pb-4 w-full">
-            <NoteEditor
-                expandEditor={true}
-                {delegatedName}
-                delegatedSigner={listSigner}
-                delegatedUser={listSignerUser}
-                bind:title={addNewItemValue}
-                on:keyup={onNewItemChange}
-                on:saved={onNewItemSaved}
-                bind:visibility={newItemVisibility}
-            />
-        </div>
-    {:else}
-        <div class="
-            px-4 py-2 text-lg
-            h-14
-            sm:mb-4
-            shadow
-            w-full
-            border border-zinc-200
-            rounded-xl
-            bg-white transition duration-200 ease-in-out
-            flex flex-row gap-2
-        ">
-            <input autofocus bind:value={addNewItemValue} on:keyup={onNewItemChange} class="
-                w-full
-                focus:outline-none
-            " placeholder="Start typing" />
 
-            {#if showSaveButton}
-                <div class="flex flex-row gap-2">
-                    <NoteVisibility bind:value={newItemVisibility} />
-                    <button
-                        class="inline-flex items-center gap-x-2 rounded-md bg-gradient-to-br from-orange-500 to-red-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-orange-600 hover:to-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500
-                        px-4
-                    " on:click={save}>
-                        Save
-                    </button>
-                </div>
-            {/if}
-        </div>
+<div class="relative flex flex-col items-start justify-center">
+        <EventEditorTextarea bind:value />
 
         {#if validationError}
             <div class="text-red-500 text-sm mt-2">
                 {validationError}
             </div>
         {/if}
-    {/if}
+</div>
+
+<div class="flex flex-row justify-between">
+    <EventVisibility
+        {delegatedName}
+        delegatedUser={listSignerUser}
+        bind:value={visibility}
+    />
+
+    <div>
+        <RoundedButton on:click={save}>
+            Save
+        </RoundedButton>
+    </div>
 </div>
