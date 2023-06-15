@@ -53,7 +53,7 @@
         return decendants;
     }
 
-    const children = decendants(item);
+    $: children = decendants(item);
 
     function dragStart(event: DragEvent) {
         if (!event.dataTransfer) return;
