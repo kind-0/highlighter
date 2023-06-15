@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { NDKEventStore } from '$lib/stores/ndk.ts';
+    // import type { NDKEventStore } from '$lib/stores/ndk.ts';
     import LogoIcon from '$lib/icons/Logo.svelte';
     import HighlightIcon from '$lib/icons/Highlight.svelte';
     import BookmarkIcon from '$lib/icons/Bookmark.svelte';
@@ -13,20 +13,19 @@
     import NavigationButton from './components/navigation/Button.svelte';
 
     import { currentUser } from '$lib/store';
-    import ndk from '$lib/stores/ndk';
+    // import ndk from '$lib/stores/ndk';
     import { Modals, closeModal } from 'svelte-modals';
     import { fade } from 'svelte/transition';
 
-    import { onMount } from 'svelte';
     import ListItem from './components/navigation/list-item.svelte';
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
+    // import { NDKEvent } from '@nostr-dev-kit/ndk';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import { NavHamburger } from 'flowbite-svelte';
 
-    import { NDKListKinds } from '$lib/ndk-kinds';
+    // import { NDKListKinds } from '$lib/ndk-kinds';
     import type NDKList from '$lib/ndk-kinds/lists';
 
-    import { lists, sortedLists, getLists } from '$lib/stores/list';
+    import { sortedLists, getLists } from '$lib/stores/list';
 
     let subscribed = false;
     let listSub;
@@ -57,6 +56,7 @@
     // }
 
     let isOpen = false;
+
 </script>
 
 <div class="h-full pb-48">

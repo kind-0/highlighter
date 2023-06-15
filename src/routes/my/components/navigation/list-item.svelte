@@ -1,21 +1,16 @@
 <script lang="ts">
     import ndk from '$lib/stores/ndk';
     import { NDKEvent, type NDKTag } from '@nostr-dev-kit/ndk';
-
     import NavigationButton from './Button.svelte';
     import NDKList from '$lib/ndk-kinds/lists';
-    import { lists, sortedLists, getLists } from '$lib/stores/list';
+    import { sortedLists} from '$lib/stores/list';
     export let item: NDKList;
     // export let lists: NDKList[];
 
-
-    console.log("lists", $lists)
-    // console.log('list to render:', item);
     let hover = false;
 
     async function addToList(e: DragEvent) {
-
-        console.log("add to list !!")
+        console.log('add to list !!');
         if (!e.dataTransfer) return;
 
         const id = e.dataTransfer.getData('id');
@@ -60,11 +55,9 @@
 
     const children = decendants(item);
 
-    console.log("children", children)
-
     function dragStart(event: DragEvent) {
         if (!event.dataTransfer) return;
-         const tag = item.tagReference();
+        const tag = item.tagReference();
         event.dataTransfer.setData('id', item.id as string);
         event.dataTransfer.setData('tag', JSON.stringify(tag));
     }
