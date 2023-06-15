@@ -157,42 +157,6 @@
 
         value = '';
     }
-
-    async function _save() {
-        if (!value || value.length === 0) {
-            return;
-        }
-
-        let tag: NDKTag = [];
-
-        const decode = nip19.decode(value);
-        switch (decode.type) {
-            case 'note':
-                tag = ['e', decode.data as string];
-                break;
-            case 'naddr':
-                const { kind, pubkey, identifier } = decode.data;
-                tag = ['a', `${kind}:${pubkey}:${identifier}`];
-                break;
-            case 'nprofile':
-                tag = ['p', decode.data.pubkey as string];
-                break;
-            case 'npub':
-                tag = ['p', decode.data as string];
-                break;
-            case 'nevent':
-                tag = ['e', decode.data.id as string];
-                break;
-            default:
-                alert("not sure how to interpret that");
-                return;
-        }
-
-        await list.addItem(tag, undefined, visibility === 'Secret');
-        await list.sign();
-        await list.publish();
-        value = '';
-    }
 </script>
 
 
