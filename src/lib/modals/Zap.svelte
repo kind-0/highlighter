@@ -8,10 +8,8 @@
     import { requestProvider } from 'webln';
 
     import { closeModal } from 'svelte-modals';
-    import { fade } from 'svelte/transition';
-    import { onMount } from 'svelte';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
-    import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
+    import ModalButton from '$lib/components/ModalButton.svelte';
 
     export let event: NDKEvent;
 
@@ -19,7 +17,6 @@
     let comment = '';
 
     async function zap() {
-        // await $ndk.connect();
         let pr = await event.zap(parseInt(amount)*1000, comment);
 
         if (!pr) {
@@ -33,18 +30,10 @@
         } catch (err: any) {
             console.log(err);
         }
-
-        try {
-            const webln = await requestProvider();
-            const res = await webln.sendPayment(pr);
-        } catch (err: any) {
-            console.log(err);
-            // should we unlock the mutex here if the user rejected the payment?
-        }
     }
 </script>
 
-<ModalWrapper>
+<ModalWrapper class="max-w-md">
     <button class="
         text-zinc-500 hover:text-zinc-300 transition duration-300
         absolute top-2 right-2
@@ -97,7 +86,7 @@
             bind:value={comment} />
     </div>
 
-    <RoundedButton class="w-full py-3 text-lg rounded-md" on:click={zap}>
+    <ModalButton on:click={zap}>
         ZAP
-    </RoundedButton>
+    </ModalButton>
 </ModalWrapper>

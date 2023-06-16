@@ -36,6 +36,7 @@ if (!relayList || !Array.isArray(relayList) || relayList.length === 0) {
         'wss://relay.damus.io',
         'wss://relay.snort.social',
         'wss://nostr.mom',
+        'wss://relay.nostr.band',
         // 'wss://atlas.nostr.land/',
         'wss://offchain.pub/',
     ];
@@ -62,6 +63,7 @@ type classWithConvertFunction = {
 };
 
 _ndk.storeSubscribe = <T>(filter: NDKFilter, opts?: NDKSubscriptionOptions, klass?: classWithConvertFunction): NDKEventStore<T> => {
+    if (filter && filter['#q']) console.log(`opts for sub`, opts);
     const sub = _ndk.subscribe(filter, opts);
     const events: T[] = [];
     const store: UnsubscribableStore<T[]> = {

@@ -1,5 +1,9 @@
 <script lang="ts">
-    import Trash from '$lib/icons/Trash.svelte';
+    import { Dropdown, DropdownItem } from 'flowbite-svelte'
+
+    import DeleteIcon from '$lib/icons/Trash.svelte';
+    import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
+    import CopyIcon from '$lib/icons/Copy.svelte';
 
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
@@ -23,21 +27,13 @@
     export let list: NDKList;
     let listId;
 
-    let encryptedTags: NDKTag[] = [];
     let publicTags: NDKTag[] = [];
-
-    let encryptedTagsPromise: Promise<NDKTag[]>;
 
     let listSignerData: SignerStoreItem | undefined;
 
     if (list.id !== listId) {
         listId = list.id;
         publicTags = list.tags;
-
-        // encryptedTagsPromise = new Promise(async (resolve) => {
-        //     encryptedTags = await list.encryptedTags();
-        //     resolve(encryptedTags);
-        // });
     }
 
     /**
@@ -50,11 +46,12 @@
         currentUserPubkeys.push(listSignerData.user.hexpubkey());
     }
 
-    async function deleteBookmarkList() {
+    async function deleteList() {
         if (!confirm("Are you sure you want to delete this list?")) {
             return;
         }
 
+        await list.encrypt();
         await list.delete();
         goto('/my/lists');
     }
@@ -127,6 +124,37 @@
         getSigner(list).then(d => listSignerData = d);
     }
 
+    let copiedEventJSON = false;
+
+    function copyJSON(e: Event) {
+        e.stopPropagation();
+        navigator.clipboard.writeText(JSON.stringify(list.rawEvent()));
+        copiedEventJSON = true;
+        setTimeout(() => {
+            copiedEventJSON = false;
+        }, 1500);
+    }
+
+    async function tryToDecrypt(): Promise<NDKTag[]> {
+        console.log(`will try to decrypt ${list.content}`);
+        const tags = await list.encryptedTags();
+        console.log(`decrypted ${list.content}`);
+        return tags;
+    }
+
+    let encryptedTagsPromise: Promise<NDKTag[]> | undefined;
+
+    $: if (list && $currentUser && !encryptedTagsPromise) {
+        encryptedTagsPromise = new Promise(async (resolve, reject) => {
+            try {
+                const tags = await tryToDecrypt();
+                console.log(`decrypted tags`, tags)
+                resolve(tags);
+            } catch (e) {
+                setTimeout(() => { tryToDecrypt() }, 100 * Math.random());
+            }
+        });
+    }
 </script>
 
 <svelte:head>
@@ -134,18 +162,30 @@
 </svelte:head>
 
 <div class="flex flex-col gap-8">
-    <div class="flex flex-row items-center justify-between">
-        <!-- Header -->
-        <div class="flex-1">
+    <div class="flex flex-row items-center">
+        <div class="flex flex-row items-start">
+            <button on:click|stopPropagation={() => {}}>
+                <MoreOptionsIcon class="
+                    w-8 h-8
+                    opacity-40 hover:opacity-100
+                    transition-opacity duration-200
+                " />
+            </button>
+            <Dropdown>
+                <DropdownItem class="flex flex-row items-center gap-2" on:click={deleteList}>
+                    <DeleteIcon class="w-4 h-4" />
+                    Delete List
+                </DropdownItem>
+
+                <DropdownItem class="flex flex-row items-center gap-2" on:click={copyJSON}>
+                    <CopyIcon class="w-4 h-4" />
+                    {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
+                </DropdownItem>
+            </Dropdown>
+
             <PageTitle title={list.name || "List"} subtitle={list.description} />
         </div>
 
-        <div class="flex flex-row items-center">
-            <button
-                on:click={deleteBookmarkList}
-                class="w-6 h-6 opacity-50 hover:opacity-100 duration-300"
-            ><Trash /></button>
-        </div>
     </div>
 
     <div class="-mt-8">
@@ -194,12 +234,16 @@
                 </div>
             </TabItem>
 
-            {#await list.encryptedTags() then encryptedTags}
+            {#await encryptedTagsPromise}
+                Loading
+            {:then encryptedTags}
                 {#if encryptedTags.length > 0}
                     <TabItem title="Secret">
                         <Tags {list} tags={encryptedTags} {currentUserPubkeys} />
                     </TabItem>
                 {/if}
+            {:catch e}
+                {e}
             {/await}
 
             {#if listSignerData?.saved && $currentUser}

@@ -10,6 +10,7 @@
     import { Name } from '@nostr-dev-kit/ndk-svelte-components';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
     import { filterForId, filterFromNaddr } from '$lib/utils';
+    import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
 
     export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
@@ -18,6 +19,15 @@
     export let event: NDKEvent | undefined = undefined;
 
     const dispatcher = createEventDispatcher();
+
+    async function decryptWithRetry(event: NDKEvent, resolve: (e: NDKEvent) => void) {
+        try {
+            await event.decrypt($currentUser!);
+            resolve(event);
+        } catch (e) {
+            setTimeout(() => decryptWithRetry(event, resolve), 1000 * Math.random());
+        }
+    }
 
     async function loadEvent(): Promise<NDKEvent | undefined> {
         if (event) return event;
@@ -39,10 +49,7 @@
                 if (!e) return reject(`no event ${id}`);
 
                 if (e.kind === 4) {
-                    setTimeout(async () => {
-                        await e.decrypt($currentUser!);
-                        resolve(e);
-                    }, 500 * Math.random())
+                    decryptWithRetry(e, resolve);
                 } else {
                     resolve(e);
                 }
@@ -112,8 +119,10 @@
                             </div>
                         </div>
                     </a>
-                {:else}
-                    @{e.kind}
+                {:else if e.kind === 9735}
+                    <ZapEventCard
+                        event={e}
+                    />
                 {/if}
             </div>
         {:else}

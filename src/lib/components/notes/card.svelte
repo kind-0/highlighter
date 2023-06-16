@@ -25,6 +25,7 @@
     });
 </script>
 
+<code>NoteCard</code>
 <EventCard
     {event}
     skipHeader={true}

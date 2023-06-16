@@ -8,6 +8,7 @@
     export let skipTitle: boolean = false;
 </script>
 
+<p><code>HighlightList</code></p>
 <div class="grid grid-cols-1 gap-8 pb-32">
     {#each items as item}
         <HighlightListItem

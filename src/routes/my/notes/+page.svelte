@@ -1,5 +1,5 @@
 <script lang="ts">
-    import EncryptedNoteInterface from '$lib/interfaces/encrypted-notes';
+	import type { NDKEventStore } from '$lib/stores/ndk';
     import EventCard from '$lib/components/events/card.svelte';
 
     import NewIcon from '$lib/icons/New.svelte';
@@ -10,7 +10,7 @@
     import { NDKEvent } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
-    import type { NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
+    import type { NostrEvent } from '@nostr-dev-kit/ndk';
     import { generateEphemeralSigner, saveEphemeralSigner } from '$lib/signers/ephemeral';
 
     let privateNote;
@@ -45,34 +45,31 @@
         await privateNote.publish();
     }
 
-    let encryptedNotes: any;
+    let encryptedNotes: NDKEventStore<NDKEvent>;
     let decryptedNotes: Record<string, NDKEvent | null> = {};
     let loadedNoteIds: string[] = [];
 
-    $: {
-        if (!encryptedNotes && $currentUser) {
-            encryptedNotes = EncryptedNoteInterface.load({ recipient: $currentUser!.hexpubkey() });
-        }
+    $: if (!encryptedNotes && $currentUser) {
+        encryptedNotes = $ndk.storeSubscribe({
+            authors: [$currentUser.hexpubkey()],
+            kinds: [4, 31023 as number],
+            '#p': [$currentUser.hexpubkey()]
+        })
+    }
 
+    $: {
         if ($encryptedNotes && $encryptedNotes.length > 0 && loadedNoteIds.length < $encryptedNotes.length) {
             console.log('encrypted notes', $encryptedNotes?.length, Object.keys(decryptedNotes).length)
             setTimeout(async () => {
-                loadedNoteIds = $encryptedNotes.map((n: App.EncryptedNote) => n.id);
+                loadedNoteIds = $encryptedNotes.map((n: NDKEvent) => n.id);
 
                 for (const note of $encryptedNotes) {
                     try {
                         if (!decryptedNotes[note.id]) {
-                            const eventJSON = JSON.parse(note.event);
-                            const event = new NDKEvent($ndk, eventJSON);
-                            await event.decrypt($currentUser!);
-                            try {
-                                event.content = JSON.parse(event.content);
+                            await note.decrypt($currentUser!);
+                                // if (event.content.key) continue;
 
-                                if (event.content.key) continue;
-                            } catch (e) {
-                            }
-
-                            decryptedNotes[note.id] = event;
+                            decryptedNotes[note.id] = note;
 
                         }
                     } catch (e) {
@@ -95,14 +92,12 @@
     </ToolbarButton>
 </div>
 
-{#if loadedNote}
-    <SecretNoteEditor event={loadedNote} />
-{:else}
+{#if $encryptedNotes}
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {#each Object.values(decryptedNotes).filter(n => !!n) as note}
-            {#if note.content?.title}
+        {#each Object.values($encryptedNotes).filter(n => !!n) as note}
+            <!-- {#if note?.content}
                 <a
-                    href="/my/notes/{note.content.event||note.content.naddr}"
+                    href="/my/notes/{note.encode()}"
                     class="flex flex-col"
                     on:click|preventDefault={() => loadedNote = note}
                 >
@@ -115,7 +110,7 @@
                     " style="max-height: 40rem;">
                         <div class="flex-1 truncate px-4 py-2 text-sm">
                             <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
-                                {note.content.title}
+                                {note?.content}
                             </div>
                             <div class="flex flex-row gap-4 items-start text-sm text-zinc-400">
                                 {new Date(note.created_at*1000).toLocaleString()}
@@ -123,9 +118,13 @@
                         </div>
                     </div>
                 </a>
-            {:else if note}
-                <EventCard event={note} skipHeader={true} />
-            {/if}
+            {:else if note} -->
+                <EventCard
+                    event={note}
+                    skipHeader={true}
+                    skipFooter={true}
+                />
+            <!-- {/if} -->
         {/each}
     </div>
 {/if}

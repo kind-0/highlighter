@@ -13,7 +13,7 @@
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
     import CardContent from '$lib/components/events/content.svelte';
-    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import type NDKLongForm from '$lib/ndk-kinds/long-form';
     import { Card } from 'flowbite-svelte';
     import NewUserInstruction from '../NewUserInstruction.svelte';
     import { onDestroy } from 'svelte';
@@ -166,7 +166,7 @@
     }
 
     function articleTitle() {
-        return article?.title || article?.url || article;
+        return article?.title || article?.url || article.toString();
     }
 </script>
 

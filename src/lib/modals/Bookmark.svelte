@@ -4,12 +4,10 @@
     import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
 
     import { closeModal } from 'svelte-modals';
-    import { fade } from 'svelte/transition';
-    import { onMount } from 'svelte';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Input from '$lib/components/Input.svelte';
-    import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
-    import { lists } from '$lib/stores/list';
+    import { sortedLists } from '$lib/stores/list';
+    import type NDKList from '$lib/ndk-kinds/lists';
 
     export let event: NDKEvent;
 
@@ -17,19 +15,9 @@
     let newListName: string;
 
     async function addToList(list: NDKList) {
-        const event = new NDKEvent($ndk, JSON.parse(list.event));
-
-        // check if event is already in list
-        const [a,b] = event.tagReference();
-        if (event.tags.find((tag) => tag[0] === a && tag[1] === b)) {
-            event.tags.filter((tag) => tag[0] !== a && tag[1] !== b);
-            await event.publish();
-            closeModal();
-            return;
-        }
-
-        event.tags.push(event.tagReference());
-        await event.publish();
+        await list.addItem(event);
+        await list.sign();
+        await list.publish();
         closeModal();
     }
 
@@ -56,7 +44,7 @@
     }
 </script>
 
-<ModalWrapper klass="max-w-sm">
+<ModalWrapper class="max-w-sm">
     <button class="
         text-zinc-500 hover:text-zinc-300 transition duration-300
         absolute top-2 right-2
@@ -74,7 +62,7 @@
             w-full
             max-h-96
         ">
-            {#each $lists as list}
+            {#each $sortedLists as list}
                 <li>
                     <button class="
                         p-3 truncate
@@ -86,16 +74,19 @@
             {/each}
         </ul>
 
-        <div class="flex flex-row gap-2">
+        <div class="flex flex-row">
             <Input type="text" klass="
-                w-2/3
+                w-2/3 rounded-l-lg
             " placeholder="New List" bind:value={newListName} />
 
-            <RoundedButton class="
-                rounded-lg w-1/3
+            <button class="
+                bg-orange-500 hover:bg-orange-400 transition duration-300
+                text-white font-semibold
+                rounded-r-md w-1/3
+                -ml-2
             " on:click={createNewList}>
-                Create
-            </RoundedButton>
+                New List
+            </button>
         </div>
     </div>
 </ModalWrapper>

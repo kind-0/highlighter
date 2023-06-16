@@ -2,7 +2,7 @@
     import EventCard from '$lib/components/events/card.svelte';
     import HighlightContent from '$lib/components/highlights/HighlightContent.svelte';
 
-    import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import { NDKEvent } from '@nostr-dev-kit/ndk';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
     import NDKLongForm from '$lib/ndk-kinds/long-form';
     import { onMount } from 'svelte';
@@ -38,7 +38,7 @@
     }
 
     function linkToArticle() {
-        if (article?.encode) {
+        if (article instanceof NDKEvent) {
             return `/a/${article.encode()}`;
         } else if (article?.url) {
             return `/load?url=${encodeURIComponent(article.url)}`;

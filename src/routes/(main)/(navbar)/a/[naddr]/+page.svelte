@@ -8,6 +8,7 @@
     import ndk from '$lib/stores/ndk';
     import NDKLongForm from '$lib/ndk-kinds/long-form';
     import { Card, Skeleton, TestimonialPlaceholder } from 'flowbite-svelte';
+    import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
 
     const { naddr } = $page.params;
     let article: NDKEvent | NDKLongForm;
@@ -112,12 +113,18 @@
         <Skeleton size='xxl' class='mt-8'/>
         <Skeleton size='xxl' class='mt-8'/>
     </Card>
-{:then}
-    <Reader
-        {article}
-        {content}
-        {unmarkedContent}
-    />
+{:then article}
+    {#if article.kind === 9735}
+        <Reader {article}>
+            <ZapEventCard draggable={false} event={article} skipFooter={false}  />
+        </Reader>
+    {:else}
+        <Reader
+            {article}
+            {content}
+            {unmarkedContent}
+        />
+    {/if}
 {:catch}
     <Card size="full">
         <div class="text-center">

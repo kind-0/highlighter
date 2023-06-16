@@ -12,7 +12,7 @@
 
     let filter: NDKFilter | undefined = undefined;
 
-    let items: NDKEventStore;
+    let items: NDKEventStore<NDKHighlight>;
 
     $: if (prevScope !== scope) {
         prevScope = scope;
@@ -32,7 +32,7 @@
                 break;
         }
 
-        filter = { authors: pubkeys, kinds: [9802 as number], limit: 100 };
+        filter = { authors: pubkeys, kinds: [9802 as number], limit: 20 };
 
         items = $ndk.storeSubscribe(filter);
     }
@@ -40,6 +40,7 @@
 
 {#key filter}
     {#if filter}
+        <code>newest</code>
         <HighlightList items={$items.map(e => NDKHighlight.from(e))} />
     {/if}
 {/key}

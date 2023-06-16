@@ -17,10 +17,6 @@
 
         if (!e.dataTransfer) return;
 
-        console.log('items', Array.from(e.dataTransfer.items));
-
-        debugger
-
         // set dropZoneActive if none of the tags have this id
         const data = parseDragData(e.dataTransfer);
         console.log({data});
