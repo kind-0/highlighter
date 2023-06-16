@@ -3,8 +3,6 @@
     import ConsoleIcon from '$lib/icons/Console.svelte';
     import AboutIcon from '$lib/icons/About.svelte';
 
-    import ndk from '$lib/stores/ndk';
-
     import { currentUser, currentScope } from '$lib/store';
 
     import Avatar from '$lib/components/Avatar.svelte';
@@ -13,7 +11,6 @@
     import Logo from '$lib/icons/Logo.svelte';
     import RoundedButton from '../../components/RoundedButton.svelte';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
-    import { fetchFollowers } from '$lib/currentUser';
     import RelaysButton from '$lib/components/RelaysButton.svelte';
 
     let isOpen = false;
@@ -30,7 +27,7 @@
                     <div class="w-6 h-6 hidden sm:block"><Logo /></div>
                 </div>
                 <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                    <Link href="/{$currentScope?.label}/highlights"
+                    <Link href="/{$currentScope?.label}/newest"
                         klass="
                             border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium
                         "

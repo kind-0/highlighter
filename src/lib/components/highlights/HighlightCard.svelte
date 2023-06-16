@@ -7,14 +7,25 @@
     import NDKLongForm from '$lib/ndk-kinds/long-form';
     import { onMount } from 'svelte';
     import AvatarWithName from '../AvatarWithName.svelte';
+    import { Card } from 'flowbite-svelte';
+    import { tagToNip19 } from '$lib/utils';
+    import { getContext } from 'svelte';
 
     export let highlight: NDKHighlight;
-    export let article: NDKLongForm | NDKEvent | string | undefined;
-    export let skipTitle: boolean = false;
+    export let article: NDKLongForm | NDKEvent | undefined = undefined;
+    export let skipTitle: boolean = getContext("skipTitle") ?? false;
     export let skipButtons: boolean = false;
     export let skipFooter: boolean = false;
     export let disableClick: boolean = false;
-    export let expandedContext: boolean = true;
+    export let expandedContext: boolean = false;
+
+    let articlePromise: Promise<NDKLongForm | NDKEvent | string | undefined>;
+
+    if (article) {
+        articlePromise = Promise.resolve(article);
+    } else {
+        articlePromise = highlight.getArticle();
+    }
 
     function onContentClick(e: Event) {
         if (disableClick) return;
@@ -38,56 +49,61 @@
     }
 
     function linkToArticle() {
-        if (article instanceof NDKEvent) {
-            return `/a/${article.encode()}`;
-        } else if (article?.url) {
-            return `/load?url=${encodeURIComponent(article.url)}`;
-        } else if (article?.length > 0) {
-            return `/load?url=${encodeURIComponent(article)}`;
+        const tag = highlight.getArticleTag();
+
+        if (!tag) return '#';
+
+        const val = tagToNip19(tag);
+
+        if (!val) return '#';
+
+        if (val.startsWith('http')) {
+            return `/load?url=${encodeURIComponent(val)}`
+        } else if (val.startsWith('n')) {
+            return `/a/${val}`;
         } else {
             return '#';
         }
     }
 </script>
 
-<EventCard
-    event={highlight}
-    skipHeader={skipTitle}
-    {skipButtons}
-    byString={"highlighted by"}
-    {skipFooter}
->
-    <div slot="header">
-        {#if article instanceof NDKLongForm && article.title}
-            <div class="text-xl font-semibold truncate">
-                <a href={linkToArticle()}>{article.title}</a>
-            </div>
-        {:else if highlight?.url && highlight.url.startsWith('https://')}
-            <div class="text-xl font-semibold truncate flex flex-row items-center gap-2">
-                <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
-                <a href={linkToArticle()}>{new URL(highlight.url).hostname}</a>
-            </div>
-        {:else if article?.author}
-            <a href={linkToArticle()}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
-        {/if}
-    </div>
+{#await articlePromise then article}
+    <EventCard
+        event={highlight}
+        skipHeader={skipTitle}
+        {skipButtons}
+        byString={"highlighted by"}
+        {skipFooter}
+        class="bg-orange-50 border-orange-100"
+    >
+        <div slot="header">
+            {#if article instanceof NDKLongForm && article.title}
+                <div class="text-xl text-zinc-900 font-semibold truncate">
+                    <a href={linkToArticle()}>{article.title}</a>
+                </div>
+            {:else if highlight?.url && highlight.url.startsWith('https://')}
+                <div class="text-xl text-zinc-900 font-semibold truncate flex flex-row items-center gap-2">
+                    <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
+                    <a href={linkToArticle()}>{new URL(highlight.url).hostname}</a>
+                </div>
+            {:else if article?.author}
+                <a href={linkToArticle()}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
+            {:else if typeof article === 'string'}
+                <a href={linkToArticle()}>{article}</a>
+            {/if}
+        </div>
 
-    <a href={linkToArticle()} on:click={onContentClick} class="
-        leading-relaxed h-full flex flex-col
-        py-2
-        overflow-auto
-        {$$props.class}
-    ">
-        <HighlightContent
-            {highlight}
-            {article}
-            {expandedContext}
-        />
-    </a>
-</EventCard>
-
-<style>
-    /* :global(.event-card) {
-        @apply text-lg;
-    } */
-</style>
+        <a href={linkToArticle()} on:click={onContentClick} class="
+            leading-relaxed h-full flex flex-col
+            py-2
+            overflow-auto
+            {$$props.class}
+        ">
+            <HighlightContent
+                {highlight}
+                {article}
+                {expandedContext}
+            />
+        </a>
+    </EventCard>
+{/await}

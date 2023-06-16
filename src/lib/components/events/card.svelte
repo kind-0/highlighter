@@ -3,8 +3,6 @@
 
     import { Dropdown, DropdownItem } from 'flowbite-svelte'
 
-    import { currentUser } from "$lib/store";
-
     import CopyIcon from '$lib/icons/Copy.svelte';
     import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
     import LinkIcon from '$lib/icons/Link.svelte';
@@ -75,7 +73,10 @@
 
 <div class="flex flex-col w-full gap-6">
     <div {draggable} on:dragstart={dragStart}>
-        <Card class="flex flex-col gap-4 group h-full" size="full">
+        <Card class="
+            flex flex-col gap-4 group h-full
+            {$$props.class}
+        " size="full">
             {#if !skipHeader}
                 <!-- Header -->
                 <div class="flex flex-row justify-between items-start relative">

@@ -5,17 +5,7 @@
     import type { NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    // import UserInterface from '$lib/interfaces/user';
 
-    // import NewIcon from '$lib/icons/New.svelte';
-
-    // import ToolbarButton from '../components/toolbar/button.svelte';
-    // import BookmarkList from '../components/bookmark-list/Card.svelte';
-
-    // import { onMount } from 'svelte';
-
-    let currentNpub;
-    let userList, _userList: App.BookmarkList[] = [];
     let followsList: Promise<Set<NDKUser>>;
 
     async function loadFollowList() {
@@ -37,36 +27,6 @@
     onMount(async () => {
         loadFollowList();
     });
-
-
-    // async function loadUserList() {
-    //     const user = await $ndk.signer?.user();
-
-	// 	if (!user) {
-    //         setTimeout(() => {
-    //             loadUserList();
-    //         }, 100);
-    //         return;
-	// 	}
-
-	// 	currentNpub = user.npub;
-
-	// 	const opts = { pubkeys: [user.hexpubkey()] };
-	// 	userList = UserInterface
-	// 	return BookmarkListInterface.startStream(opts);
-    // }
-
-    // onMount(async () => {
-    //     loadUserList();
-    // })
-
-    // $: {
-	// 	_userList = (($userList || []) as App.BookmarkList[]).sort((a, b) => {
-	// 		return b.createdAt - a.createdAt;
-	// 	});
-
-	// 	_userList = _userList;
-	// }
 
     let currentSelection = new Set<NDKUser>();
 

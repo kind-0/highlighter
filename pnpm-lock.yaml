@@ -15,14 +15,14 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3
   '@nostr-dev-kit/ndk':
-    specifier: ^0.5.2
-    version: 0.5.2(typescript@5.1.3)
+    specifier: ^0.5.3
+    version: 0.5.3(typescript@5.1.3)
   '@nostr-dev-kit/ndk-cache-redis':
     specifier: ^1.3.0
     version: 1.3.0(typescript@5.1.3)
   '@nostr-dev-kit/ndk-svelte-components':
-    specifier: ^0.2.3
-    version: 0.2.3(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3)
+    specifier: ^0.2.6
+    version: 0.2.6(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3)
   '@popperjs/core':
     specifier: ^2.11.7
     version: 2.11.7
@@ -553,12 +553,12 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk-svelte-components@0.2.3(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3):
-    resolution: {integrity: sha512-0zIQpP126J9m+5U96vcGPUu+Vd0DkIT0IxaHdpE0n7VTpBqg07BGeCL1vMUtmhB0djX2mysBdNZ+9LeenViMMA==}
+  /@nostr-dev-kit/ndk-svelte-components@0.2.6(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3):
+    resolution: {integrity: sha512-hGxew03wQToJKMUHEZAlVy5bQmNZI8fMRa3OoT2IbdvS21N5VJiGyJntRzm1B8yqAZzJ9Apacc6xmwRp2AgofQ==}
     peerDependencies:
       svelte: ^3.54.0
     dependencies:
-      '@nostr-dev-kit/ndk': 0.5.2(typescript@5.1.3)
+      '@nostr-dev-kit/ndk': 0.5.3(typescript@5.1.3)
       rehype-autolink-headings: 6.1.1
       rehype-slug: 5.1.0
       svelte: 3.59.1
@@ -607,8 +607,8 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk@0.5.2(typescript@5.1.3):
-    resolution: {integrity: sha512-ZTcEGHxe/Yoazr2SHB+6wQ/1ZkLvaJVdEFNOwg2Ll1lD6C7ttnP/rPD1ex17bQFaU//4yvsdgEREDJqo+mLedw==}
+  /@nostr-dev-kit/ndk@0.5.3(typescript@5.1.3):
+    resolution: {integrity: sha512-GLmuAoor4oMxxKjFeZ4viHR9XEI61m0wBm78vTUzY1Ev+bBdDzorv6heBz7TWmQirtoJ32r/zIgWdzHsHC6h3A==}
     dependencies:
       '@noble/hashes': 1.3.1
       '@noble/secp256k1': 2.0.0

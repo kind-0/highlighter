@@ -10,6 +10,7 @@
     export let skipFooter = false;
     export let skipButtons = false;
     export let skipReplies = false;
+    export let skipHeader = true;
     export let expandReplies = true
 
     let replies: NDKEventStore<NDKEvent>;
@@ -25,10 +26,9 @@
     });
 </script>
 
-<code>NoteCard</code>
 <EventCard
     {event}
-    skipHeader={true}
+    {skipHeader}
     {skipFooter}
     {skipButtons}
     {skipReplies}

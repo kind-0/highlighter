@@ -199,8 +199,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
     }
 
     public async query(subscription: NDKSubscription): Promise<void> {
-        // return;
-        if (!subscription.filter?.kinds || subscription.filter?.kinds?.length === 1) return;
+        // if (!subscription.filter?.kinds || subscription.filter?.kinds?.length === 1) return;
         const filterKeys = Object.keys(subscription.filter || {}).sort();
 
         (await this.byAuthors(filterKeys, subscription)) ||

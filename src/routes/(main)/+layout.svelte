@@ -1,6 +1,40 @@
 <script lang="ts">
+    import { currentScope, currentUser, type ScopeSelection } from '$lib/store';
+    import { getHighlights } from '$lib/stores/highlights';
+    import type { NDKFilter, NDKSubscription } from '@nostr-dev-kit/ndk';
+    import { onDestroy } from 'svelte';
     import { Modals, closeModal } from 'svelte-modals'
     import { fade } from 'svelte/transition'
+
+    let subscribed = false;
+    let highlightsSub: NDKSubscription;
+    let subscribedScopeLabel: string;
+
+    function getHighlightsWithFilter(): NDKSubscription {
+        const filter: NDKFilter = {};
+        if ($currentScope?.pubkeys) {
+            filter.authors = $currentScope.pubkeys;
+        }
+        return getHighlights(filter);
+    }
+
+    $: if (!subscribed && $currentUser) {
+        subscribed = true;
+        subscribedScopeLabel = $currentScope.label;
+        highlightsSub = getHighlightsWithFilter();
+    }
+
+    $: if (subscribed && $currentScope.label !== subscribedScopeLabel) {
+        highlightsSub.stop();
+        subscribedScopeLabel = $currentScope.label;
+        highlightsSub = getHighlightsWithFilter();
+    }
+
+    onDestroy(() => {
+        if (highlightsSub) {
+            highlightsSub.stop();
+        }
+    });
 </script>
 
 <div class="min-h-full">

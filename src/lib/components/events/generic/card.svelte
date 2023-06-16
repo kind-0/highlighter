@@ -1,6 +1,7 @@
 <script lang="ts">
     import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
     import NoteCard from '$lib/components/notes/card.svelte';
+    import { getContext } from 'svelte';
     import ndk from '$lib/stores/ndk';
     import { createEventDispatcher } from 'svelte';
     import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
@@ -88,7 +89,7 @@
                             <HighlightCard
                                 highlight={NDKHighlight.from(e)}
                                 {article}
-                                skipTitle={true}
+                                skipTitle={getContext("skipTitle")??true}
                             />
                         {/await}
                     </div>

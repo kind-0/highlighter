@@ -71,7 +71,7 @@
 {#if text}
     {#if contentType === 'text/plain'}
         <Reader
-            article={{}}
+            article={url}
             content={text.replace(/  /g, ' ')}
             unmarkedContent={text.replace(/  /g, ' ')}
             url={url}

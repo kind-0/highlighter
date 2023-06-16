@@ -1,7 +1,23 @@
 import sanitizeHtml from 'sanitize-html';
 import MarkdownIt from 'markdown-it';
 import { nip19 } from 'nostr-tools';
-import { filterFromId, type NDKFilter } from '@nostr-dev-kit/ndk';
+import { filterFromId, type NDKFilter, type NDKTag } from '@nostr-dev-kit/ndk';
+
+export function tagToNip19(tag: NDKTag): string | undefined {
+    switch (tag[0]) {
+        case 'a':
+            const [ kind, pubkey, identifier ] = tag[1].split(':');
+            return nip19.naddrEncode({
+                kind: parseInt(kind),
+                pubkey,
+                identifier
+            })
+        case 'e':
+            return nip19.noteEncode(tag[1]);
+        case 'r':
+            return tag[1];
+    }
+}
 
 export function nicelyFormattedMilliSatNumber(amount: number) {
     return nicelyFormattedSatNumber(

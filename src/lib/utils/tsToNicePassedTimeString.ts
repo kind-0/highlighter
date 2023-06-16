@@ -15,16 +15,13 @@ function tsToNicePassedTimeString(timestamp: number | undefined, maxDaysToDispla
         displayString = new Date(timestamp * 1000).toLocaleString();
     } else if (timePassed > oneDay) {
         const daysPassed = Math.floor(timePassed / oneDay);
-        displayString = daysPassed.toString() + ' day';
-        daysPassed > 1 ? (displayString = displayString.concat('s')) : null;
+        displayString = daysPassed.toString() + 'd';
     } else if (timePassed > oneHour) {
         const hoursPassed = Math.floor(timePassed / oneHour);
-        displayString = hoursPassed.toString() + ' hour';
-        hoursPassed > 1 ? (displayString = displayString.concat('s')) : null;
+        displayString = hoursPassed.toString() + 'h';
     } else if (timePassed > oneMinute) {
         const minutesPassed = Math.floor(timePassed / oneMinute);
-        displayString = minutesPassed.toString() + ' minute';
-        minutesPassed > 1 ? (displayString = displayString.concat('s')) : null;
+        displayString = minutesPassed.toString() + 'm';
     } else {
         displayString = 'now';
     }

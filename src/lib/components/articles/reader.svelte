@@ -260,6 +260,7 @@
             <div class="
                 {newHighlightItem ? 'opacity-50' : ''}
                 transition duration-100
+                md:mb-96
             ">
                 {#if article && highlightFilter}
                     {#key highlightFilter}
