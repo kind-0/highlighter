@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { createTextareaAutosize } from '@grail-ui/svelte';
+
+    const { useTextareaAutosize } = createTextareaAutosize();
     export let value: string;
     export let focus: boolean = false;
 </script>
@@ -8,11 +11,10 @@
     on:focus={() => { focus = true }}
     on:blur={() => { focus = false }}
     on:keyup on:keydown on:change
+    use:useTextareaAutosize
     class="
         focus:outline-none
         text-lg
-        {focus ? 'min-h-28' : 'min-h-14'}
-        sm:mb-4
         shadow
         w-full
         border border-zinc-200

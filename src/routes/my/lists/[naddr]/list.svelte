@@ -23,6 +23,7 @@
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
     import { getSigner, type SignerStoreItem } from '$lib/stores/signer';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
+    import { Name } from '@nostr-dev-kit/ndk-svelte-components';
 
     export let list: NDKList;
     let listId;
@@ -162,12 +163,14 @@
 </svelte:head>
 
 <div class="flex flex-col gap-8">
-    <div class="flex flex-row items-center">
+    <div class="border-b border-gray-200 pb-5 flex flex-row gap-4 items-start">
         <div class="flex flex-row items-start">
             <button on:click|stopPropagation={() => {}}>
                 <MoreOptionsIcon class="
-                    w-8 h-8
-                    opacity-40 hover:opacity-100
+                    border shadow rounded-full
+                    bg-white
+                    p-2
+                    w-10 h-10
                     transition-opacity duration-200
                 " />
             </button>
@@ -182,20 +185,23 @@
                     {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
                 </DropdownItem>
             </Dropdown>
-
-            <PageTitle title={list.name || "List"} subtitle={list.description} />
         </div>
+        <div class="flex flex-col">
+            <div class="-ml-2 -mt-2 flex flex-wrap items-baseline">
+                <h3 class="ml-2 mt-2 text-3xl font-semibold leading-6 text-gray-900">
+                    {list.name}
+                </h3>
+                <p class="ml-2 mt-1 truncate text-base text-gray-500">
+                    {list.description}
+                </p>
+            </div>
 
-    </div>
-
-    <div class="-mt-8">
-        {#if listSignerData?.saved}
-            <AvatarWithName pubkey={listSignerData.user.hexpubkey()}>
-                <div slot="bio">
+            <div class="flex flex-row gap-8 text-xs text-zinc-400">
+                {#if listSignerData?.saved}
                     {listSignerData.user.npub}
-                </div>
-            </AvatarWithName>
-        {/if}
+                {/if}
+            </div>
+        </div>
     </div>
 
     <div class="grid grid-flow-row md:grid-cols-1 sm:max-w-prose lg:sdgrid-cols-3 gap-2 w-full">
