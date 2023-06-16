@@ -211,10 +211,6 @@ export default class DexieAdapter implements NDKCacheAdapter {
     }
 
     public async setEvent(event: NDKEvent, filter: NDKFilter): Promise<void> {
-        if (event.kind === 30001) {
-            console.log(`dexie setEvent updating cache with`, event.rawEvent());
-        }
-
         if (event.kind === 0) {
             let profile = profileFromEvent(event, {});
 

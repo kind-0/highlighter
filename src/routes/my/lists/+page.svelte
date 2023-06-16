@@ -9,7 +9,35 @@
     import { openModal } from 'svelte-modals'
     import { lists } from "$lib/stores/list";
 
+    import { derived } from 'svelte/store';
+    import type NDKList from '$lib/ndk-kinds/lists';
+
     let openMenu = false;
+
+    const namedLists = derived(lists, ($lists) => {
+        const namedLists: NDKList[] = [];
+
+        for (const list of $lists.values()) {
+            if (!!list.tagValue('name')) namedLists.push(list);
+        }
+
+        // sort by created_at
+        namedLists.sort((a, b) => b.created_at - a.created_at);
+
+        return namedLists;
+    });
+
+    const unnamedLists = derived(lists, ($lists) => {
+        const unnamedLists: NDKList[] = [];
+
+        for (const list of $lists.values()) {
+            if (!list.tagValue('name')) unnamedLists.push(list);
+        }
+
+        unnamedLists.sort((a, b) => b.created_at - a.created_at);
+
+        return unnamedLists;
+    });
 </script>
 
 <svelte:head>
@@ -67,7 +95,18 @@
     </div>
 
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-        {#each Array.from($lists.values())??[] as list (list.id)}
+
+        {#each $namedLists??[] as list (list.id)}
+            <div>
+                <ListCard {list} />
+            </div>
+        {/each}
+    </div>
+
+    <hr>
+
+    <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {#each $unnamedLists??[] as list (list.id)}
             <div>
                 <ListCard {list} />
             </div>

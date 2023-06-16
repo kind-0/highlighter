@@ -5,7 +5,7 @@ import { NDKKind } from '../index.js';
  * Represents any NIP-33 list kind.
  */
 class NDKList extends NDKEvent {
-    private _encryptedTags: NDKTag[] | undefined;
+    public _encryptedTags: NDKTag[] | undefined;
 
     constructor(ndk?: NDK, rawEvent?: NostrEvent) {
         super(ndk, rawEvent);
@@ -55,11 +55,15 @@ class NDKList extends NDKEvent {
 
         try {
             if (this.content.length > 0) {
-                await this.decrypt(user);
-
-                const a = JSON.parse(this.content);
-                if (a && a[0]) {
-                    return a;
+                try {
+                    console.log(`decrypting ${this.content}`);
+                    await this.decrypt(user);
+                    const a = JSON.parse(this.content);
+                    if (a && a[0]) {
+                        return this._encryptedTags = a;
+                    }
+                    return this._encryptedTags = [];
+                } catch (e) {
                 }
             }
         } catch (e) {

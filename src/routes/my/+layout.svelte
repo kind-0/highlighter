@@ -1,5 +1,4 @@
 <script lang="ts">
-    // import type { NDKEventStore } from '$lib/stores/ndk.ts';
     import LogoIcon from '$lib/icons/Logo.svelte';
     import HighlightIcon from '$lib/icons/Highlight.svelte';
     import BookmarkIcon from '$lib/icons/Bookmark.svelte';
@@ -13,16 +12,13 @@
     import NavigationButton from './components/navigation/Button.svelte';
 
     import { currentUser } from '$lib/store';
-    // import ndk from '$lib/stores/ndk';
     import { Modals, closeModal } from 'svelte-modals';
     import { fade } from 'svelte/transition';
 
     import ListItem from './components/navigation/list-item.svelte';
-    // import { NDKEvent } from '@nostr-dev-kit/ndk';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import { NavHamburger } from 'flowbite-svelte';
 
-    // import { NDKListKinds } from '$lib/ndk-kinds';
     import type NDKList from '$lib/ndk-kinds/lists';
 
     import { sortedLists, getLists } from '$lib/stores/list';
@@ -37,7 +33,6 @@
 
     function isTopLevel(thisList: NDKList) {
         for (const _list of $sortedLists) {
-            // check if a list has thisList's id in its tags
             const referenced = _list.tags.find((t) => t[1] === thisList.tagId());
             const notReferencedByItself = _list.tags.find((t) => t[1] !== _list.tagId()); // that is not itself
             if (referenced && notReferencedByItself) {
@@ -46,14 +41,6 @@
         }
         return true;
     }
-
-    // $: {
-    // 	_bookmarkLists = (($bookmarkLists || []) as NDKList[]).sort((a, b) => {
-    // 		return b.createdAt - a.createdAt;
-    // 	});
-
-    //     _bookmarkLists = _bookmarkLists.filter(l => !l.title.startsWith('chats/'));
-    // }
 
     let isOpen = false;
 

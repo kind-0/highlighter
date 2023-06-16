@@ -6,7 +6,7 @@ export class Database extends Dexie {
     eventTags!: Table<App.EventTag>;
 
     constructor() {
-        super('highlighterV3');
+        super('highlighterV4');
         this.version(1).stores({
             users: '++id, name, displayName, image, banner, bio, nip05, lud16, about, zapService, event',
             events: 'id, pubkey, kind, [kind+pubkey]',

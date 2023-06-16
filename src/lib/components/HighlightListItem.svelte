@@ -36,7 +36,7 @@
     }
 
     // replies = $ndk.storeSubscribe({ '#e': [highlight.id] }, { closeOnEose: false });
-    quotes = $ndk.storeSubscribe({ '#q': [highlight.id] }, { closeOnEose: false, groupableDelay: 500 });
+    quotes = $ndk.storeSubscribe({ kinds: [1], '#q': [highlight.id] }, { closeOnEose: true, groupableDelay: 200 });
 
     // $: {
     //     if (prevHighlightId !== highlight.id && highlight.id) {
@@ -77,6 +77,7 @@
     }
 </script>
 
+<code>HighlightListItem</code>
 <div class="
     flex flex-col
     {collapsedQuotes? '' : 'gap-8'}
@@ -84,6 +85,7 @@
     {#if shouldDisplayQuote(highlight, $quotes||[])}
         <div class="text-lg">
             {#await highlight.article then article}
+                <code>HighlightCard</code>
                 <HighlightCard
                     {highlight}
                     {article}

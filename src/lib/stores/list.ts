@@ -3,7 +3,6 @@ import { NDKListKinds } from '../ndk-kinds/index.js';
 import { NDKKind, type NDKEvent, type NDKUser, NDKSubscriptionCacheUsage } from '@nostr-dev-kit/ndk';
 import { writable, derived, get as getStore } from 'svelte/store';
 import ndk from './ndk';
-import { throttle, debounce } from 'throttle-debounce';
 
 export const lists = writable<Map<string, NDKList>>(new Map());
 export const deletions = writable<Set<string>>(new Set());
@@ -22,7 +21,7 @@ export function getLists(user: NDKUser) {
     const $ndk = getStore(ndk);
     const sub = $ndk.subscribe(
         {
-            kinds: [NDKKind.EventDeletion, ...(NDKListKinds as number[])],
+            kinds: [...(NDKListKinds as number[])],
             authors: [user.hexpubkey()],
         },
         {
@@ -35,28 +34,35 @@ export function getLists(user: NDKUser) {
     sub.on('event', (event: NDKEvent) => {
         if (!shouldProcess(event)) return;
 
-        if (event.tagValue('d') === '3e57m2ngxkn2jlbv') {
-            console.log(`list subscription received event`, event.created_at, event.tags.length, 'items')
-        }
+        event.ndk = $ndk; // #ndk-bug? this should be already set when it's called from the subscription
+        const list = NDKList.from(event);
+        lists.update((lists) => {
+            lists.set(list.tagId(), list);
+            return lists;
+        });
 
-        if (event.kind === NDKKind.EventDeletion) {
+        // Request deletions specific to each list
+        const deletionSub = $ndk.subscribe({
+            kinds: [NDKKind.EventDeletion as number],
+            ...event.filter(),
+        }, {
+            closeOnEose: true,
+            cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
+        });
+
+        deletionSub.on('event', (event: NDKEvent) => {
             const tag = event.tagValue('a');
             if (tag) {
                 deletions.update((deletions) => {
                     deletions.add(tag);
                     return deletions;
                 });
+                lists.update((lists) => {
+                    lists.delete(tag);
+                    return lists;
+                });
             }
-        } else {
-            event.ndk = $ndk; // #ndk-bug? this should be already set when it's called from the subscription
-            const list = NDKList.from(event);
-            lists.update((lists) => {
-                lists.set(list.tagId(), list);
-                return lists;
-            });
-        }
-
-        return;
+        });
     });
 
     return sub;

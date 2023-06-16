@@ -32,9 +32,21 @@ export async function findEphemeralSigner(
     const event = await ndk.fetchEvent(filter);
 
     if (event) {
-        await event.decrypt(await mainSigner.user());
-        const content = JSON.parse(event.content);
-        return new NDKPrivateKeySigner(content.key);
+        const decryptEventFunction = async (event: NDKEvent) => {
+            await event.decrypt(await mainSigner.user());
+            const content = JSON.parse(event.content);
+            return new NDKPrivateKeySigner(content.key);
+        };
+
+        const promise = new Promise<NDKPrivateKeySigner>((resolve, reject) => {
+            try {
+                resolve(decryptEventFunction(event));
+            } catch(e) {
+                setTimeout(() => { decryptEventFunction(event); }, 1000 * Math.random());
+            }
+        });
+
+        return promise;
     }
 }
 

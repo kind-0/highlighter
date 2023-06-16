@@ -32,6 +32,7 @@
     export let userPubkey: string | undefined = undefined;
     export let byString: string | undefined = undefined;
     export let expandReplies = false;
+    export let draggable = true;
 
     export let replies: NDKEvent[];
 
@@ -71,7 +72,7 @@
 </script>
 
 <div class="flex flex-col w-full gap-6">
-    <div draggable={true} on:dragstart={dragStart}>
+    <div {draggable} on:dragstart={dragStart}>
         <Card class="flex flex-col gap-4 group h-full" size="full">
             {#if !skipHeader}
                 <!-- Header -->
@@ -123,7 +124,7 @@
                             href="/p/{userPubkey}"
                             class="flex flex-row gap-4 items-center justify-center">
                             <Avatar pubkey={userPubkey} size='xs' />
-                            <div class=" text-gray-500 text-xs hidden sm:block">
+                            <div class=" text-gray-500 text-xs hidden sm:block truncate">
                                 {byString||''}
                                 <Name pubkey={userPubkey} />
                             </div>
@@ -153,9 +154,8 @@
                             {/if}
                             <BookmarkButton {event} />
 
-                            {#if $currentUser?.hexpubkey() !== event.pubkey}
-                                <ZapsButton {event} />
-                            {/if}
+                            <ZapsButton {event} />
+
                             <BoostButton {event} />
                             {#if replies}
                                 <RepliesButton {event} />

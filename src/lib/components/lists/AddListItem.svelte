@@ -21,50 +21,6 @@
     let visibility = 'Delegated';
     let validationError: string | undefined;
 
-    function onNewItemChange() {
-        console.log(`change`)
-        if (value.length === 0) {
-            showSaveButton = false;
-            newItemType = undefined;
-            visibility = 'Delegated';
-            return;
-        }
-
-        const validation = list.validateTag(value);
-
-        if (validation !== true) {
-            validationError = validation as string;
-            return;
-        } else {
-            validationError = undefined;
-        }
-
-        if (list instanceof NDKRelayList) {
-            return;
-        }
-
-        const patterns: string[] = ['npub1', 'naddr', 'note1', 'nprofile', 'nevent'];
-        let isNotMatching = true;
-
-        for (const pattern of patterns) {
-            if (value.startsWith(pattern.slice(0, value.length))) {
-                isNotMatching = false;
-                break;
-            }
-        }
-
-        if (value.match(/ /) || isNotMatching) {
-            newItemType = 'note'
-        } else {
-            newItemType = undefined;
-        }
-
-        if (newItemType !== 'note' && value.length > 3) {
-            showSaveButton = true;
-            visibility = 'Public';
-        }
-    }
-
     function getKind(): NDKKind {
         switch (visibility) {
             case 'Public':
