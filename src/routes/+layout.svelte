@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
     import { fetchFollowers } from '$lib/currentUser';
+    import { currentUserFollowPubkeys as currentUserFollowPubkeysStore } from '$lib/store';
 
     let prevCurrentUser: string | undefined = undefined;
 
@@ -18,6 +19,15 @@
     $: if ($currentUser && $currentUser?.npub !== prevCurrentUser) {
         prevCurrentUser = $currentUser?.npub;
         console.log(`loading followers`);
+
+        // added
+        const cachedFollows = localStorage.getItem("currentUserFollowPubkeysStore")
+        if (cachedFollows) {
+            $currentUserFollowPubkeysStore = JSON.parse(cachedFollows)
+        }
+        // end of added 
+
+        
         fetchFollowers();
     }
 </script>
