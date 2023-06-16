@@ -21,21 +21,22 @@
         console.log(`loading followers`);
 
         // added
-        const cachedFollows = localStorage.getItem("currentUserFollowPubkeysStore")
+        const cachedFollows = localStorage.getItem('currentUserFollowPubkeysStore');
         if (cachedFollows) {
-            $currentUserFollowPubkeysStore = JSON.parse(cachedFollows)
+            $currentUserFollowPubkeysStore = JSON.parse(cachedFollows);
         }
-        // end of added 
+        // end of added
 
-        
         fetchFollowers();
     }
+
+    $: console.log("currentUserFollowPubkeysStore updated", $currentUserFollowPubkeysStore)
 </script>
 
 <slot />
 
 <style>
     @tailwind base;
-	@tailwind components;
-	@tailwind utilities;
+    @tailwind components;
+    @tailwind utilities;
 </style>

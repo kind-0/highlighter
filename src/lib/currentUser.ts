@@ -13,7 +13,9 @@ export async function fetchFollowers(): Promise<void> {
 
     const follows = await $currentUser?.follows();
     const hexpubkeys = Array.from(follows).map((u: NDKUser) => u.hexpubkey());
+    
     const uniqueHexpubkeys = Array.from(new Set(hexpubkeys));
+
     currentUserFollowPubkeysStore.set(uniqueHexpubkeys);
     localStorage.setItem("currentUserFollowPubkeysStore", JSON.stringify(uniqueHexpubkeys))
 }
