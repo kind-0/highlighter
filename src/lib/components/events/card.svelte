@@ -23,7 +23,8 @@
     import Avatar from "../Avatar.svelte";
     import Name from "../Name.svelte";
     import { Tooltip } from "flowbite-svelte";
-    import NiceTime from "./generic/niceTime.svelte";
+
+    import tsToNicePassedTimeString from "$lib/utils/tsToNicePassedTimeString";
 
     export let event: NDKEvent;
 
@@ -140,7 +141,7 @@
                         text-xs text-slate-500
                         z-0
                     ">
-                        <NiceTime timestamp={event.created_at } maxDaysToDisplayNice={8}/>
+                        {tsToNicePassedTimeString(event.created_at,5)}
                     </div>
 
                     {#if !skipButtons}
