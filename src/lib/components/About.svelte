@@ -1,15 +1,9 @@
 <script lang="ts">
+	import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import { onMount } from "svelte";
-    import Highlight from "./HighlightListItem.svelte";
 
     const purpleTextOrangeHighlightsId = '30023:6e468422dfb74a5738702a8823b9b28168abab8655faacb6853cd0ee15deee93:1680612926599';
     const highlightId = '532808e4d60f5f82b95aeaa3ed2e930a0c5973dccb0ede68b28b1931db91440f';
-    let highlights;
-
-    onMount(() => {
-        // highlights = HighlightInterface.fromIds([highlightId]);
-        // HighlightInterface.startStream({articleId: purpleTextOrangeHighlightsId});
-    })
 
 </script>
 
@@ -50,15 +44,11 @@
     </p>
 
     <div class="text-base">
-        {#if $highlights && $highlights.length > 0}
-            {#each $highlights as highlight}
-                <Highlight {highlight} skipTitle={false} disableClick={true} />
-            {/each}
-        {:else}
-            <div class="bg-orange-900/30 rounded-xl p-6 text-zinc-300/70">
-                Loading highlight event.
-            </div>
-        {/if}
+        <GenericEventCard
+            id={highlightId}
+            skipTitle={false}
+            skipReplies={true}
+        />
     </div>
 
     <p>

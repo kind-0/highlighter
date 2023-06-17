@@ -7,17 +7,16 @@
     import { Card } from "flowbite-svelte";
     import AvatarWithName from "$lib/components/AvatarWithName.svelte";
     import Avatar from "$lib/components/Avatar.svelte";
-    import Name from "$lib/components/Name.svelte";
-    import HighlightCard from "$lib/components/highlights/HighlightCard.svelte";
     import { NDKKind } from "$lib/ndk-kinds";
     import { NDKEvent } from "@nostr-dev-kit/ndk";
     import HighlightListItem from '$lib/components/HighlightListItem.svelte';
+    import Favicon from '$lib/components/Favicon.svelte';
 
     export let highlights: NDKHighlight[];
 
     let articlePromise = highlights[0].getArticle();
 
-    function articleTitle(article: NDKEvent) {
+    function articleTitle(article: NDKEvent | string) {
         return article?.title || article?.url || article.toString();
     }
 
@@ -54,7 +53,7 @@
 
 {#await articlePromise then article}
     {#if article}
-        <Card size="full" class="
+        <Card size="xl" class="
             flex flex-col gap-8
             sm:hover:bg-white
         " href={articleLink(article)}>
@@ -67,7 +66,7 @@
                     </a>
                 {:else if typeof article === "string"}
                     <div class="flex flex-row gap-2 items-center">
-                        <img src={`https://${new URL(article).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
+                        <Favicon url={article} class="w-8 h-8 rounded-md" />
                         <a href={`/load?url=${encodeURIComponent(article)}`} class="
                             text-3xl font-bold font-sans leading-normal text-left text-zinc-700
                         ">

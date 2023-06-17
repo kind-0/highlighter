@@ -16,6 +16,7 @@
     export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
     export let skipReplies: boolean = false;
+    export let skipTitle: boolean | undefined = undefined;
     export let skipFooter: boolean = false;
     export let event: NDKEvent | undefined = undefined;
     export let draggable = true;
@@ -91,7 +92,7 @@
                                 highlight={NDKHighlight.from(e)}
                                 {skipReplies}
                                 {article}
-                                skipTitle={getContext("skipTitle")??true}
+                                skipTitle={skipTitle??getContext("skipTitle")??true}
                             />
                         {/await}
                     </div>

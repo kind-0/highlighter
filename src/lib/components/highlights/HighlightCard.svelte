@@ -11,6 +11,7 @@
     import { tagToNip19 } from '$lib/utils';
     import { getContext, onDestroy, onMount } from 'svelte';
     import type { NDKEventStore } from '$lib/stores/ndk';
+    import Favicon from '$lib/components/Favicon.svelte';
 
     export let highlight: NDKHighlight;
     export let article: NDKLongForm | NDKEvent | undefined = undefined;
@@ -104,7 +105,7 @@
                 </div>
             {:else if highlight?.url && highlight.url.startsWith('https://')}
                 <div class="text-xl text-zinc-900 font-semibold truncate flex flex-row items-center gap-2">
-                    <img src={`https://${new URL(highlight.url).hostname}/favicon.ico`} class="w-8 h-8 rounded-md" />
+                    <Favicon url={highlight.url} class="w-8 h-8 rounded-md" />
                     <a href={linkToArticle()}>{new URL(highlight.url).hostname}</a>
                 </div>
             {:else if article?.author}

@@ -91,7 +91,7 @@
         {:else}
             {#each ($quotes||[]) as quote}
                 <div class="text-lg">
-                    <NoteCard event={quote} />
+                    <NoteCard event={quote} expandReplies={false} />
                 </div>
             {/each}
         {/if}
