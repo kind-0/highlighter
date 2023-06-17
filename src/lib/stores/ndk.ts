@@ -62,7 +62,6 @@ type classWithConvertFunction = {
 };
 
 _ndk.storeSubscribe = <T>(filter: NDKFilter, opts?: NDKSubscriptionOptions, klass?: classWithConvertFunction): NDKEventStore<T> => {
-    if (filter && filter['#q']) console.log(`opts for sub`, opts);
     const sub = _ndk.subscribe(filter, opts);
     const eventIds: Set<string> = new Set();
     const events: T[] = [];

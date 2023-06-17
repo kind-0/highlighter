@@ -27,6 +27,7 @@
         try {
             const webln = await requestProvider();
             const res = await webln.sendPayment(pr);
+            closeModal();
         } catch (err: any) {
             console.log(err);
         }

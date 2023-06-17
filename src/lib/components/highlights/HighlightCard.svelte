@@ -2,14 +2,15 @@
     import EventCard from '$lib/components/events/card.svelte';
     import HighlightContent from '$lib/components/highlights/HighlightContent.svelte';
 
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
+    import ndk from '$lib/stores/ndk';
+
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
     import NDKLongForm from '$lib/ndk-kinds/long-form';
-    import { onMount } from 'svelte';
     import AvatarWithName from '../AvatarWithName.svelte';
-    import { Card } from 'flowbite-svelte';
     import { tagToNip19 } from '$lib/utils';
-    import { getContext } from 'svelte';
+    import { getContext, onDestroy, onMount } from 'svelte';
+    import type { NDKEventStore } from '$lib/stores/ndk';
 
     export let highlight: NDKHighlight;
     export let article: NDKLongForm | NDKEvent | undefined = undefined;
@@ -24,8 +25,24 @@
     if (article) {
         articlePromise = Promise.resolve(article);
     } else {
-        articlePromise = highlight.getArticle();
+        try {
+            articlePromise = highlight.getArticle();
+        } catch (e) {
+            console.log(highlight)
+            console.error(e);
+            articlePromise = Promise.resolve(undefined);
+        }
     }
+
+    let replies: NDKEventStore<NDKEvent>;
+
+    onMount(() => {
+        replies = $ndk.storeSubscribe({ kinds: [1], ...highlight.filter()});
+    });
+
+    onDestroy(() => {
+        if (replies) replies.unsubscribe();
+    });
 
     function onContentClick(e: Event) {
         if (disableClick) return;
@@ -72,6 +89,7 @@
         event={highlight}
         skipHeader={skipTitle}
         {skipButtons}
+        replies={($replies||[])}
         byString={"highlighted by"}
         {skipFooter}
         class="bg-orange-50 border-orange-100"
@@ -89,7 +107,7 @@
             {:else if article?.author}
                 <a href={linkToArticle()}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
             {:else if typeof article === 'string'}
-                <a href={linkToArticle()}>{article}</a>
+                <a class="font-semibold" href={linkToArticle()}>{article}</a>
             {/if}
         </div>
 

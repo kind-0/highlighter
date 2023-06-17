@@ -12,7 +12,8 @@ function tsToNicePassedTimeString(timestamp: number | undefined, maxDaysToDispla
     let displayString: string;
 
     if (timePassed > oneDay * maxDaysToDisplayNice) {
-        displayString = new Date(timestamp * 1000).toLocaleString();
+        // displayString date in local format without time
+        displayString = new Date(timestamp * 1000).toLocaleDateString();
     } else if (timePassed > oneDay) {
         const daysPassed = Math.floor(timePassed / oneDay);
         displayString = daysPassed.toString() + 'd';

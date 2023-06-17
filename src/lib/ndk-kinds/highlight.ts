@@ -29,7 +29,9 @@ class NDKHighlight extends NDKEvent {
         if (context === undefined) {
             this.tags = this.tags.filter(([tag, value]) => tag !== 'context');
         } else {
+            this.tags = this.tags.filter(([tag, value]) => tag !== 'context');
             this.tags.push(['context', context]);
+            console.log(`adding context tag: ${context}`)
         }
     }
 

@@ -9,7 +9,6 @@
 
     onMount(async () => {
         try {
-            console.log(`connecting to ndk from layout`);
             $ndk.connect();
         } catch (e) {
             console.error(`layout error`, e);
@@ -18,7 +17,6 @@
 
     $: if ($currentUser && $currentUser?.npub !== prevCurrentUser) {
         prevCurrentUser = $currentUser?.npub;
-        console.log(`loading followers`);
 
         // added
         const cachedFollows = localStorage.getItem('currentUserFollowPubkeysStore');
@@ -29,8 +27,6 @@
 
         fetchFollowers();
     }
-
-    $: console.log("currentUserFollowPubkeysStore updated", $currentUserFollowPubkeysStore)
 </script>
 
 <slot />

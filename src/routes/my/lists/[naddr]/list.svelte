@@ -122,7 +122,10 @@
 
     $: if (list && listSignerData?.id !== list.encode()) {
         listSignerData = undefined;
-        getSigner(list).then(d => listSignerData = d);
+        getSigner(list).then(d => listSignerData = d).catch(e => {
+            console.error(e);
+            listSignerData = undefined;
+        });
     }
 
     let copiedEventJSON = false;
@@ -192,7 +195,7 @@
                     {list.name}
                 </h3>
                 <p class="ml-2 mt-1 truncate text-base text-gray-500">
-                    {list.description}
+                    {list.description??""}
                 </p>
             </div>
 

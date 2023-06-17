@@ -69,6 +69,8 @@
         e.dataTransfer.setData('kind', event.kind!.toString());
         e.dataTransfer.setData('tag', JSON.stringify(tag));
     }
+
+    let zappedAmount: number;
 </script>
 
 <div class="flex flex-col w-full gap-6">
@@ -135,42 +137,48 @@
                     </div>
 
                     <div class="
-                        absolute bottom-0 right-0
-                        opacity-100
-                        {!skipButtons ? 'group-hover:opacity-0' : ''}
-                        transition duration-300
-                        text-xs text-slate-500
-                        z-0
+                        flex flex-row gap-4 items-center
+                        z-10
                     ">
-                        {tsToNicePassedTimeString(event.created_at,5)}
-                    </div>
-
-                    {#if !skipButtons}
-                        <div class="
-                            flex flex-row gap-4 items-center
-                            opacity-0 group-hover:opacity-100
-                            transition duration-300
-                            z-10
-                        ">
+                        {#if !skipButtons}
                             {#if event.kind !== 9802}
-                                <HighlightButton {event} />
+                                <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                    <HighlightButton {event} />
+                                </div>
                             {/if}
-                            <BookmarkButton {event} />
+                            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                <BookmarkButton {event} />
+                            </div>
 
-                            <ZapsButton {event} />
+                            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                <BoostButton {event} />
+                            </div>
 
-                            <BoostButton {event} />
                             {#if replies}
-                                <RepliesButton {event} />
+                                <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                    <RepliesButton {event} />
+                                </div>
                             {/if}
 
-                            <a href={`/e/${event.encode()}`} class="
-                                text-slate-500 hover:text-orange-500
-                                flex flex-row items-center gap-2
+                            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                <a href={`/e/${event.encode()}`} class="
+                                    text-slate-500 hover:text-orange-500
+                                    flex flex-row items-center gap-2
+                                ">
+                                    <LinkIcon class="w-4 h-4" />
+                                </a>
+                                <Tooltip color="black">Link to this note</Tooltip>
+                            </div>
+
+                            <div class="
+                                {zappedAmount === 0 ? "opacity-0 group-hover:opacity-100 transition duration-300" : ""}
                             ">
-                                <LinkIcon class="w-4 h-4" />
-                            </a>
-                            <Tooltip color="black">Link to this note</Tooltip>
+                                <ZapsButton bind:zappedAmount {event} />
+                            </div>
+
+                            <div class="text-sm">
+                                {tsToNicePassedTimeString(event.created_at,5)}
+                            </div>
 
                             <button on:click|stopPropagation={() => {}}>
                                 <MoreOptionsIcon class="w-4 h-4" />
@@ -186,8 +194,9 @@
                                     {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
                                 </DropdownItem>
                             </Dropdown>
-                        </div>
-                    {/if}
+
+                        {/if}
+                    </div>
                 </div>
             {/if}
         </Card>

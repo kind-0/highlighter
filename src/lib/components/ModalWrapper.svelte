@@ -15,7 +15,7 @@
         sm:mx-auto
         rounded-lg sm:rounded-xl p-6
         shadow-xl
-        bg-white
+        bg-zinc-100
         dark:bg-zinc-900 dark:text-white
         flex flex-col gap-8
         relative

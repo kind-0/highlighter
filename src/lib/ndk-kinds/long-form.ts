@@ -19,6 +19,14 @@ class NDKLongForm extends NDKEvent {
         }
     }
 
+    get image(): string | undefined {
+        return this.tagValue('image');
+    }
+
+    get summary(): string | undefined {
+        return this.tagValue('summary');
+    }
+
     get url(): string | undefined {
         return this.tagValue('url');
     }

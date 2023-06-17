@@ -3,8 +3,6 @@
     import { page } from '$app/stores';
     import ndk from '$lib/stores/ndk';
 
-    import SecretNodeEditor from '../../components/note-editor.svelte';
-    import ToolbarButton from '../../components/toolbar/button.svelte';
     import { onMount } from "svelte";
 
     const { naddr } = $page.params;

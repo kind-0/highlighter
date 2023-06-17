@@ -25,11 +25,11 @@ export const articleHighlights = derived(highlights, ($highlights) => {
     for (const highlight of $highlights) {
         const articleId = highlight.getArticleTag();
         if (articleId) {
-            const articleHighlight = articleHighlights.get(articleId);
+            const articleHighlight = articleHighlights.get(articleId[1]);
             if (articleHighlight) {
                 articleHighlight.push(highlight);
             } else {
-                articleHighlights.set(articleId, [highlight]);
+                articleHighlights.set(articleId[1], [highlight]);
             }
         }
     }
