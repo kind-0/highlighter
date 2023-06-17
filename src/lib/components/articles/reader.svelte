@@ -159,7 +159,7 @@
 </svelte:head>
 
 <div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
-    <Card size="full" class="md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
+    <Card size="xl" class="md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
         <!-- Title -->
         <h1 class="text-5xl text-zinc-800 font-black leading-normal text-left">{articleTitle()}</h1>
 

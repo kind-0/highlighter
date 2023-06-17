@@ -12,6 +12,7 @@
     export let skipReplies = false;
     export let skipHeader = true;
     export let expandReplies = true
+    export let draggable = true;
 
     let replies: NDKEventStore<NDKEvent>;
 
@@ -28,6 +29,7 @@
 
 <EventCard
     {event}
+    {draggable}
     {skipHeader}
     {skipFooter}
     {skipButtons}

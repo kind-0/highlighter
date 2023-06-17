@@ -19,7 +19,8 @@ export async function findEphemeralSigner(
     opts: IFindEphemeralSignerLookups
 ): Promise<NDKPrivateKeySigner | undefined> {
     const mainUser = await mainSigner.user();
-    const filter: NDKFilter = { kinds: [2600 as number], '#p': [mainUser.hexpubkey()] };
+    const filter: NDKFilter = { kinds: [2601 as number], '#p': [mainUser.hexpubkey()] };
+
 
     if (opts.name) {
         const hashedName = await getHashedKeyName(opts.name);
@@ -39,9 +40,16 @@ export async function findEphemeralSigner(
         };
 
         const promise = new Promise<NDKPrivateKeySigner>((resolve, reject) => {
+            let decryptionAttempts = 0;
             try {
+                decryptionAttempts++;
                 resolve(decryptEventFunction(event));
             } catch(e) {
+                if (decryptionAttempts > 5) {
+                    console.error(`Failed to decrypt ephemeral signer event after ${decryptionAttempts} attempts.`);
+                    reject(e);
+                    return;
+                }
                 setTimeout(() => { decryptEventFunction(event); }, 1000 * Math.random());
             }
         });
@@ -119,7 +127,7 @@ export async function saveEphemeralSigner(ndk: NDK, targetSigner: NDKPrivateKeyS
 
     const mainUser = await mainSigner.user();
     const event = new NDKEvent(ndk, {
-        kind: 2600,
+        kind: 2601,
         content: generateContent(targetSigner, opts),
         tags: await generateTags(mainSigner, opts),
     } as NostrEvent);

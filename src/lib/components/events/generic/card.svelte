@@ -18,6 +18,7 @@
     export let skipReplies: boolean = false;
     export let skipFooter: boolean = false;
     export let event: NDKEvent | undefined = undefined;
+    export let draggable = true;
 
     const dispatcher = createEventDispatcher();
 
@@ -80,7 +81,7 @@
     {:then e}
         {#if e}
             <div
-                draggable={true}
+                {draggable}
                 on:dragstart={(dragEvent) => dragStart(dragEvent, e)}
             >
                 {#if e.kind === 9802}
@@ -88,6 +89,7 @@
                         {#await NDKHighlight.from(e).article then article}
                             <HighlightCard
                                 highlight={NDKHighlight.from(e)}
+                                {skipReplies}
                                 {article}
                                 skipTitle={getContext("skipTitle")??true}
                             />
@@ -95,6 +97,7 @@
                     </div>
                 {:else if e.kind === 1}
                     <NoteCard
+                        {draggable}
                         event={e}
                         {skipReplies}
                         {skipFooter}

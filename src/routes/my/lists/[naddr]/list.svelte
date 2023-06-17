@@ -107,7 +107,6 @@
             try {
                 await saveEphemeralSigner($ndk, listSignerData.signer, {
                     associatedEvent: list,
-                    name: list.encode(),
                     keyProfile: {
                         name: listSignerData.name,
                         picture: $currentUser?.profile?.image,
@@ -120,11 +119,18 @@
         }
     }
 
-    $: if (list && listSignerData?.id !== list.encode()) {
+    let fetchingSigner = false;
+
+    $: if (list && listSignerData?.id !== list.encode() && !fetchingSigner) {
+        fetchingSigner = true;
         listSignerData = undefined;
-        getSigner(list).then(d => listSignerData = d).catch(e => {
+        getSigner(list).then(d => {
+            listSignerData = d
+            fetchingSigner = false;
+        }).catch(e => {
             console.error(e);
             listSignerData = undefined;
+            fetchingSigner = false;
         });
     }
 

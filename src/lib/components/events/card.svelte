@@ -40,7 +40,6 @@
 
     let copiedEventId = false;
     let copiedEventJSON = false;
-    let niceTime = event.created_at ? new Date(event.created_at * 1000).toLocaleString() : undefined;
 
     function copyId(e: Event) {
         e.stopPropagation();
@@ -203,7 +202,7 @@
     </div>
 
     {#if replies?.length && replies?.length > 0}
-        {#if !expandReplies}
+        {#if expandReplies}
             {#each replies as reply}
                 <div class="ml-6">
                     <NoteCard event={reply} {expandReplies} />
@@ -214,7 +213,7 @@
                 text-base text-left text-orange-500 -mt-4
                 font-semibold
                 px-4
-            " on:click={() => { expandReplies = false }}>
+            " on:click={() => { expandReplies = true }}>
                 View replies...
             </button>
         {/if}

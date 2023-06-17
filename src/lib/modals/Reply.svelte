@@ -45,6 +45,7 @@
 
         <div class="flex flex-col gap-8">
             <GenericEventCard
+                draggable={false}
                 {event}
                 skipTitle={true}
                 skipButtons={true}

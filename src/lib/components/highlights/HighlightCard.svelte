@@ -19,6 +19,7 @@
     export let skipFooter: boolean = false;
     export let disableClick: boolean = false;
     export let expandedContext: boolean = false;
+    export let skipReplies = false;
 
     let articlePromise: Promise<NDKLongForm | NDKEvent | string | undefined>;
 
@@ -37,7 +38,9 @@
     let replies: NDKEventStore<NDKEvent>;
 
     onMount(() => {
-        replies = $ndk.storeSubscribe({ kinds: [1], ...highlight.filter()});
+        if (!skipReplies) {
+            replies = $ndk.storeSubscribe({ kinds: [1], ...highlight.filter()});
+        }
     });
 
     onDestroy(() => {

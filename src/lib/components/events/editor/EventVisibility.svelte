@@ -49,7 +49,7 @@
     </button>
     <Dropdown class="
         w-auto mx-2 sm:mx-0 sm:w-96 border border-zinc-200 rounded-lg shadow-md z-50 text-sm
-        bg-transparent
+        bg-white
     " placement="bottom">
         <li class="rounded hover:bg-gray-100 dark:hover:bg-gray-600 px-4 py-4 border-b border-b-zinc-200">
             <Radio bind:group={value} value='Public'>
