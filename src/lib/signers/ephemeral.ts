@@ -128,7 +128,7 @@ export async function saveEphemeralSigner(ndk: NDK, targetSigner: NDKPrivateKeyS
 
     const mainUser = await mainSigner.user();
     const event = new NDKEvent(ndk, {
-        kind: 2601,
+        kind: 2600,
         content: generateContent(targetSigner, opts),
         tags: await generateTags(mainSigner, opts),
     } as NostrEvent);
