@@ -12,12 +12,14 @@
     import NDKHighlight from '$lib/ndk-kinds/highlight';
     import { filterForId, filterFromNaddr } from '$lib/utils';
     import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
+    import ListCard from '$lib/components/lists/ListCard.svelte';
 
     export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
     export let skipReplies: boolean = false;
     export let skipTitle: boolean | undefined = undefined;
     export let skipFooter: boolean = false;
+    export let expandReplies: boolean = true;
     export let event: NDKEvent | undefined = undefined;
     export let draggable = true;
 
@@ -57,7 +59,7 @@
                     resolve(e);
                 }
 
-                dispatcher('event:load', e);
+                dispatcher('eventLoad', e);
             });
         });
 
@@ -102,28 +104,17 @@
                         event={e}
                         {skipReplies}
                         {skipFooter}
+                        {expandReplies}
                     />
                 {:else if e.kind === 4}
                     <NoteCard
                         event={e}
                         {skipReplies}
                         {skipFooter}
+                        {expandReplies}
                     />
                 {:else if e.kind >= 30000 && e.kind < 40000}
-                    <a href="/my/lists/{e.encode()}" class="
-                        shadow
-                        flex flex-col h-full gap-4
-                        border border-zinc-200 hover:border-zinc-200
-                        px-6 pt-6 pb-4 rounded-xl
-                        bg-white hover:bg-slate-50 transition duration-200 ease-in-out
-                    " style="max-height: 40rem;">
-                        <div class="flex-1 truncate px-4 py-2 text-sm">
-                            <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
-                                <Name ndk={$ndk} pubkey={e.pubkey} />'s
-                                {(new NDKList($ndk, e.rawEvent())).name} list
-                            </div>
-                        </div>
-                    </a>
+                    <ListCard list={NDKList.from(e)} />
                 {:else if e.kind === 9735}
                     <ZapEventCard
                         event={e}

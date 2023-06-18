@@ -57,10 +57,18 @@ export function getLists(user: NDKUser) {
                     deletions.add(tag);
                     return deletions;
                 });
-                // lists.update((lists) => {
-                //     lists.delete(tag);
-                //     return lists;
-                // });
+                lists.update((lists) => {
+                    // get the list from the store
+                    const list = lists.get(tag);
+                    if (!list) return lists;
+
+                    // remove the list from the store if the timestamp of the deletion is greater than the list's timestamp
+                    if (event.created_at! > list.created_at!) {
+                        lists.delete(tag);
+                    }
+
+                    return lists;
+                });
             }
         });
     });

@@ -232,7 +232,7 @@
 
         <!-- Content -->
         <HighlightWrapper on:selectionchange={onSelectionChange}>
-            <article class="my-6">
+            <article class="my-2">
                 <Article>
                     {#if $$slots.default}
                         <slot />

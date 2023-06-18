@@ -37,10 +37,6 @@
         await list.publish();
     }
 
-    $: if ($currentUser && !currentUserPubkeys.includes($currentUser.hexpubkey())) {
-        currentUserPubkeys.push($currentUser.hexpubkey());
-    }
-
     function shouldDisplayTag(tag: NDKTag) {
         switch (tag[0]) {
             case 'a':
@@ -59,7 +55,11 @@
 <div class="flex flex-col gap-2.5">
     {#each tags as tag, i (i)}
         {#if shouldDisplayTag(tag)}
-            <CollapsibleCard {tag} on:removeItem={onRemoveItem} />
+            <CollapsibleCard
+                {tag}
+                on:removeItem={onRemoveItem}
+                skipFooterForPubkeys={currentUserPubkeys}
+            />
         {/if}
     {/each}
 </div>

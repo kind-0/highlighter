@@ -43,6 +43,10 @@
      */
     let currentUserPubkeys: string[] = [];
 
+    if ($currentUser) {
+        currentUserPubkeys.push($currentUser.hexpubkey());
+    }
+
     $: if (listSignerData?.user && !currentUserPubkeys.includes(listSignerData.user.hexpubkey())) {
         currentUserPubkeys.push(listSignerData.user.hexpubkey());
     }
@@ -52,7 +56,7 @@
             return;
         }
 
-        await list.encrypt();
+        await list.encrypt($currentUser!);
         await list.delete();
         goto('/my/lists');
     }

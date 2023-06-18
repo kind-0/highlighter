@@ -2,13 +2,14 @@
 	import UserCard from '$lib/components/UserCard.svelte';
     import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import RelayCard from '$lib/components/relays/RelayCard.svelte';
-    import type { NDKTag } from '@nostr-dev-kit/ndk';
+    import type { NDKEvent, NDKTag } from '@nostr-dev-kit/ndk';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
 
     export let tag: NDKTag;
     export let collapsed = true;
+    export let skipFooterForPubkeys: string[] | undefined = undefined;
 
     let tagIsList = false;
     let listData: [number, string, string];
@@ -32,6 +33,14 @@
     function remove() {
         dispatch('removeItem', {tag});
     }
+
+    let skipFooter: boolean = collapsed;
+
+    function onEventLoaded(e: CustomEvent) {
+        const event: NDKEvent = e.detail;
+
+        skipFooter = !!skipFooterForPubkeys?.includes(event.pubkey);
+    }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -43,7 +52,9 @@
         {:else}
             <GenericEventCard
                 id={tag[1]}
-                skipFooter={collapsed}
+                skipFooter={collapsed && skipFooter}
+                expandReplies={false}
+                on:eventLoad={onEventLoaded}
             />
         {/if}
 </div>

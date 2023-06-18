@@ -38,20 +38,20 @@
                 const next = content[i + 1]
 
                 if ((!prev || prev.type === "newline") && (!next || next.type === "newline")) {
-                let n = 1
-                for (let j = i - 1; ; j--) {
-                    if (content[j]?.type === "newline") {
-                        n += 1
-                    } else {
-                        break
+                    let n = 1
+                    for (let j = i - 1; ; j--) {
+                        if (content[j]?.type === "newline") {
+                            n += 1
+                        } else {
+                            break
+                        }
                     }
-                }
 
-                ranges.push({i: i + 1, n})
+                    ranges.push({i: i + 1, n})
+                }
             }
         }
     }
-}
 </script>
 
 <!-- text-black -->
@@ -63,7 +63,7 @@
 ">
     <div>
         {#if content}
-            {#each content as { type, value }}
+            {#each content as { type, value }, i}
                 {#if type === "newline"}
                     {#each value as _}
                         {#if addNewLines}
@@ -92,7 +92,15 @@
                     <b>#{value}</b>
 
                 {:else}
-                    <p>{@html value}</p>
+                    {#if i === 0 || (content[i-1] && content[i-1].type === "newline")}
+                        {@html '<p>'}
+                    {/if}
+
+                    {@html value}
+
+                    {#if i === content.length-1 || (content[i+1] && content[i+1].type === "newline")}
+                        {@html '</p>'}
+                    {/if}
                 {/if}
             {/each}
         {:else}
