@@ -23,27 +23,29 @@
     }
 </script>
 
-<Card class="group block flex-shrink-0">
-    <div class="flex flex-row gap-3.5 items-center">
-        <div class="">
-            <Avatar {userProfile} />
-        </div>
-        <div class="w-4/5">
-            <p class="text-base font-medium text-gray-700 group-hover:text-gray-900">
-                <Name {userProfile} />
-            </p>
-
-            {#if subtitle || userProfile?.about}
-                <p class="text-sm font-medium text-gray-500 group-hover:text-gray-700 truncate">
-                    {subtitle || userProfile?.about}
+<Card class="group block flex-shrink-0" size="xl">
+    <div class="flex flex-row gap-8">
+        <div class="flex flex-row gap-3.5 items-center overflow-hidden">
+            <div class="">
+                <Avatar {userProfile} />
+            </div>
+            <div class="w-4/5">
+                <p class="text-base font-medium text-gray-700 group-hover:text-gray-900">
+                    <Name {userProfile} />
                 </p>
-            {/if}
-        </div>
-    </div>
 
-    {#if $$slots.right}
-        <div class="flex items-center justify-end">
-            <slot name="right" />
+                {#if subtitle || userProfile?.about}
+                    <p class="text-sm font-medium text-gray-500 group-hover:text-gray-700 truncate">
+                        {subtitle || userProfile?.about}
+                    </p>
+                {/if}
+            </div>
         </div>
-    {/if}
+
+        {#if $$slots.right}
+            <div class="flex items-center justify-end">
+                <slot name="right" />
+            </div>
+        {/if}
+    </div>
 </Card>

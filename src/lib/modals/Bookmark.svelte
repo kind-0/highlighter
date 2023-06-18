@@ -11,7 +11,6 @@
 
     export let event: NDKEvent;
 
-    let currentNpub;
     let newListName: string;
 
     async function addToList(list: NDKList) {

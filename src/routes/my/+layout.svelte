@@ -23,13 +23,13 @@
 
     import { sortedLists, getLists } from '$lib/stores/list';
 
-    let subscribed = false;
-    let listSub;
+    // let subscribed = false;
+    // let listSub;
 
-    $: if (!subscribed && $currentUser) {
-        subscribed = true;
-        listSub = getLists($currentUser);
-    }
+    // $: if (!subscribed && $currentUser) {
+    //     subscribed = true;
+    //     listSub = getLists($currentUser);
+    // }
 
     function isTopLevel(thisList: NDKList) {
         for (const _list of $sortedLists) {

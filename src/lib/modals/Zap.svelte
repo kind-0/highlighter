@@ -27,11 +27,16 @@
 
         try {
             const webln = await requestProvider();
-            const res = await webln.sendPayment(pr);
-            closeModal();
+            webln.sendPayment(pr);
+            // TODO we should check here if the payment was successful, with a timer
+            // that is canceled here; if the timer doesn't come back, show the modal again
+            // or instruct the user to do something with the failed payment
         } catch (err: any) {
             console.log(err);
+            return;
         }
+
+        closeModal();
     }
 </script>
 

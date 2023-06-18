@@ -67,7 +67,6 @@
                 {#if type === "newline"}
                     {#each value as _}
                         {#if addNewLines}
-                            <br />
                         {/if}
                     {/each}
                 {:else if type === "link"}
@@ -93,7 +92,7 @@
                     <b>#{value}</b>
 
                 {:else}
-                    {@html value}
+                    <p>{@html value}</p>
                 {/if}
             {/each}
         {:else}

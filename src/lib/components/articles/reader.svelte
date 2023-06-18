@@ -12,7 +12,7 @@
 
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
-    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import type NDKLongForm from '$lib/ndk-kinds/long-form';
     import { Card } from 'flowbite-svelte';
     import NewUserInstruction from '../NewUserInstruction.svelte';
     import { onDestroy } from 'svelte';
@@ -110,6 +110,26 @@
 
     let newHighlightItem: NDKHighlight | undefined;
 
+    /**
+     * Choose the context for the highlight
+     */
+    function chooseContext(selection: string, sentence: string, paragraph: string): string {
+        let context = paragraph;
+
+        // If the selection is 3x shorter than the paragraph, use the sentence
+        if (
+            selection.length > 30 && // wait until there is enough text selected to make this call, otherwise the UX is weird
+            selection.length * 20 < paragraph.length) {
+            context = sentence + '… sentence ' + selection.length + 'paragraph:' + paragraph.length;
+        }
+
+        // if (selection.length >= paragraph.length) {
+        //     context = undefined;
+        // }
+
+        return context;
+    }
+
     function onSelectionChange(e: Event) {
         let {selection, sentence, paragraph } = e.detail;
         let context: string | undefined;
@@ -118,11 +138,7 @@
         paragraph = paragraph.trim();
         sentence = sentence.trim();
 
-        context = paragraph;
-
-        if (selection.length >= paragraph.length) {
-            context = undefined;
-        }
+        context = chooseContext(selection, sentence, paragraph);
 
         if (selection.trim() === '') return;
 
@@ -157,6 +173,17 @@
         }
         return article?.title || article?.url || article.toString();
     }
+
+    let articleTopicsId: string;
+    let topics: string[] = [];
+
+    $: if (article?.id && articleTopicsId !== article.id) {
+        articleTopicsId = article.id;
+        const articleTopics = (article.tags??[]).filter(t => t[0] === 't').map(t => t[1]).slice(0,10);
+        console.log(`setting topics from ${topics} to ${articleTopics}`)
+        topics = articleTopics;
+    }
+
 </script>
 
 <svelte:head>
@@ -240,6 +267,7 @@
                         article={article.id ? article : undefined}
                         highlight={newHighlightItem}
                         on:close={onNewHighlightClose}
+                        bind:topics
                     />
                 </div>
             {/if}

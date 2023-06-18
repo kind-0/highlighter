@@ -9,9 +9,11 @@
     import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
     import { createEventDispatcher } from 'svelte';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
-
+    import { Card, Input } from 'flowbite-svelte';
+    import TopicInput from './TopicInput.svelte';
 
     export let highlight: NDKHighlight;
+    export let topics: string[] = [];
 
     let highlightUser = new NDKUser({hexpubkey: highlight.pubkey});
     let saving = false;
@@ -32,10 +34,14 @@
         saving = true;
         highlight.content = highlight.content;
 
+        // Add tags
+        for (const topic of topics) {
+            highlight.tags.push(['t', topic]);
+        }
+
         // NIP-31
         highlight.tags.push(altTag(highlight));
 
-        console.log(highlight.rawEvent());
         await highlight.publish();
 
         if (comment) {
@@ -67,8 +73,9 @@
 </script>
 
 <div class="flex flex-col gap-4">
-    <div class="
-        overflow-hidden rounded-md bg-white px-6 py-4 shadow
+    <Card size="xl" class="
+        overflow-hidden rounded-md
+        bg-orange-50
         flex flex-col h-full gap-2
         transition duration-100
         group
@@ -78,7 +85,7 @@
             leading-relaxed h-full
             px-6 py-4
             my-2
-            border-l border-slate-500
+            border-l-4 border-orange-500
             overflow-auto
         ">
             {@html contextWithHighlight}
@@ -90,6 +97,7 @@
         <!-- Footer -->
         <div class="
             flex flex-row
+            gap-8
             items-center
             justify-between
             w-full
@@ -97,14 +105,9 @@
             py-4 pb-0
         ">
             <div class="flex flex-row gap-4 items-center whitespace-nowrap">
-                <a
-                    href="/p/{highlightUser.npub}"
-                    class="flex flex-row gap-4 items-center justify-center">
-                    <Avatar pubkey={highlight.pubkey} klass="h-6" />
-                    <div class=" text-gray-500 text-xs hidden sm:block">
-                        <Name pubkey={highlight.pubkey} />
-                    </div>
-                </a>
+                <TopicInput
+                    bind:values={topics}
+                />
             </div>
 
             <div class="
@@ -119,5 +122,5 @@
                 <RoundedButton on:click={save} disabled={saving}>Save</RoundedButton>
             </div>
         </div>
-    </div>
+    </Card>
 </div>

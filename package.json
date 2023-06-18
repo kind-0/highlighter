@@ -70,6 +70,7 @@
 		"svelte-modals": "^1.2.1",
 		"svelte-preprocess": "^5.0.4",
 		"svelte-scrollto": "^0.2.0",
+		"svelte-tags-input": "^5.0.0",
 		"throttle-debounce": "^5.0.0",
 		"turndown": "^7.1.2",
 		"uuid": "^9.0.0",
