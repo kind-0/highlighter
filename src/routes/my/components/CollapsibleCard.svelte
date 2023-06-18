@@ -1,4 +1,8 @@
 <script lang="ts">
+    import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
+
+    import { Dropdown, DropdownItem } from 'flowbite-svelte'
+
 	import UserCard from '$lib/components/UserCard.svelte';
     import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import RelayCard from '$lib/components/relays/RelayCard.svelte';
@@ -44,22 +48,31 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={toggleCollapsed}>
-        {#if tag[0] === 'r'}
-            <RelayCard relayUrl={tag[1]} />
-        {:else if tag[0] === 'p'}
-            <UserCard pubkey={tag[1]} />
-        {:else}
-            <GenericEventCard
-                id={tag[1]}
-                skipFooter={collapsed && skipFooter}
-                expandReplies={false}
-                on:eventLoad={onEventLoaded}
-            />
-        {/if}
-</div>
-{#if !collapsed}
-    <div class="flex flex-row gap-2 items-center">
-        <button class="text-zinc-500 text-sm" on:click={remove}>Remove</button>
+<div class="w-full relative">
+    <div class="absolute -left-10">
+        <button class="
+            border border-transparent hover:border-zinc-200 hover:bg-zinc-100
+            px-2 py-2 rounded-lg
+        " on:click|stopPropagation={() => {}}>
+            <MoreOptionsIcon class="w-4 h-4 text-black" />
+        </button>
+        <Dropdown>
+            <DropdownItem class="flex flex-row items-center gap-2" on:click={remove}>
+                Remove
+            </DropdownItem>
+        </Dropdown>
     </div>
-{/if}
+
+    {#if tag[0] === 'r'}
+        <RelayCard relayUrl={tag[1]} />
+    {:else if tag[0] === 'p'}
+        <UserCard pubkey={tag[1]} />
+    {:else}
+        <GenericEventCard
+            id={tag[1]}
+            skipFooter={collapsed && skipFooter}
+            expandReplies={false}
+            on:eventLoad={onEventLoaded}
+        />
+    {/if}
+</div>

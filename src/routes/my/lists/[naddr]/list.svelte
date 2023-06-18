@@ -8,7 +8,6 @@
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
 
-    import PageTitle from '../../components/PageTitle.svelte';
     import { Tabs, TabItem } from 'flowbite-svelte';
 
     import Tags from './tags.svelte';
@@ -23,7 +22,6 @@
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
     import { getSigner, type SignerStoreItem } from '$lib/stores/signer';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
-    import { Name } from '@nostr-dev-kit/ndk-svelte-components';
 
     export let list: NDKList;
     let listId;

@@ -84,6 +84,7 @@
     {:then e}
         {#if e}
             <div
+                class="w-full"
                 {draggable}
                 on:dragstart={(dragEvent) => dragStart(dragEvent, e)}
             >

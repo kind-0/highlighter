@@ -6,7 +6,7 @@
 
 </script>
 
-<Card class={$$props.class}>
+<Card size="xl" class={$$props.class}>
     <a
     href={`/my/lists/${list.encode()}`}
     class="flex flex-col gap-4">
