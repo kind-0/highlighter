@@ -2,6 +2,7 @@
     import Avatar from '$lib/components/Avatar.svelte';
     import Name from '$lib/components/Name.svelte';
     import UserInterface from '$lib/interfaces/users';
+    import type { NDKUser } from '@nostr-dev-kit/ndk';
     import type { Observable } from 'dexie';
 
     export let pubkey: string | undefined;
@@ -27,10 +28,10 @@
 <div class="group block flex-shrink-0">
     <div class="flex items-center gap-2">
         <div>
-            <Avatar {userProfile} {size} />
+            <Avatar {userProfile} {size} class={$$props.avatarClass} />
         </div>
         <div>
-            <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><Name {userProfile} /></p>
+            <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><span class={$$props.nameClass}><Name {userProfile} /></span></p>
             <div class="text-xs text-gray-500 truncate">
                 {#if subtitle}
                     {subtitle}

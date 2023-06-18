@@ -12,7 +12,7 @@
 
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
-    import type NDKLongForm from '$lib/ndk-kinds/long-form';
+    import NDKLongForm from '$lib/ndk-kinds/long-form';
     import { Card } from 'flowbite-svelte';
     import NewUserInstruction from '../NewUserInstruction.svelte';
     import { onDestroy } from 'svelte';
@@ -150,6 +150,11 @@
     }
 
     function articleTitle() {
+        if (article instanceof NDKEvent) {
+            if (!article.title) {
+                return undefined;
+            }
+        }
         return article?.title || article?.url || article.toString();
     }
 </script>
@@ -161,12 +166,18 @@
 <div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
     <Card size="xl" class="md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
         <!-- Title -->
-        <h1 class="text-5xl text-zinc-800 font-black leading-normal text-left">{articleTitle()}</h1>
+        {#if articleTitle()}
+            <h1 class="text-5xl text-zinc-800 font-black leading-normal text-left">{articleTitle()}</h1>
+        {/if}
 
         <div class="flex flex-row justify-between mb-2">
             <!-- Author / URL -->
-            {#if article?.author}
-                <AvatarWithName pubkey={article.author.hexpubkey()} class="w-10 h-10 rounded-full" />
+            {#if article?.author && article?.author?.hexpubkey()}
+                <AvatarWithName
+                    pubkey={article.author.hexpubkey()}
+                    avatarClass="w-12 h-12 rounded-full"
+                    nameClass="text-xl font-black"
+                />
             {:else if url}
                 <div class="text-slate-600 text-xs whitespace-nowrap">
                     {url}

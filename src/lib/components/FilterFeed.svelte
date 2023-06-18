@@ -3,11 +3,14 @@
 	import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
     import { onDestroy } from 'svelte';
+    import { derived } from 'svelte/store';
 
     export let filter: NDKFilter;
     export let feedLength: number = 0;
+    export let eventFilter: (e: NDKEvent) => boolean = () => true;
 
     let feed: NDKEvent[] = [];
+    let eventIds: Set<string> = new Set();
 
     onDestroy(() => {
         if (sub) {
@@ -18,7 +21,17 @@
     const sub = $ndk.subscribe(filter, { closeOnEose: false });
 
     sub.on('event', (e, r) => {
-        feed.push(e);
+        if (eventIds.has(e.id)) {
+            return;
+        }
+        if (eventFilter(e)) {
+            let i = 0;
+            while (i < feed.length && feed[i].created_at! > e.created_at!) {
+                i++;
+            }
+            feed.splice(i, 0, e);
+            eventIds.add(e.id);
+        }
         feedLength = feed.length;
         feed = feed;
     })

@@ -57,10 +57,10 @@ export function getLists(user: NDKUser) {
                     deletions.add(tag);
                     return deletions;
                 });
-                lists.update((lists) => {
-                    lists.delete(tag);
-                    return lists;
-                });
+                // lists.update((lists) => {
+                //     lists.delete(tag);
+                //     return lists;
+                // });
             }
         });
     });

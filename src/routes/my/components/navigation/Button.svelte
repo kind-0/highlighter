@@ -16,6 +16,7 @@
     group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold
     w-full
     { active ? 'bg-gray-50 text-orange-500' : 'text-zinc-700 hover:text-orange-500 hover:bg-zinc-50' }
+    {$$props.class}
 ">
     <slot />
 </button>

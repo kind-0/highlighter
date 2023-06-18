@@ -19,7 +19,7 @@ export async function findEphemeralSigner(
     opts: IFindEphemeralSignerLookups
 ): Promise<NDKPrivateKeySigner | undefined> {
     const mainUser = await mainSigner.user();
-    const filter: NDKFilter = { kinds: [2601 as number], '#p': [mainUser.hexpubkey()] };
+    const filter: NDKFilter = { kinds: [2600 as number] };
 
 
     if (opts.name) {
@@ -33,6 +33,7 @@ export async function findEphemeralSigner(
     const event = await ndk.fetchEvent(filter);
 
     if (event) {
+        console.log(`signer found, filtered with ${filter['#e']}`, opts, event.rawEvent())
         const decryptEventFunction = async (event: NDKEvent) => {
             await event.decrypt(await mainSigner.user());
             const content = JSON.parse(event.content);

@@ -17,6 +17,7 @@
     let comment = '';
 
     async function zap() {
+        event.ndk = $ndk;
         let pr = await event.zap(parseInt(amount)*1000, comment);
 
         if (!pr) {

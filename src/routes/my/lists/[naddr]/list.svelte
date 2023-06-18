@@ -312,7 +312,9 @@
                     <FilterFeed filter={{
                         kinds: [1, 9802, 4, 30023],
                         '#p': [listSignerData.user.hexpubkey()]
-                    }} bind:feedLength={globalFeedLength} />
+                    }}
+                    bind:feedLength={globalFeedLength}
+                    eventFilter={(e) => e.pubkey !== $currentUser.hexpubkey()} />
                 </TabItem>
             {/if}
 
