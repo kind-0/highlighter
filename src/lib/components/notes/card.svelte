@@ -18,7 +18,10 @@
 
     onMount(() => {
         if (!skipReplies) {
-            replies = $ndk.storeSubscribe({ kinds: [1], '#e': [event.id] });
+            replies = $ndk.storeSubscribe(
+                { kinds: [1], '#e': [event.id] },
+                { closeOnEose: false }
+            );
         }
     });
 

@@ -1,5 +1,5 @@
 import NDK, { NDKEvent, NDKPrivateKeySigner, type NDKFilter, type NDKSigner, type NDKUserProfile } from '@nostr-dev-kit/ndk';
-import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk/lib/src/events';
+import type { NDKTag, NostrEvent } from '@nostr-dev-kit/ndk';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 
@@ -33,7 +33,6 @@ export async function findEphemeralSigner(
     const event = await ndk.fetchEvent(filter);
 
     if (event) {
-        console.log(`signer found, filtered with ${filter['#e']}`, opts, event.rawEvent())
         const decryptEventFunction = async (event: NDKEvent) => {
             await event.decrypt(await mainSigner.user());
             const content = JSON.parse(event.content);

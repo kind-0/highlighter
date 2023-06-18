@@ -16,8 +16,6 @@
 
     const dispatch = createEventDispatcher();
     let value = '';
-    let newItemType: string | undefined;
-    let showSaveButton = false;
     let visibility = 'Delegated';
     let validationError: string | undefined;
 

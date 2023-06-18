@@ -22,6 +22,7 @@
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
     import { getSigner, type SignerStoreItem } from '$lib/stores/signer';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
+    import { setContext } from 'svelte';
 
     export let list: NDKList;
     let listId;
@@ -77,7 +78,6 @@
         const tag = JSON.parse(e.dataTransfer.getData('tag'));
 
         if (list.tags.find(t => t[1] === id)) {
-            alert('already has it');
             return;
         }
 
@@ -112,6 +112,8 @@
                     keyProfile: {
                         name: listSignerData.name,
                         picture: $currentUser?.profile?.image,
+                        lud06: $currentUser?.profile?.lud06,
+                        lud16: $currentUser?.profile?.lud16,
                     }
                 });
             } catch (e) {
@@ -134,6 +136,7 @@
             listSignerData = undefined;
             fetchingSigner = false;
         });
+
     }
 
     let copiedEventJSON = false;

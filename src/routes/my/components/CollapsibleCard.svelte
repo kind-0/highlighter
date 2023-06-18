@@ -12,7 +12,6 @@
     const dispatch = createEventDispatcher();
 
     export let tag: NDKTag;
-    export let collapsed = true;
     export let skipFooterForPubkeys: string[] | undefined = undefined;
 
     let tagIsList = false;
@@ -30,15 +29,11 @@
         }
     }
 
-    function toggleCollapsed() {
-        collapsed = !collapsed;
-    }
-
     function remove() {
         dispatch('removeItem', {tag});
     }
 
-    let skipFooter: boolean = collapsed;
+    let skipFooter: boolean = true;
 
     function onEventLoaded(e: CustomEvent) {
         const event: NDKEvent = e.detail;
@@ -48,7 +43,10 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="w-full relative">
+<div
+    class="w-full relative"
+    on:click={() => { skipFooter = false; }}
+>
     <div class="absolute -left-10">
         <button class="
             border border-transparent hover:border-zinc-200 hover:bg-zinc-100
@@ -70,7 +68,7 @@
     {:else}
         <GenericEventCard
             id={tag[1]}
-            skipFooter={collapsed && skipFooter}
+            {skipFooter}
             expandReplies={false}
             on:eventLoad={onEventLoaded}
         />

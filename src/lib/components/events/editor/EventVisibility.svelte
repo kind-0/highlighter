@@ -12,6 +12,7 @@
     export let delegatedName: string | undefined = undefined;
     export let delegatedUser: NDKUser | undefined = undefined;
     export let value: string;
+    export let placement: string = 'bottom-start';
 
     let ndk = $_ndk as NDK;
 </script>
@@ -50,7 +51,7 @@
     <Dropdown class="
         w-auto mx-2 sm:mx-0 sm:w-96 border border-zinc-200 rounded-lg shadow-md z-50 text-sm
         bg-white
-    " placement="bottom">
+    " {placement}>
         <li class="rounded hover:bg-gray-100 dark:hover:bg-gray-600 px-4 py-4 border-b border-b-zinc-200">
             <Radio bind:group={value} value='Public'>
                 <div class="flex flex-col pl-2.5">

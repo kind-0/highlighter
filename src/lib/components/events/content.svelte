@@ -52,6 +52,18 @@
             }
         }
     }
+
+    function addPTags(value: string, i): string {
+        if (i === 0 || (content[i-1] && ['newline', 'text'].includes(content[i-1].type))) {
+            value = '<p>' + value;
+        }
+
+        if (i === content.length-1 || (content[i+1] && ['newline', 'text'].includes(content[i+1].type))) {
+            value = value + '</p>';
+        }
+
+        return value;
+    }
 </script>
 
 <!-- text-black -->
@@ -60,6 +72,7 @@
     h-full flex flex-col sm:text-justify
     overflow-auto
     font-semibold
+    card-content
 ">
     <div>
         {#if content}
@@ -92,15 +105,7 @@
                     <b>#{value}</b>
 
                 {:else}
-                    {#if i === 0 || (content[i-1] && content[i-1].type === "newline")}
-                        {@html '<p>'}
-                    {/if}
-
-                    {@html value}
-
-                    {#if i === content.length-1 || (content[i+1] && content[i+1].type === "newline")}
-                        {@html '</p>'}
-                    {/if}
+                    {@html addPTags(value, i)}
                 {/if}
             {/each}
         {:else}
@@ -113,5 +118,9 @@
     div {
         font-family: 'Montserrat', sans-serif;
         font-weight: 300;
+    }
+
+    :global(.card-content p:not(:last-child)) {
+        margin-bottom: 1rem;
     }
 </style>

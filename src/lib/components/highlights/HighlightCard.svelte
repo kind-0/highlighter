@@ -40,7 +40,10 @@
 
     onMount(() => {
         if (!skipReplies) {
-            replies = $ndk.storeSubscribe({ kinds: [1], ...highlight.filter()});
+            replies = $ndk.storeSubscribe(
+                { kinds: [1], ...highlight.filter()},
+                { closeOnEose: false }
+            );
         }
     });
 
