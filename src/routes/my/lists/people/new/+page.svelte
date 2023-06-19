@@ -77,9 +77,9 @@
     {#await followsList}
         <div>Loading...</div>
     {:then followsList}
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid  2xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-4">
             {#each Array.from(followsList.values()) as user}
-                <div class="flex flex-col items-center gap-4">
+                <div class="flex flex-col items-center gap-4 ">
                     <UserCard pubkey={user.hexpubkey()}>
                         <button type="submit" class="
                             text-zinc-400 hover:text-zinc-600

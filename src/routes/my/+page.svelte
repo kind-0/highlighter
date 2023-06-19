@@ -2,12 +2,13 @@
     import GlobalIcon from '$lib/icons/Global.svelte';
 </script>
 
-<div class="max-w-prose text-lg flex flex-col gap-4">
-    <div class="text-4xl font-semibold flex flex-row gap-2 items-center">
-        Welcome to
-        <div><span class="font-thin">my</span>HIGHLIGHTER</div>
+<div class="max-w-prose text-lg flex flex-col gap-4 ">
+    <div class="w-196 pb-4">
+    <div class="text-4xl font-semibold flex flex-row gap-2 items-center flex-wrap md:flex-nowrap justify-between md:justify-start">
+        <div>Welcome to</div>
+        <div class="title-span"><span class=" font-thin">my</span>HIGHLIGHTER</div>
     </div>
-
+</div>
     <div class="overflow-hidden rounded-lg bg-white shadow p-6 flex flex-col gap-6">
         <p>
             myHighlighter is an <em>experiment</em> of what a
@@ -36,3 +37,13 @@
         </p>
     </div>
 </div>
+
+<style>
+    @media only screen and (max-width: 770px){
+    .title-span {
+position: relative;
+        right: 0px ;
+        margin-left: 80px;
+    }
+}
+</style>

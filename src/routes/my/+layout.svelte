@@ -54,17 +54,7 @@
         {isOpen ? 'flex shadow-lg' : 'hidden sm:block'}
     "
     >
-        <button
-            on:click={() => {
-                isOpen = false;
-            }}
-            class="
-            absolute top-2 right-2
-            sm:hidden
-        "
-        >
-            <CloseIcon />
-        </button>
+
 
         <div
             class="
@@ -73,7 +63,7 @@
             sm:flex
         "
         >
-            <div class="flex h-16 shrink-0 items-center justify-between flex-row gap-2 font-bold tracking-wider text-zinc-800">
+            <div class="flex  h-16 shrink-0 justify-between flex-row gap-2 font-bold tracking-wider text-zinc-800">
                 <div class="flex flex-row items-center gap-2">
                     <span class="w-6 h-6 overflow-clip"><LogoIcon /></span>
                     <a href="/my" class="flex flex-row">
@@ -83,6 +73,22 @@
                 </div>
 
                 <RelaysButton iconOnly={true} />
+
+                <button
+                on:click={() => {
+                    isOpen = false;
+                }}
+                class="
+                absolute top-2 right-2
+                sm:hidden
+            "
+            >
+                <CloseIcon />
+            </button>
+
+            <div class="sm:hidden w-2">
+
+            </div>
             </div>
 
             <!-- svelte-ignore a11y-click-events-have-key-events -->

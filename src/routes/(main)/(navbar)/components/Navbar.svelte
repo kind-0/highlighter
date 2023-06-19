@@ -110,9 +110,9 @@
     <div class="sm:hidden bg-white shadow-lg z-30 {isOpen ? 'block' : 'hidden' }" id="mobile-menu">
         <div class="space-y-1 pb-3 pt-2">
             <!-- Current: "border-slate-500 bg-slate-50 text-slate-700", Default: "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800" -->
-            <a href="/global/highlights" class="border-slate-500 bg-slate-50 text-slate-700 block border-l-4 py-2 pl-3 pr-4 text-base font-medium" aria-current="page">Highlights</a>
-            <a href="/search" class="border-slate-500 bg-slate-50 text-slate-700 block border-l-4 py-2 pl-3 pr-4 text-base font-medium" aria-current="page">Search</a>
-            <a href="/my" class="border-slate-500 bg-slate-50 text-slate-700 block border-l-4 py-2 pl-3 pr-4 text-base font-medium" aria-current="page">my Highlighter</a>
+            <a href="/global/highlights" class="border-slate-500 bg-slate-50 text-slate-700 block border-l-4 py-2 pl-3 pr-4 text-base font-medium" aria-current="page" on:click={()=>isOpen = false}>Highlights</a>
+            <a href="/search" class="border-slate-500 bg-slate-50 text-slate-700 block border-l-4 py-2 pl-3 pr-4 text-base font-medium" aria-current="page"  on:click={()=>isOpen = false}>Search</a>
+            <a href="/my" class="border-slate-500 bg-slate-50 text-slate-700 block border-l-4 py-2 pl-3 pr-4 text-base font-medium" aria-current="page"  on:click={()=>isOpen = false}>my Highlighter</a> 
         </div>
     </div>
 </nav>

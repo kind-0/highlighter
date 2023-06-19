@@ -32,6 +32,7 @@
     px-6 pt-6 pb-4 rounded-xl
     bg-white hover:bg-slate-50 transition duration-200 ease-in-out
     overflow-clip
+    flex-grow-1
 " style="max-height: 40rem;">
     <div class="flex flex-row gap-4 items-stretch h-full justify-items-stretch">
         <Avatar {userProfile} klass="w-14 h-14" />
