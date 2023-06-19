@@ -6,10 +6,10 @@
 
 </script>
 
-<Card size="xl" class={$$props.class}>
+<Card class="max-w-full">
     <a
     href={`/my/lists/${list.encode()}`}
-    class="flex flex-col gap-4">
+    class="flex flex-col gap-4 ">
         <div class="flex flex-col gap-2">
             <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
                 {list.name}
@@ -25,3 +25,9 @@
         </div>
     </a>
 </Card>
+
+<style>
+    .full-width-card {
+        width: 100%;
+    }
+</style>
