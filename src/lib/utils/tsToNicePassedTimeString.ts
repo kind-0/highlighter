@@ -3,11 +3,11 @@ function tsToNicePassedTimeString(timestamp: number | undefined, maxDaysToDispla
         return '';
     }
 
-    let nowTime = new Date().getTime();
-    let timePassed = nowTime - timestamp * 1000;
-    let oneDay = 86400000;
-    let oneHour = 3600000;
-    let oneMinute = 60000;
+    const nowTime = new Date().getTime();
+    const timePassed = nowTime - timestamp * 1000;
+    const oneDay = 86400000;
+    const oneHour = 3600000;
+    const oneMinute = 60000;
 
     let displayString: string;
 
