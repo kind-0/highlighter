@@ -48,6 +48,7 @@ export function getLists(user: NDKUser) {
         }, {
             closeOnEose: true,
             cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
+            groupableDelay: 1000
         });
 
         deletionSub.on('event', (event: NDKEvent) => {

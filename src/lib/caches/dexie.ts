@@ -210,7 +210,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
     }
 
     public async setEvent(event: NDKEvent, filter: NDKFilter): Promise<void> {
-        if (event.kind === 0) {
+        if (false) {
             let profile = profileFromEvent(event, {});
 
             db.users.put({
