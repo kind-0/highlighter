@@ -14,7 +14,7 @@
     export let event: NDKEvent;
     let eventId: string;
     let zaps: NDKEventStore<NDKEvent>;
-    let zappedAmount: number = 0;
+    export let zappedAmount: number = 0;
 
     onDestroy(() => {
         if (zaps) zaps.unsubscribe();
@@ -30,10 +30,17 @@
         );
     }
 
+    let zappedByCurrentUser: boolean = false;
+
     $: if ($zaps) {
         zappedAmount = $zaps.reduce((acc: number, zap: NDKEvent) => {
             const zapInvoice = zapInvoiceFromEvent(zap);
             if (!zapInvoice) return acc;
+
+            if (zapInvoice.zappee === $currentUser?.hexpubkey()) {
+                zappedByCurrentUser = true;
+            }
+
             return acc + zapInvoice.amount;
         }, 0);
     }
@@ -45,9 +52,15 @@
         flex flex-row items-center gap-2
         {$$props.class}
     " on:click={() => { openModal(ZapModal, { event }) }}>
-        <ZapIcon class="w-4 h-4" />
+        <ZapIcon class="
+            w-4 h-4
+            {zappedByCurrentUser ? 'text-orange-500' : ''}
+        " />
         {#if zappedAmount > 0}
-            <div class="text-sm">{nicelyFormattedMilliSatNumber(zappedAmount)}</div>
+            <div class="
+                text-sm
+                {zappedByCurrentUser ? 'text-orange-500' : ''}
+            ">{nicelyFormattedMilliSatNumber(zappedAmount)}</div>
         {/if}
     </button>
     <Tooltip color="black">Zap</Tooltip>

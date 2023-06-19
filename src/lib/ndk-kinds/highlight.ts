@@ -29,7 +29,9 @@ class NDKHighlight extends NDKEvent {
         if (context === undefined) {
             this.tags = this.tags.filter(([tag, value]) => tag !== 'context');
         } else {
+            this.tags = this.tags.filter(([tag, value]) => tag !== 'context');
             this.tags.push(['context', context]);
+            console.log(`adding context tag: ${context}`)
         }
     }
 
@@ -77,7 +79,6 @@ class NDKHighlight extends NDKEvent {
         }
 
         if (taggedBech32) {
-            console.log(`sending to fetchEvent ${taggedBech32}`)
             let a = await this.ndk?.fetchEvent(taggedBech32);
             if (a) {
                 if (a.kind === NDKKind.LongForm) {
@@ -87,8 +88,6 @@ class NDKHighlight extends NDKEvent {
                 this._article = a;
             }
         }
-
-        console.log('returning this._article', this._article, articleTag);
 
         return this._article;
     }

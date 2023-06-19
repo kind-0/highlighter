@@ -12,17 +12,21 @@
 
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
-    import CardContent from '$lib/components/events/content.svelte';
     import type NDKLongForm from '$lib/ndk-kinds/long-form';
     import { Card } from 'flowbite-svelte';
     import NewUserInstruction from '../NewUserInstruction.svelte';
     import { onDestroy } from 'svelte';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
+    import MarkedContent from './MarkedContent.svelte';
+    import Avatar from '../Avatar.svelte';
+    import Name from '../Name.svelte';
+    import AvatarWithName from '../AvatarWithName.svelte';
 
     export let article: NDKEvent | NDKLongForm | string;
     export let content: string | undefined = undefined;
     export let unmarkedContent: string;
     export let url: string | undefined = undefined;
+    export let renderAsHtml: boolean = false;
 
     let scope: string;
 
@@ -104,26 +108,6 @@
         highlights?.unsubscribe();
     });
 
-    let markedHighlightCount = 0;
-
-    $: if ($highlights && $highlights.length > 0 && markedHighlightCount !== $highlights.length) {
-        markContent();
-        markedHighlightCount = $highlights.length;
-    }
-
-    function markContent() {
-        content = unmarkedContent;
-
-        if (!content) return;
-
-        for (const highlight of $highlights||[]) {
-            if (!highlight.content) continue;
-            // if (replacedHighlights[highlight.id!]) continue;
-            content = content.replace(highlight.content, `<mark data-highlight-id="${highlight.id}">${highlight.content}</mark>`);
-            // replacedHighlights[highlight.id!] = true;
-        }
-    }
-
     let newHighlightItem: NDKHighlight | undefined;
 
     function onSelectionChange(e: Event) {
@@ -175,21 +159,14 @@
 </svelte:head>
 
 <div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
-    <Card size="full" class="md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
+    <Card size="xl" class="md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
         <!-- Title -->
-        <h1 class="text-2xl font-bold font-sans leading-normal text-left">{articleTitle()}</h1>
+        <h1 class="text-5xl text-zinc-800 font-black leading-normal text-left">{articleTitle()}</h1>
 
-        <div class="flex flex-row justify-between">
+        <div class="flex flex-row justify-between mb-2">
             <!-- Author / URL -->
             {#if article?.author}
-                <h2 class="flex flex-row items-center text-sm sm:text-sm gap-4">
-                    <div class="flex flex-row gap-4 items-start">
-                        <!-- <Avatar ndk={$ndk} user={article.author} class="w-10 h-10 rounded-full" />
-                        <div class=" text-gray-500 text-lg">
-                            <Name ndk={$ndk} user={article.author} />
-                        </div> -->
-                    </div>
-                </h2>
+                <AvatarWithName pubkey={article.author.hexpubkey()} class="w-10 h-10 rounded-full" />
             {:else if url}
                 <div class="text-slate-600 text-xs whitespace-nowrap">
                     {url}
@@ -197,17 +174,6 @@
             {:else}
                 <div></div>
             {/if}
-
-            <!-- Publisher -->
-            <!-- {#if publisher != article?.author}
-                <h2 class="flex flex-row items-center text-sm sm:text-sm gap-4">
-                    Published by
-                    <div class="flex flex-row items-center gap-2">
-                        <Avatar pubkey={article.publisher} klass="h-10" />
-                        <Name pubkey={article.publisher} />
-                    </div>
-                </h2>
-            {/if} -->
         </div>
 
 
@@ -220,16 +186,26 @@
             ">{$highlights?.length} highlights</a>
         {/if}
 
+        {#if article?.image}
+            <div class="flex flex-row justify-center">
+                <img src={article.image} class="w-full" />
+            </div>
+        {/if}
+
         <!-- Content -->
         <HighlightWrapper on:selectionchange={onSelectionChange}>
-            <article class="my-6 font-serif">
+            <article class="my-6">
                 <Article>
                     {#if $$slots.default}
                         <slot />
+                    {:else if renderAsHtml}
+                        {@html content}
                     {:else}
-                        <CardContent
-                            note={content??""}
-                            tags={article?.tags||[]}
+                        <MarkedContent
+                            content={content??""}
+                            {unmarkedContent}
+                            highlights={$highlights}
+                            tags={article.tags}
                             addNewLines={article?.kind !== 30023}
                         />
                     {/if}
@@ -260,6 +236,7 @@
             <div class="
                 {newHighlightItem ? 'opacity-50' : ''}
                 transition duration-100
+                md:mb-96
             ">
                 {#if article && highlightFilter}
                     {#key highlightFilter}
@@ -274,3 +251,10 @@
         </div>
     </div>
 </div>
+
+<style>
+    h1, article {
+        font-family: 'Montserrat', sans-serif;
+        font-family: 'Outfit', sans-serif;
+    }
+</style>

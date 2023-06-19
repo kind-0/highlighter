@@ -25,7 +25,8 @@
                 kind: 1,
                 content: `nostr:${event.encode()}\n${comment}`,
                 tags: [
-                    ['q', event.tagId(), 'quote']
+                    ['q', event.tagId(), 'quote'],
+                    ['k', event.kind]
                 ]
             } as NostrEvent)
             await commentEvent.publish();

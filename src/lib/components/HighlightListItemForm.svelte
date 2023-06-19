@@ -13,7 +13,6 @@
 
     export let highlight: NDKHighlight;
 
-    let articleLink: string;
     let highlightUser = new NDKUser({hexpubkey: highlight.pubkey});
     let saving = false;
 
@@ -36,6 +35,7 @@
         // NIP-31
         highlight.tags.push(altTag(highlight));
 
+        console.log(highlight.rawEvent());
         await highlight.publish();
 
         if (comment) {
@@ -43,7 +43,8 @@
                 kind: 1,
                 content: `nostr:${highlight.encode()}\n${comment}`,
                 tags: [
-                    ['q', highlight.tagId(), 'quote']
+                    ['q', highlight.tagId(), 'quote'],
+                    ['k', highlight.kind]
                 ]
             } as NostrEvent)
             await commentEvent.publish();

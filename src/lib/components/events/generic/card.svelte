@@ -1,6 +1,7 @@
 <script lang="ts">
     import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
     import NoteCard from '$lib/components/notes/card.svelte';
+    import { getContext } from 'svelte';
     import ndk from '$lib/stores/ndk';
     import { createEventDispatcher } from 'svelte';
     import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
@@ -17,6 +18,7 @@
     export let skipReplies: boolean = false;
     export let skipFooter: boolean = false;
     export let event: NDKEvent | undefined = undefined;
+    export let draggable = true;
 
     const dispatcher = createEventDispatcher();
 
@@ -79,7 +81,7 @@
     {:then e}
         {#if e}
             <div
-                draggable={true}
+                {draggable}
                 on:dragstart={(dragEvent) => dragStart(dragEvent, e)}
             >
                 {#if e.kind === 9802}
@@ -87,13 +89,15 @@
                         {#await NDKHighlight.from(e).article then article}
                             <HighlightCard
                                 highlight={NDKHighlight.from(e)}
+                                {skipReplies}
                                 {article}
-                                skipTitle={true}
+                                skipTitle={getContext("skipTitle")??true}
                             />
                         {/await}
                     </div>
                 {:else if e.kind === 1}
                     <NoteCard
+                        {draggable}
                         event={e}
                         {skipReplies}
                         {skipFooter}

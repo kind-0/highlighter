@@ -60,6 +60,7 @@
             border border-zinc-300
             overflow-y-auto
             w-full
+            bg-white
             max-h-96
         ">
             {#each $sortedLists as list}

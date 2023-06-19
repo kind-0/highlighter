@@ -3,8 +3,6 @@
 
     import { Dropdown, DropdownItem } from 'flowbite-svelte'
 
-    import { currentUser } from "$lib/store";
-
     import CopyIcon from '$lib/icons/Copy.svelte';
     import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
     import LinkIcon from '$lib/icons/Link.svelte';
@@ -42,7 +40,6 @@
 
     let copiedEventId = false;
     let copiedEventJSON = false;
-    let niceTime = event.created_at ? new Date(event.created_at * 1000).toLocaleString() : undefined;
 
     function copyId(e: Event) {
         e.stopPropagation();
@@ -71,11 +68,16 @@
         e.dataTransfer.setData('kind', event.kind!.toString());
         e.dataTransfer.setData('tag', JSON.stringify(tag));
     }
+
+    let zappedAmount: number;
 </script>
 
 <div class="flex flex-col w-full gap-6">
     <div {draggable} on:dragstart={dragStart}>
-        <Card class="flex flex-col gap-4 group h-full" size="full">
+        <Card class="
+            flex flex-col gap-4 group h-full
+            {$$props.class}
+        " size="full">
             {#if !skipHeader}
                 <!-- Header -->
                 <div class="flex flex-row justify-between items-start relative">
@@ -134,42 +136,48 @@
                     </div>
 
                     <div class="
-                        absolute bottom-0 right-0
-                        opacity-100
-                        {!skipButtons ? 'group-hover:opacity-0' : ''}
-                        transition duration-300
-                        text-xs text-slate-500
-                        z-0
+                        flex flex-row gap-4 items-center
+                        z-10
                     ">
-                        {tsToNicePassedTimeString(event.created_at,5)}
-                    </div>
-
-                    {#if !skipButtons}
-                        <div class="
-                            flex flex-row gap-4 items-center
-                            opacity-0 group-hover:opacity-100
-                            transition duration-300
-                            z-10
-                        ">
+                        {#if !skipButtons}
                             {#if event.kind !== 9802}
-                                <HighlightButton {event} />
+                                <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                    <HighlightButton {event} />
+                                </div>
                             {/if}
-                            <BookmarkButton {event} />
+                            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                <BookmarkButton {event} />
+                            </div>
 
-                            <ZapsButton {event} />
+                            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                <BoostButton {event} />
+                            </div>
 
-                            <BoostButton {event} />
                             {#if replies}
-                                <RepliesButton {event} />
+                                <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                    <RepliesButton {event} />
+                                </div>
                             {/if}
 
-                            <a href={`/e/${event.encode()}`} class="
-                                text-slate-500 hover:text-orange-500
-                                flex flex-row items-center gap-2
+                            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+                                <a href={`/e/${event.encode()}`} class="
+                                    text-slate-500 hover:text-orange-500
+                                    flex flex-row items-center gap-2
+                                ">
+                                    <LinkIcon class="w-4 h-4" />
+                                </a>
+                                <Tooltip color="black">Link to this note</Tooltip>
+                            </div>
+
+                            <div class="
+                                {zappedAmount === 0 ? "opacity-0 group-hover:opacity-100 transition duration-300" : ""}
                             ">
-                                <LinkIcon class="w-4 h-4" />
-                            </a>
-                            <Tooltip color="black">Link to this note</Tooltip>
+                                <ZapsButton bind:zappedAmount {event} />
+                            </div>
+
+                            <div class="text-sm">
+                                {tsToNicePassedTimeString(event.created_at,5)}
+                            </div>
 
                             <button on:click|stopPropagation={() => {}}>
                                 <MoreOptionsIcon class="w-4 h-4" />
@@ -185,15 +193,16 @@
                                     {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
                                 </DropdownItem>
                             </Dropdown>
-                        </div>
-                    {/if}
+
+                        {/if}
+                    </div>
                 </div>
             {/if}
         </Card>
     </div>
 
     {#if replies?.length && replies?.length > 0}
-        {#if !expandReplies}
+        {#if expandReplies}
             {#each replies as reply}
                 <div class="ml-6">
                     <NoteCard event={reply} {expandReplies} />
@@ -204,7 +213,7 @@
                 text-base text-left text-orange-500 -mt-4
                 font-semibold
                 px-4
-            " on:click={() => { expandReplies = false }}>
+            " on:click={() => { expandReplies = true }}>
                 View replies...
             </button>
         {/if}

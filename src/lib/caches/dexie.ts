@@ -156,7 +156,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
         const kinds = subscription.filter.kinds as number[];
 
         for (const event of events) {
-            if (!kinds.includes(event.kind!)) continue;
+            if (!kinds?.includes(event.kind!)) continue;
 
             // console.log(`cache hit by kind and tags`, subscription.filter);
             subscription.eventReceived(event, undefined, true);
@@ -199,8 +199,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
     }
 
     public async query(subscription: NDKSubscription): Promise<void> {
-        // return;
-        if (!subscription.filter?.kinds || subscription.filter?.kinds?.length === 1) return;
+        // if (!subscription.filter?.kinds || subscription.filter?.kinds?.length === 1) return;
         const filterKeys = Object.keys(subscription.filter || {}).sort();
 
         (await this.byAuthors(filterKeys, subscription)) ||

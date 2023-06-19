@@ -1,46 +1,40 @@
 <script lang="ts">
-    import { currentUser, currentUserFollowPubkeys } from '$lib/store';
+	import RoundedButton from './../../../../components/RoundedButton.svelte';
     import HighlightList from '$lib/components/HighlightList.svelte';
-    import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
-    import NDKHighlight from '$lib/ndk-kinds/highlight';
-    import type { Writable } from 'svelte/store';
-    import type { NDKEventStore } from '$lib/stores/ndk';
-    import ndk from '$lib/stores/ndk';
+    import type NDKHighlight from '$lib/ndk-kinds/highlight';
+    import { highlights } from '$lib/stores/highlights';
+    import { throttle } from 'throttle-debounce';
 
     export let scope: string;
-    let prevScope: string;
 
-    let filter: NDKFilter | undefined = undefined;
+    let renderedHighlights: NDKHighlight[] = [];
+    let processedHighlightCount: number;
+    let highlightsToShow = 10;
 
-    let items: NDKEventStore<NDKHighlight>;
+    const throttledRenderHighlights = throttle(10, () => {
+        const addedIds = new Set();
+        renderedHighlights = $highlights.slice(0, highlightsToShow)
+            .filter(h => {
+                if (addedIds.has(h.id)) {
+                    return false;
+                }
 
-    $: if (prevScope !== scope) {
-        prevScope = scope;
+                addedIds.add(h.id);
+                return true;
+            });
+    });
 
-        if (items) {
-            items.unsubscribe();
-        }
+    $: if ($highlights.length !== processedHighlightCount) {
+        processedHighlightCount = $highlights.length;
+        throttledRenderHighlights();
+    }
 
-        let pubkeys: string[] | undefined;
-
-        switch (scope) {
-            case 'personal':
-                pubkeys = [$currentUser?.hexpubkey()!];
-                break;
-            case 'network':
-                pubkeys = $currentUserFollowPubkeys!;
-                break;
-        }
-
-        filter = { authors: pubkeys, kinds: [9802 as number], limit: 20 };
-
-        items = $ndk.storeSubscribe(filter);
+    function loadMore() {
+        highlightsToShow = (highlightsToShow * 1.1) + 20
+        throttledRenderHighlights();
     }
 </script>
 
-{#key filter}
-    {#if filter}
-        <code>newest</code>
-        <HighlightList items={$items.map(e => NDKHighlight.from(e))} />
-    {/if}
-{/key}
+<HighlightList items={renderedHighlights} />
+
+<RoundedButton class="mt-8 py-4" on:click={loadMore}>Load More</RoundedButton>

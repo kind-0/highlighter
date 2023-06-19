@@ -11,7 +11,7 @@
     let highlightedId: string;
     let floatedHighlightBorder: boolean = false;
 
-    let contextWithHighlight = '';
+    let contextWithHighlight = highlight.content;
 
     $: if (article?.content && highlightedId !== article.id) {
         highlightedId = article.id;

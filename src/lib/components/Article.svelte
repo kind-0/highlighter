@@ -9,21 +9,25 @@
     :global(article h1) {
         font-weight: 600;
         font-size: 2rem;
-        font-family: Inter;
+        font-family: 'Montserrat', sans-serif;
+        font-family: 'Outfit', sans-serif;
         margin-top: 1.5rem;
     }
 
     :global(article h2) {
-        font-weight: 600;
+        font-weight: 800;
         font-size: 1.75rem;
-        font-family: Inter;
+        font-family: 'Montserrat', sans-serif;
+        font-family: 'Outfit', sans-serif;
         margin-top: 1.5rem;
+        @apply text-zinc-700;
     }
 
     :global(article h3) {
         font-weight: 600;
         font-size: 1.5rem;
-        font-family: Inter;
+        font-family: 'Montserrat', sans-serif;
+        font-family: 'Outfit', sans-serif;
         margin-top: 1.5rem;
     }
 

@@ -59,6 +59,7 @@
     leading-normal
     h-full flex flex-col sm:text-justify
     overflow-auto
+    font-semibold
 ">
     <div>
         {#if content}
@@ -100,3 +101,10 @@
     </div>
 </div>
 
+
+<style>
+    div {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 300;
+    }
+</style>

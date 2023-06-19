@@ -4,7 +4,7 @@
     import ClickToAddComment from '$lib/components/ClickToAddComment.svelte';
     import { NDKEvent, type NostrEvent } from '@nostr-dev-kit/ndk';
     import { closeModal } from 'svelte-modals';
-    import NoteCard from '$lib/components/notes/card.svelte';
+    import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import ModalButton from '$lib/components/ModalButton.svelte';
 
@@ -44,7 +44,8 @@
         <h2 class="text-zinc-500 font-semibold text-base uppercase">REPLY</h2>
 
         <div class="flex flex-col gap-8">
-            <NoteCard
+            <GenericEventCard
+                draggable={false}
                 {event}
                 skipTitle={true}
                 skipButtons={true}
