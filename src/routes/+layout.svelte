@@ -4,6 +4,7 @@
     import { currentUser } from '$lib/store';
     import { fetchFollowers } from '$lib/currentUser';
     import { currentUserFollowPubkeys as currentUserFollowPubkeysStore } from '$lib/store';
+    import { pwaInfo } from 'virtual:pwa-info'; 
 
     let prevCurrentUser: string | undefined = undefined;
 
@@ -14,6 +15,8 @@
             console.error(`layout error`, e);
         }
     });
+
+    $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
     $: if ($currentUser && $currentUser?.npub !== prevCurrentUser) {
         prevCurrentUser = $currentUser?.npub;
@@ -28,6 +31,11 @@
         fetchFollowers();
     }
 </script>
+
+  
+<svelte:head> 
+ 	{@html webManifestLink} 
+</svelte:head>
 
 <slot />
 
