@@ -55,7 +55,6 @@
 <div class="flex flex-col gap-2.5">
     {#each tags as tag, i (i)}
         {#if shouldDisplayTag(tag)}
-            {tag}
             <CollapsibleCard
                 {tag}
                 on:removeItem={onRemoveItem}

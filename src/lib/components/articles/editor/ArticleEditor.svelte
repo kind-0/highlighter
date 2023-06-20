@@ -5,7 +5,6 @@
     import EventVisibility from "$lib/components/events/editor/EventVisibility.svelte";
 
     import ArticleTitle from "./ArticleTitle.svelte";
-    import MarkdownIt from 'markdown-it';
     import ArticlePreview from "./ArticlePreview.svelte";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
@@ -19,22 +18,11 @@
     let title: string = event?.title ?? "Untitled";
 
     let body: string = event?.content || "";
-    let markdownContent = '';
-    let visibility = event?.kind === 31023 ? 'Secret' : 'Public';
+    let visibility = event?.kind === 30023 ? 'Public' : 'Secret';
 
     onMount(() => {
         title = event.title || "";
     });
-
-    const md = new MarkdownIt();
-    md.linkify?.set();
-
-    async function onBodyChange(e: Event) {
-        if (body.length > 0)
-            markdownContent = md.render(body);
-        else
-            markdownContent = "";
-    }
 
     async function save() {
         event.title = title;
@@ -74,17 +62,17 @@
     <div class="lg:w-1/2">
         <div class="flex flex-col gap-8">
             <Card size="xl" class="w-full">
-                <ArticleTitle bind:title on:keydown={onTitleKeyDown} />
+                <ArticleTitle bind:title on:keydown={onTitleKeyDown} class="px-0" />
 
                 <Textarea
                     bind:this={bodyEl}
                     class="w-full border-0
                         focus:ring-0 focus:border-0
                         placeholder-zinc-300
+                        px-0
                     "
                     placeholder="Start writing..."
                     bind:value={body}
-                    on:keyup={onBodyChange}
                 />
             </Card>
 
@@ -112,7 +100,7 @@
     <div class="lg:w-1/2">
         <ArticlePreview
             {title}
-            body={markdownContent}
+            {body}
             tags={event.tags}
         />
     </div>

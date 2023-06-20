@@ -11,8 +11,8 @@
     import ndk from "$lib/stores/ndk";
     import NDKLongForm from '$lib/ndk-kinds/long-form';
 
-    import { Card } from 'flowbite-svelte';
     import { onMount } from 'svelte';
+    import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
 
     let encryptedLongForms: NDKEventStore<NDKLongForm>;
     let decryptingLongFormIds = new Set<string>();
@@ -44,26 +44,6 @@
         setTimeout(() => { mounted = true; }, 250);
     });
 
-    // Decrypt long-forms
-    $: if (mounted && $currentUser && $ndk.signer && $encryptedLongForms.length !== decryptingLongFormIds.size) {
-        for (const longForm of $encryptedLongForms) {
-            const encode = longForm.encode();
-            if (!decryptingLongFormIds.has(encode)) {
-                decryptingLongFormIds.add(encode);
-
-                if (!longForm.title) {
-                    decryptedLongForms[encode] = longForm.tagValue('d')!;
-                    continue;
-                }
-
-                $ndk.signer.decrypt($currentUser, longForm.title)
-                    .then((title: string) => {
-                        decryptedLongForms[encode] = title;
-                    });
-            }
-        }
-    }
-
     // Decrypt notes
     $: if (mounted && $currentUser && $ndk.signer && $encryptedNotes.length !== decryptingNoteIds.size) {
         for (const note of $encryptedNotes) {
@@ -87,13 +67,14 @@
     </ToolbarButton>
 </div>
 
-{#each Object.keys(decryptedLongForms) as id (id)}
-    {#key decryptedLongForms[id]}
-        <Card href={`/my/notes/${id}`}>
-            {decryptedLongForms[id] || 'Untitled'}
-        </Card>
-    {/key}
-{/each}
+{#if $encryptedLongForms}
+    {#each $encryptedLongForms as longForm (longForm.id)}
+        <ArticleIntroCard
+            article={longForm}
+            class="max-h-48 overflow-hidden"
+        />
+    {/each}
+{/if}
 
 {#if decryptedNotes}
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-4 gap-4">

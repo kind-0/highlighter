@@ -45,10 +45,10 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-    class="w-full relative"
+    class="w-full max-h-96 overflow-scroll flex flex-row items-start gap-2"
     on:click={() => { skipFooter = false; }}
 >
-    <div class="absolute -left-10">
+    <div>
         <button class="w-5 h-5">
             <MoreOptionsIcon class="text-black" />
         </button>

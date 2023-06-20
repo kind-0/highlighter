@@ -3,8 +3,9 @@
     import NDKLongForm from "$lib/ndk-kinds/long-form";
 
     import ndk from "$lib/stores/ndk";
+    import type { NostrEvent } from "@nostr-dev-kit/ndk";
 
-    let event = new NDKLongForm($ndk);
+    let event = new NDKLongForm($ndk, { kind: 31023 } as NostrEvent);
 </script>
 
 <ArticleEditor bind:event />

@@ -13,6 +13,8 @@
     import { filterForId, filterFromNaddr } from '$lib/utils';
     import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
     import ListCard from '$lib/components/lists/ListCard.svelte';
+    import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
+    import NDKLongForm from '$lib/ndk-kinds/long-form';
 
     export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
@@ -119,6 +121,10 @@
                 {:else if e.kind === 9735}
                     <ZapEventCard
                         event={e}
+                    />
+                {:else if e.kind === 31023}
+                    <ArticleIntroCard
+                        article={NDKLongForm.from(e)}
                     />
                 {:else if e.kind >= 30000 && e.kind < 40000}
                     <Card size="xl">

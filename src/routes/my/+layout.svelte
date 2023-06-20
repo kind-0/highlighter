@@ -19,17 +19,25 @@
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import { NavHamburger } from 'flowbite-svelte';
 
+    import ndk from '$lib/stores/ndk';
+
     import type NDKList from '$lib/ndk-kinds/lists';
 
     import { sortedLists, getLists } from '$lib/stores/list';
 
-    // let subscribed = false;
-    // let listSub;
+    let readyToRender = false;
 
-    // $: if (!subscribed && $currentUser) {
-    //     subscribed = true;
-    //     listSub = getLists($currentUser);
-    // }
+    $: if ($currentUser && $ndk.signer) {
+        readyToRender = true;
+    }
+
+    let subscribed = false;
+    let listSub;
+
+    $: if (!subscribed && $currentUser) {
+        subscribed = true;
+        listSub = getLists($currentUser);
+    }
 
     function isTopLevel(thisList: NDKList) {
         for (const _list of $sortedLists) {
@@ -179,7 +187,11 @@
     >
         <div class="px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex flex-col gap-6 max-h-screen">
-                <slot />
+                {#if readyToRender}
+                    <slot />
+                {:else}
+                    Loading
+                {/if}
             </div>
         </div>
     </main>

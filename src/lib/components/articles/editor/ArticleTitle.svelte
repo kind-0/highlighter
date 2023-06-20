@@ -13,6 +13,7 @@
         placeholder-zinc-300
         rounded-b-none outline-none
         border-0 focus:ring-0 focus-within:ring-0 focus-within:border-0 focus:border-0
+        {$$props.class??""}
     "
     placeholder="Title"
     bind:value={title}
