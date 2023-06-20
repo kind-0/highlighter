@@ -10,6 +10,7 @@ module.exports = {
         'gray-1000': '#0a0a0a',
         'gray-1100': '#080808',
         'beige-150': '#F5F1EF',
+        'beige-200': '#F7F6F4',
         'primary-500': '#FF6109',
         'primary-600': '#E65A08',
       }

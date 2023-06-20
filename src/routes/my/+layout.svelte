@@ -68,16 +68,15 @@
 
         <div
             class="
-            grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-2
+            grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 px-6 pb-2
             h-full
             sm:flex
-        "
+        " style="background: #F5F4F1"
         >
             <div class="flex h-16 shrink-0 items-center justify-between flex-row gap-2 font-bold tracking-wider text-zinc-800">
                 <div class="flex flex-row items-center gap-2">
                     <span class="w-6 h-6 overflow-clip"><LogoIcon /></span>
                     <a href="/my" class="flex flex-row">
-                        <span class="text-zinc-400 font-light">my</span>
                         <span class="text-zinc-900 uppercase">Highlighter</span>
                     </a>
                 </div>

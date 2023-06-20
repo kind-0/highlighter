@@ -16,9 +16,9 @@
     on:change
     {...$$props}
     class="
-    rounded-lg p-4
-    text-lg
-    bg-white focus:ring-orange-500 focus:border-orange-500
-    resize-none
-    dark:bg-zinc-800 dark:text-white {$$props.class}
+        rounded-lg p-4
+        text-lg
+        bg-white focus:ring-orange-500 focus:border-orange-500
+        resize-none
+        dark:bg-zinc-800 dark:text-white {$$props.class}
 "></textarea>

@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { Dropdown, DropdownItem } from 'flowbite-svelte';
+    import { Dropdown, DropdownItem, Tooltip } from 'flowbite-svelte';
 
     import DeleteIcon from '$lib/icons/Trash.svelte';
     import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
     import CopyIcon from '$lib/icons/Copy.svelte';
+    import CheckIcon from '$lib/icons/Check.svelte';
 
     import { currentUser } from '$lib/store';
     import ndk from '$lib/stores/ndk';
@@ -22,8 +23,8 @@
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
     import { getSigner, type SignerStoreItem } from '$lib/stores/signer';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
-    import { setContext } from 'svelte';
-    import { lists, getLists } from '$lib/stores/list';
+    import { getLists } from '$lib/stores/list';
+    import PageTitle from '$lib/components/PageTitle.svelte';
 
     export let list: NDKList;
     let listId;
@@ -177,6 +178,15 @@
             }
         });
     }
+
+    let copiedListNpub = false;
+
+    function copyListNpub() {
+        navigator.clipboard.writeText(listSignerData!.user.npub);
+        copiedListNpub = true;
+
+        setTimeout(() => { copiedListNpub = false; }, 1500);
+    }
 </script>
 
 <svelte:head>
@@ -185,46 +195,52 @@
 
 <div class="flex flex-col gap-8">
     <div class="border-b border-gray-200 pb-5 flex flex-row gap-4 items-start">
-        <div class="flex flex-row items-start">
-            <button on:click|stopPropagation={() => {}}>
-                <MoreOptionsIcon
-                    class="
-                    border shadow rounded-full
-                    bg-white
-                    p-2
-                    w-10 h-10
-                    transition-opacity duration-200
-                "
-                />
-            </button>
-            <Dropdown class="z-10">
-                <DropdownItem class="flex flex-row items-center gap-2" on:click={deleteList}>
-                    <DeleteIcon class="w-4 h-4" />
-                    Delete List
-                </DropdownItem>
-
-                <DropdownItem class="flex flex-row items-center gap-2" on:click={copyJSON}>
-                    <CopyIcon class="w-4 h-4" />
-                    {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
-                </DropdownItem>
-            </Dropdown>
-        </div>
-        <div class="flex flex-col">
-            <div class="-ml-2 -mt-2 flex flex-wrap items-baseline">
-                <h3 class="ml-2 mt-2 text-3xl font-semibold leading-6 text-gray-900">
-                    {list.name}
-                </h3>
-                <p class="ml-2 mt-1 truncate text-base text-gray-500">
-                    {list.description ?? ''}
-                </p>
-            </div>
-
-            <div class="flex flex-row gap-8 text-xs text-zinc-400">
+        <PageTitle
+            title={list.name}
+            subtitle={list.description}
+        >
+            <div class="flex flex-row items-center gap-4">
                 {#if listSignerData?.saved}
-                    {listSignerData.user.npub}
+                    <button class="
+                        border rounded-md
+                        bg-beige-200
+                        p-2
+                        w-10 h-10
+                        transition-opacity duration-200"
+                    on:click={copyListNpub}>
+                        {#if copiedListNpub}
+                            <CheckIcon />
+                        {:else }
+                            <CopyIcon />
+                        {/if}
+                    </button>
+                    <Tooltip color="white">Copy this lists' npub</Tooltip>
                 {/if}
+
+                <button on:click|stopPropagation={() => {}}>
+                    <MoreOptionsIcon
+                        class="
+                        border rounded-md
+                        bg-beige-200
+                        p-2
+                        w-10 h-10
+                        transition-opacity duration-200
+                    "
+                    />
+                </button>
+                <Dropdown class="z-10">
+                    <DropdownItem class="flex flex-row items-center gap-2" on:click={deleteList}>
+                        <DeleteIcon class="w-4 h-4" />
+                        Delete List
+                    </DropdownItem>
+
+                    <DropdownItem class="flex flex-row items-center gap-2" on:click={copyJSON}>
+                        <CopyIcon class="w-4 h-4" />
+                        {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
+                    </DropdownItem>
+                </Dropdown>
             </div>
-        </div>
+        </PageTitle>
     </div>
 
     <div class="grid grid-flow-row md:grid-cols-1 sm:max-w-prose lg:sdgrid-cols-3 gap-2 w-full">

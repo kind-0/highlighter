@@ -41,7 +41,7 @@
         switch (tag[0]) {
             case 'a':
                 const [kind] = tag[1].split(':');
-                return kind === '30023' || kind === '30000' || kind === '30001';
+                ['30023', '30000', '30001', '31023'].includes(kind);
             case 'e':
                 return true;
             case 'p':
@@ -55,6 +55,7 @@
 <div class="flex flex-col gap-2.5">
     {#each tags as tag, i (i)}
         {#if shouldDisplayTag(tag)}
+            {tag}
             <CollapsibleCard
                 {tag}
                 on:removeItem={onRemoveItem}
