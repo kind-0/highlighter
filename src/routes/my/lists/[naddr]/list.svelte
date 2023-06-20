@@ -27,10 +27,12 @@
     import PageTitle from '$lib/components/PageTitle.svelte';
     import Button from '$lib/components/buttons/Button.svelte';
     import CopyButton from '$lib/components/buttons/CopyButton.svelte';
+    import DraggableEventC from '$lib/components/utilities/DraggableEventC.svelte';
 
     export let list: NDKList;
     let listId;
 
+    let element
     let publicTags: NDKTag[] = [];
 
     let listSignerData: SignerStoreItem | undefined;
@@ -232,23 +234,11 @@
 
         <Tabs style="underline">
             <TabItem open title="Public">
-                <div
-                    on:dragenter={onDragEnter}
-                    on:dragleave={() => (dropZoneActive = false)}
-                    on:drop={(e) => {
-                        addToList(e);
-                        dropZoneActive = false;
-                    }}
-                    ondragover="return false"
-                    class="
-                        {dropZoneActive ? 'bg-zinc-300' : ''}
-                        rounded-xl
-                        transition duration-200 ease-in-out
-                        p-2 py-2 -mx-6 px-6
-                    "
-                >
+      <DraggableEventC {element}>
+        <div bind:this={element}>
                     <Tags {list} tags={list.tags} {currentUserPubkeys} />
                 </div>
+                </DraggableEventC>
             </TabItem>
 
             {#await encryptedTagsPromise}

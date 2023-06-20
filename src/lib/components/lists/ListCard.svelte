@@ -5,7 +5,7 @@
     export let list: NDKList;
 
 </script>
-
+ 
 <Card class="max-w-full">
     <a
     href={`/my/lists/${list.encode()}`}

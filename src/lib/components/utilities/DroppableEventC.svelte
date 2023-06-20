@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { NDKTag } from '@nostr-dev-kit/ndk';
     import { createEventDispatcher } from 'svelte';
-
+import  { dropped }  from './dropstore'
     type validateFunction = (opts: {id: string, tag: NDKTag}) => boolean;
 
     export let validate: validateFunction = () => true;
@@ -9,7 +9,11 @@
 
     const dispatch = createEventDispatcher();
 
+
     let dropZoneActive = false;
+
+
+    $: console.log("dropped! in droppable", $dropped)
 
     function onDragEnter(e: DragEvent) {
         e.preventDefault();

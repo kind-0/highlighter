@@ -1,0 +1,12 @@
+{
+    "created_at": 1686820860,
+    "content": "",
+    "tags": [
+        ["d", "8th list"],
+        ["description", "..."]
+    ],
+    "kind": 30001,
+    "pubkey": "881a6bd661e5fc7465ff2afee014e77fd81209fae9584467ff7b4b36f296eb78",
+    "id": "07a5b40fb298bc005b4bc01836d8ba3d93138608c24f169c678e12665160e9a5",
+    "sig": "8246d6596518640333e8e10f3c69b78b97135fa1381d51da7e6333f1aafa250182725edbcbb390571fe4640af4fe97188847f729127d51cf0838f49dbeb88fe4"
+}

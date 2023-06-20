@@ -100,8 +100,7 @@
                         {/await}
                     </div>
                 {:else if e.kind === 1}
-                    <NoteCard
-                        {draggable}
+                    <NoteCard                  
                         event={e}
                         {skipReplies}
                         {skipFooter}

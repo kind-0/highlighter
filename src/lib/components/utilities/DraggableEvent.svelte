@@ -5,7 +5,7 @@
 
     function dragStart(dragEvent: DragEvent) {
         if (!dragEvent.dataTransfer) return;
-
+ 
         const tag = event.tagReference();
 
         console.log('drag id', event.id);
