@@ -25,6 +25,8 @@
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
     import { getLists } from '$lib/stores/list';
     import PageTitle from '$lib/components/PageTitle.svelte';
+    import Button from '$lib/components/buttons/Button.svelte';
+    import CopyButton from '$lib/components/buttons/CopyButton.svelte';
 
     export let list: NDKList;
     let listId;
@@ -178,15 +180,6 @@
             }
         });
     }
-
-    let copiedListNpub = false;
-
-    function copyListNpub() {
-        navigator.clipboard.writeText(listSignerData!.user.npub);
-        copiedListNpub = true;
-
-        setTimeout(() => { copiedListNpub = false; }, 1500);
-    }
 </script>
 
 <svelte:head>
@@ -201,33 +194,12 @@
         >
             <div class="flex flex-row items-center gap-4">
                 {#if listSignerData?.saved}
-                    <button class="
-                        border rounded-md
-                        bg-beige-200
-                        p-2
-                        w-10 h-10
-                        transition-opacity duration-200"
-                    on:click={copyListNpub}>
-                        {#if copiedListNpub}
-                            <CheckIcon />
-                        {:else }
-                            <CopyIcon />
-                        {/if}
-                    </button>
-                    <Tooltip color="white">Copy this lists' npub</Tooltip>
+                    <CopyButton data={listSignerData.user.npub} tooltip="Copy this lists' npub" />
                 {/if}
 
-                <button on:click|stopPropagation={() => {}}>
-                    <MoreOptionsIcon
-                        class="
-                        border rounded-md
-                        bg-beige-200
-                        p-2
-                        w-10 h-10
-                        transition-opacity duration-200
-                    "
-                    />
-                </button>
+                <Button class="w-10 h-10">
+                    <MoreOptionsIcon />
+                </Button>
                 <Dropdown class="z-10">
                     <DropdownItem class="flex flex-row items-center gap-2" on:click={deleteList}>
                         <DeleteIcon class="w-4 h-4" />
@@ -243,7 +215,7 @@
         </PageTitle>
     </div>
 
-    <div class="grid grid-flow-row md:grid-cols-1 sm:max-w-prose lg:sdgrid-cols-3 gap-2 w-full">
+    <div class="flex flex-col sm:max-w-prose gap-2 w-full">
         {#if list instanceof NDKRelayList}
             <AddRelayListItem {list} />
         {:else if listSignerData}

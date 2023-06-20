@@ -12,7 +12,6 @@
     on:blur={() => { focus = false }}
     on:keyup on:keydown on:change
     use:useTextareaAutosize
-    style={"z-index: -10;"}
     class="
         focus:outline-none
         text-lg
@@ -22,5 +21,4 @@
         rounded-xl
         bg-white transition duration-200 ease-in-out
         resize-none
-       
 " placeholder={`Start typing, or write a nostr id ${focus ? "(npub..., note1..., nevent1...)" : "" }`} />

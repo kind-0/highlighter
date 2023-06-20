@@ -49,11 +49,8 @@
     on:click={() => { skipFooter = false; }}
 >
     <div class="absolute -left-10">
-        <button class="
-            border border-transparent hover:border-zinc-200 hover:bg-zinc-100
-            px-2 py-2 rounded-lg
-        " on:click|stopPropagation={() => {}}>
-            <MoreOptionsIcon class="w-4 h-4 text-black" />
+        <button class="w-5 h-5">
+            <MoreOptionsIcon class="text-black" />
         </button>
         <Dropdown>
             <DropdownItem class="flex flex-row items-center gap-2" on:click={remove}>

@@ -5,7 +5,7 @@
     import ndk from "$lib/stores/ndk";
     import EventVisibility from '$lib/components/events/editor/EventVisibility.svelte';
     import { createEventDispatcher } from 'svelte';
-    import RoundedButton from '$lib/components/RoundedButton.svelte';
+    import Button from '$lib/components/buttons/Button.svelte';
     import EventEditorTextarea from "../events/editor/EventEditorTextarea.svelte";
 
     export let list: NDKList;
@@ -113,14 +113,14 @@
 </script>
 
 
-<div class="relative flex flex-col items-start justify-center">
-        <EventEditorTextarea bind:value />
+<div class="flex flex-col items-start justify-center">
+    <EventEditorTextarea bind:value />
 
-        {#if validationError}
-            <div class="text-red-500 text-sm mt-2">
-                {validationError}
-            </div>
-        {/if}
+    {#if validationError}
+        <div class="text-red-500 text-sm mt-2">
+            {validationError}
+        </div>
+    {/if}
 </div>
 
 <div class="flex flex-row justify-between">
@@ -131,8 +131,8 @@
     />
 
     <div>
-        <RoundedButton on:click={save}>
+        <Button class="px-8" on:click={save}>
             Save
-        </RoundedButton>
+        </Button>
     </div>
 </div>

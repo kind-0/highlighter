@@ -22,8 +22,7 @@
         px-4 py-2
         border border-zinc-200
         text-sm
-        bg-white
-        shadow-md
+        bg-beige-200 hover:bg-beige-300
         rounded-lg
         font-semibold
         flex flex-row items-center gap-2
