@@ -6,7 +6,7 @@
 
     import ToolbarButton from '../components/toolbar/button.svelte';
 
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
     import NDKLongForm from '$lib/ndk-kinds/long-form';
@@ -14,13 +14,13 @@
     import { Card } from 'flowbite-svelte';
     import { onMount } from 'svelte';
 
-    let encryptedNotes: NDKEventStore<NDKEvent>;
-    let decryptedNotes: Record<string, NDKEvent | null> = {};
-    let loadedNoteIds: string[] = [];
-
     let encryptedLongForms: NDKEventStore<NDKLongForm>;
-    let decryptingIds = new Set<string>();
+    let decryptingLongFormIds = new Set<string>();
     let decryptedLongForms: Record<string, string> = {};
+
+    let encryptedNotes: NDKEventStore<NDKEvent>;
+    let decryptingNoteIds = new Set<string>();
+    let decryptedNotes: Record<string, NDKEvent> = {};
 
     $: if (!encryptedNotes && $currentUser) {
         encryptedNotes = $ndk.storeSubscribe({
@@ -37,45 +37,19 @@
         }, { closeOnEose: false }, NDKLongForm)
     }
 
-    // $: {
-    //     if ($encryptedNotes && $encryptedNotes.length > 0 && loadedNoteIds.length < $encryptedNotes.length) {
-    //         console.log('encrypted notes', $encryptedNotes?.length, Object.keys(decryptedNotes).length)
-    //         setTimeout(async () => {
-    //             loadedNoteIds = $encryptedNotes.map((n: NDKEvent) => n.id);
-
-    //             for (const note of $encryptedNotes) {
-    //                 try {
-    //                     if (!decryptedNotes[note.id]) {
-    //                         await note.decrypt($currentUser!);
-    //                             // if (event.content.key) continue;
-
-    //                         decryptedNotes[note.id] = note;
-
-    //                     }
-    //                 } catch (e) {
-    //                     console.error(e);
-    //                 }
-    //             }
-
-    //             decryptedNotes = decryptedNotes;
-    //         }, 100);
-    //     }
-    // }
-
     let mounted = false;
 
     onMount(() => {
-        setTimeout(() => {
-            mounted = true;
-        }, 1000);
+        mounted = !!($currentUser && $ndk.signer);
+        setTimeout(() => { mounted = true; }, 250);
     });
 
-    $: if (mounted && $currentUser && $ndk.signer && $encryptedLongForms.length !== Object.keys(decryptedLongForms).length) {
+    // Decrypt long-forms
+    $: if (mounted && $currentUser && $ndk.signer && $encryptedLongForms.length !== decryptingLongFormIds.size) {
         for (const longForm of $encryptedLongForms) {
-            console.log('will decrypt', longForm.tagValue('title'), longForm.rawEvent())
             const encode = longForm.encode();
-            if (!decryptingIds.has(encode)) {
-                decryptingIds.add(encode);
+            if (!decryptingLongFormIds.has(encode)) {
+                decryptingLongFormIds.add(encode);
 
                 if (!longForm.title) {
                     decryptedLongForms[encode] = longForm.tagValue('d')!;
@@ -84,9 +58,21 @@
 
                 $ndk.signer.decrypt($currentUser, longForm.title)
                     .then((title: string) => {
-                        console.log('decrypted', title);
                         decryptedLongForms[encode] = title;
                     });
+            }
+        }
+    }
+
+    // Decrypt notes
+    $: if (mounted && $currentUser && $ndk.signer && $encryptedNotes.length !== decryptingNoteIds.size) {
+        for (const note of $encryptedNotes) {
+            const encode = note.encode();
+            if (!decryptingNoteIds.has(encode)) {
+                decryptingNoteIds.add(encode);
+
+                note.decrypt($currentUser, $ndk.signer)
+                    .then(() => { decryptedNotes[encode] = note; });
             }
         }
     }
@@ -109,40 +95,15 @@
     {/key}
 {/each}
 
-{#if $encryptedNotes}
+{#if decryptedNotes}
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {#each Object.values($encryptedNotes).filter(n => !!n) as note}
-            <!-- {#if note?.content}
-                <a
-                    href="/my/notes/{note.encode()}"
-                    class="flex flex-col"
-                    on:click|preventDefault={() => loadedNote = note}
-                >
-                    <div class="
-                        shadow
-                        flex flex-col h-full gap-4
-                        border border-zinc-200 hover:border-zinc-200
-                        px-6 pt-6 pb-4 rounded-xl
-                        bg-white hover:bg-slate-50 transition duration-200 ease-in-out
-                    " style="max-height: 40rem;">
-                        <div class="flex-1 truncate px-4 py-2 text-sm">
-                            <div class="text-lg font-medium text-gray-900 hover:text-gray-600">
-                                {note?.content}
-                            </div>
-                            <div class="flex flex-row gap-4 items-start text-sm text-zinc-400">
-                                {new Date(note.created_at*1000).toLocaleString()}
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            {:else if note} -->
-                <EventCard
-                    event={note}
-                    skipHeader={true}
-                    skipFooter={true}
-                    replies={[]}
-                />
-            <!-- {/if} -->
+        {#each Object.values(decryptedNotes).filter(n => !!n) as note}
+            <EventCard
+                event={note}
+                skipHeader={true}
+                skipFooter={true}
+                replies={[]}
+            />
         {/each}
     </div>
 {/if}

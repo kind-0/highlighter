@@ -63,9 +63,6 @@
             let {type, value} = content[i];
             if (typeof value === 'string') value = value.replace(/(<p>|<\/p>)/i, '')
 
-                console.log({type, value});
-
-
             switch (type) {
                 case 'newline':
                     paragraphs.push(currentParagraph);

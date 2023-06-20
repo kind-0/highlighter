@@ -25,6 +25,8 @@
             return;
         }
 
+        closeModal();
+
         try {
             const webln = await requestProvider();
             webln.sendPayment(pr);
@@ -35,8 +37,6 @@
             console.log(err);
             return;
         }
-
-        closeModal();
     }
 </script>
 
