@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { Dropdown, DropdownItem } from 'flowbite-svelte'
+    import { Dropdown, DropdownItem } from 'flowbite-svelte';
 
     import DeleteIcon from '$lib/icons/Trash.svelte';
     import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
     import CopyIcon from '$lib/icons/Copy.svelte';
 
     import { currentUser } from '$lib/store';
-    import ndk from "$lib/stores/ndk";
+    import ndk from '$lib/stores/ndk';
 
     import { Tabs, TabItem } from 'flowbite-svelte';
 
@@ -23,6 +23,7 @@
     import { getSigner, type SignerStoreItem } from '$lib/stores/signer';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
     import { setContext } from 'svelte';
+    import { lists, getLists } from '$lib/stores/list';
 
     export let list: NDKList;
     let listId;
@@ -51,12 +52,15 @@
     }
 
     async function deleteList() {
-        if (!confirm("Are you sure you want to delete this list?")) {
+        if (!confirm('Are you sure you want to delete this list?')) {
             return;
         }
 
         await list.encrypt($currentUser!);
         await list.delete();
+        if ($currentUser) {
+            getLists($currentUser);
+        }
         goto('/my/lists');
     }
 
@@ -70,14 +74,14 @@
         const id = e.dataTransfer.getData('id');
         const tag = JSON.parse(e.dataTransfer.getData('tag'));
 
-        dropZoneActive = !list.tags.find(t => t[1] === id);
+        dropZoneActive = !list.tags.find((t) => t[1] === id);
     }
 
     async function addToList(e: DragEvent) {
         const id = e.dataTransfer.getData('id');
         const tag = JSON.parse(e.dataTransfer.getData('tag'));
 
-        if (list.tags.find(t => t[1] === id)) {
+        if (list.tags.find((t) => t[1] === id)) {
             return;
         }
 
@@ -114,7 +118,7 @@
                         picture: $currentUser?.profile?.image,
                         lud06: $currentUser?.profile?.lud06,
                         lud16: $currentUser?.profile?.lud16,
-                    }
+                    },
                 });
             } catch (e) {
                 console.error(e);
@@ -128,15 +132,16 @@
     $: if (list && listSignerData?.id !== list.encode() && !fetchingSigner) {
         fetchingSigner = true;
         listSignerData = undefined;
-        getSigner(list).then(d => {
-            listSignerData = d
-            fetchingSigner = false;
-        }).catch(e => {
-            console.error(e);
-            listSignerData = undefined;
-            fetchingSigner = false;
-        });
-
+        getSigner(list)
+            .then((d) => {
+                listSignerData = d;
+                fetchingSigner = false;
+            })
+            .catch((e) => {
+                console.error(e);
+                listSignerData = undefined;
+                fetchingSigner = false;
+            });
     }
 
     let copiedEventJSON = false;
@@ -163,10 +168,12 @@
         encryptedTagsPromise = new Promise(async (resolve, reject) => {
             try {
                 const tags = await tryToDecrypt();
-                console.log(`decrypted tags`, tags)
+                console.log(`decrypted tags`, tags);
                 resolve(tags);
             } catch (e) {
-                setTimeout(() => { tryToDecrypt() }, 100 * Math.random());
+                setTimeout(() => {
+                    tryToDecrypt();
+                }, 100 * Math.random());
             }
         });
     }
@@ -180,15 +187,17 @@
     <div class="border-b border-gray-200 pb-5 flex flex-row gap-4 items-start">
         <div class="flex flex-row items-start">
             <button on:click|stopPropagation={() => {}}>
-                <MoreOptionsIcon class="
+                <MoreOptionsIcon
+                    class="
                     border shadow rounded-full
                     bg-white
                     p-2
                     w-10 h-10
                     transition-opacity duration-200
-                " />
+                "
+                />
             </button>
-            <Dropdown>
+            <Dropdown class="z-10">
                 <DropdownItem class="flex flex-row items-center gap-2" on:click={deleteList}>
                     <DeleteIcon class="w-4 h-4" />
                     Delete List
@@ -206,7 +215,7 @@
                     {list.name}
                 </h3>
                 <p class="ml-2 mt-1 truncate text-base text-gray-500">
-                    {list.description??""}
+                    {list.description ?? ''}
                 </p>
             </div>
 
@@ -223,25 +232,25 @@
             <AddRelayListItem {list} />
         {:else if listSignerData}
             <AddListItem
-                list={list}
+                {list}
                 delegatedName={listSignerData.name}
                 listSigner={listSignerData.signer}
                 listSignerUser={listSignerData.user}
                 on:saved={onNoteEditorSaved}
             />
         {:else}
-            <AddListItem
-                list={list}
-                on:saved={onNoteEditorSaved}
-            />
+            <AddListItem {list} on:saved={onNoteEditorSaved} />
         {/if}
 
         <Tabs style="underline">
             <TabItem open title="Public">
                 <div
                     on:dragenter={onDragEnter}
-                    on:dragleave={() => dropZoneActive = false}
-                    on:drop={e => {addToList(e); dropZoneActive = false;}}
+                    on:dragleave={() => (dropZoneActive = false)}
+                    on:drop={(e) => {
+                        addToList(e);
+                        dropZoneActive = false;
+                    }}
                     ondragover="return false"
                     class="
                         {dropZoneActive ? 'bg-zinc-300' : ''}
@@ -269,57 +278,60 @@
             {#if listSignerData?.saved && $currentUser}
                 <TabItem title={`My Feed ${myFeedLength > 0 ? `(${myFeedLength})` : ''}`}>
                     {#if myFeedLength === 0}
-                        <div class="
+                        <div
+                            class="
                             flex flex-col gap-4
                             bg-orange-500/10
                             border-1 border-orange-500
                             rounded-xl
                             mb-4 p-4
-                        ">
+                        "
+                        >
                             <p>
                                 This tab shows mentions <em>you</em> have done of this list's account
-                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} size='xs' />
+                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} size="xs" />
                             </p>
 
-                            <p>
-                                You can use this feature to mention things you would like to have
-                                show up in this feed.
-                            </p>
+                            <p>You can use this feature to mention things you would like to have show up in this feed.</p>
                         </div>
                     {/if}
-                    <FilterFeed filter={{
-                        kinds: [1, 9802, 4, 30023],
-                        '#p': [listSignerData.user.hexpubkey()],
-                        'authors': [$currentUser.hexpubkey()]
-                    }} bind:feedLength={myFeedLength} />
+                    <FilterFeed
+                        filter={{
+                            kinds: [1, 9802, 4, 30023],
+                            '#p': [listSignerData.user.hexpubkey()],
+                            authors: [$currentUser.hexpubkey()],
+                        }}
+                        bind:feedLength={myFeedLength}
+                    />
                 </TabItem>
 
                 <TabItem title={`Global Feed ${globalFeedLength > 0 ? `(${globalFeedLength})` : ''}`}>
                     {#if globalFeedLength === 0}
-                        <div class="
+                        <div
+                            class="
                             flex flex-col gap-4
                             bg-orange-500/10
                             border-1 border-orange-500
                             rounded-xl
                             mb-4 p-4
-                        ">
+                        "
+                        >
                             <p>
                                 This tab shows <b>all</b> mentions of this list's account
-                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} size='xs' />
+                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} size="xs" />
                             </p>
 
-                            <p>
-                                You can use this feature to allow other people to suggest you
-                                to add things to this list.
-                            </p>
+                            <p>You can use this feature to allow other people to suggest you to add things to this list.</p>
                         </div>
                     {/if}
-                    <FilterFeed filter={{
-                        kinds: [1, 9802, 4, 30023],
-                        '#p': [listSignerData.user.hexpubkey()]
-                    }}
-                    bind:feedLength={globalFeedLength}
-                    eventFilter={(e) => e.pubkey !== $currentUser.hexpubkey()} />
+                    <FilterFeed
+                        filter={{
+                            kinds: [1, 9802, 4, 30023],
+                            '#p': [listSignerData.user.hexpubkey()],
+                        }}
+                        bind:feedLength={globalFeedLength}
+                        eventFilter={(e) => e.pubkey !== $currentUser.hexpubkey()}
+                    />
                 </TabItem>
             {/if}
 
