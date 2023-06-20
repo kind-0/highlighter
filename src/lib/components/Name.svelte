@@ -2,8 +2,15 @@
     import UserInterface from '$lib/interfaces/users';
     import type { Observable } from 'dexie';
 
+    import ndk from '$lib/stores/ndk';
+
+    import { getContext } from 'svelte';
+    import {Name} from '@nostr-dev-kit/ndk-svelte-components';
+
     export let pubkey: string | undefined = undefined;
     export let userProfile: App.UserProfile | undefined = undefined;
+
+    getContext('ndk');
 
     let prevPubkey: string | undefined = undefined;
 
@@ -27,10 +34,4 @@
     }
 </script>
 
-{#await observeUserProfile}
-    <span class="text-orange-600">{defaultName}</span>
-{:then _userProfile}
-    {name}
-{:catch error}
-    <div class="text-red-600">{defaultName}</div>
-{/await}
+<Name ndk={$ndk} {pubkey} class={$$props.class}/>

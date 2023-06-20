@@ -28,7 +28,7 @@
 <div class="group block flex-shrink-0">
     <div class="flex items-center gap-2">
         <div>
-            <Avatar {userProfile} {size} class={$$props.avatarClass} />
+            <Avatar {pubkey} {userProfile} {size} class={$$props.avatarClass} />
         </div>
         <div>
             <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><span class={$$props.nameClass}><Name {userProfile} /></span></p>

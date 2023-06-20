@@ -15,6 +15,7 @@
     import ListCard from '$lib/components/lists/ListCard.svelte';
     import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
     import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import { createDraggableEvent } from '$lib/utils/draggable';
 
     export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
@@ -26,15 +27,7 @@
     export let draggable = true;
 
     const dispatcher = createEventDispatcher();
-
-    async function decryptWithRetry(event: NDKEvent, resolve: (e: NDKEvent) => void) {
-        try {
-            await event.decrypt($currentUser!);
-            resolve(event);
-        } catch (e) {
-            setTimeout(() => decryptWithRetry(event, resolve), 1000 * Math.random());
-        }
-    }
+    let draggableEvent = {};
 
     async function loadEvent(): Promise<NDKEvent | undefined> {
         if (event) return event;
@@ -52,29 +45,24 @@
                 filter = filterFromNaddr(bech32);
             }
 
-            $ndk.fetchEvent(filter).then((e) => {
+            $ndk.fetchEvent(filter).then(async (e) => {
                 if (!e) return reject(`no event ${id}`);
 
                 if (e.kind === 4) {
-                    decryptWithRetry(e, resolve);
-                } else {
-                    resolve(e);
+                    await e.decrypt($currentUser!);
                 }
+
+                event = e;
+
+                draggableEvent = createDraggableEvent(e);
+
+                resolve(e);
 
                 dispatcher('eventLoad', e);
             });
         });
 
         return p;
-    }
-
-    function dragStart(dragEvent: DragEvent, ndkEvent: NDKEvent) {
-        if (!dragEvent.dataTransfer) return;
-
-        const tag = ndkEvent.tagReference();
-
-        dragEvent.dataTransfer.setData('id', ndkEvent.id as string);
-        dragEvent.dataTransfer.setData('tag', JSON.stringify(tag));
     }
 </script>
 
@@ -87,8 +75,7 @@
         {#if e}
             <div
                 class="w-full"
-                {draggable}
-                on:dragstart={(dragEvent) => dragStart(dragEvent, e)}
+                use:draggableEvent
             >
                 {#if e.kind === 9802}
                     <div class="border rounded-lg border-zinc-300">
@@ -122,7 +109,7 @@
                     <ZapEventCard
                         event={e}
                     />
-                {:else if e.kind === 31023}
+                {:else if e.kind === 30023 || e.kind === 31023}
                     <ArticleIntroCard
                         article={NDKLongForm.from(e)}
                     />

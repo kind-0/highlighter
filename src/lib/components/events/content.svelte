@@ -129,6 +129,10 @@
                                 <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
                                     <Name pubkey={value.id||value.pubkey} />
                                 </a>
+                            {:else if value.entity.startsWith('nprofile')}
+                                <a href="/p/{value.pubkey}" class="text-purple-600">
+                                    <Name pubkey={value.pubkey} />
+                                </a>
                             {:else}
                                 <div class="embedded-card text-sm">
                                     <GenericEventCard bech32={value.entity} skipReplies={true} />

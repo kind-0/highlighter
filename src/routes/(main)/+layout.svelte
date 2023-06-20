@@ -11,7 +11,7 @@
     let subscribedScopeLabel: string;
 
     function getHighlightsWithFilter(): NDKSubscription {
-        const filter: NDKFilter = {};
+        const filter: NDKFilter = { limit: 100 };
         if ($currentScope?.pubkeys) {
             filter.authors = $currentScope.pubkeys;
         }

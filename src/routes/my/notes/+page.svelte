@@ -71,7 +71,6 @@
     {#each $encryptedLongForms as longForm (longForm.id)}
         <ArticleIntroCard
             article={longForm}
-            class="max-h-48 overflow-hidden"
         />
     {/each}
 {/if}

@@ -17,26 +17,30 @@
 
     import ListItem from './components/navigation/list-item.svelte';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
-    import { NavHamburger } from 'flowbite-svelte';
+    import { NavHamburger, Skeleton } from 'flowbite-svelte';
 
     import ndk from '$lib/stores/ndk';
 
     import type NDKList from '$lib/ndk-kinds/lists';
 
-    import { sortedLists, getLists } from '$lib/stores/list';
+    import { sortedLists } from '$lib/stores/list';
 
-    let readyToRender = false;
+    import { debounce } from 'throttle-debounce';
+
+    let readyToRender = true;
 
     $: if ($currentUser && $ndk.signer) {
         readyToRender = true;
     }
 
-    let subscribed = false;
-    let listSub;
+    let renderedList: NDKList[] | undefined = undefined;
 
-    $: if (!subscribed && $currentUser) {
-        subscribed = true;
-        listSub = getLists($currentUser);
+    const updatedRenderedLists = debounce(300, () => {
+        renderedList = $sortedLists;
+    });
+
+    $: if (renderedList?.length !== $sortedLists.length) {
+        updatedRenderedLists();
     }
 
     function isTopLevel(thisList: NDKList) {
@@ -125,13 +129,17 @@
 
                     <li>
                         <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
-                        <ul class="-mx-2 mt-2 space-y-1">
-                            {#each $sortedLists ?? [] as item}
-                                {#if isTopLevel(item)}
-                                    <ListItem {item} />
-                                {/if}
-                            {/each}
-                        </ul>
+                        {#if renderedList}
+                            <ul class="-mx-2 mt-2 space-y-1">
+                                {#each renderedList ?? [] as item}
+                                    {#if isTopLevel(item)}
+                                        <ListItem {item} />
+                                    {/if}
+                                {/each}
+                            </ul>
+                        {:else}
+                            <Skeleton size="sm" class="my-8" />
+                        {/if}
                     </li>
 
                     {#if !$currentUser}

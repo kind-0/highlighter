@@ -30,6 +30,8 @@
     import { onMount } from "svelte";
     import { db } from "$lib/interfaces/db";
 
+    import { createDraggableEvent } from "$lib/utils/draggable";
+
     export let event: NDKEvent;
 
     export let skipHeader = false;
@@ -47,6 +49,14 @@
     let copiedEventId = false;
     let copiedEventJSON = false;
 
+    let draggableHandler: any;
+
+    if (draggable) {
+        draggableHandler = createDraggableEvent(event);
+    } else {
+        draggableHandler = {};
+    }
+
     function copyId(e: Event) {
         e.stopPropagation();
         navigator.clipboard.writeText(event.encode());
@@ -63,16 +73,6 @@
         setTimeout(() => {
             copiedEventJSON = false;
         }, 1500);
-    }
-
-    function dragStart(e: DragEvent) {
-        if (!e.dataTransfer) return;
-
-        const tag = event.tagReference();
-
-        e.dataTransfer.setData('id', event.id as string);
-        e.dataTransfer.setData('kind', event.kind!.toString());
-        e.dataTransfer.setData('tag', JSON.stringify(tag));
     }
 
     let hasKeyForAuthor = false;
@@ -118,11 +118,11 @@
 
 {#if !deleted}
     <div class="flex flex-col w-full gap-6">
-        <div {draggable} on:dragstart={dragStart}>
+        <div use:draggableHandler>
             <Card class="
                 flex flex-col gap-2 group h-full
                 {$$props.class}
-            " size="full">
+            " size="xl">
                 {#if !skipHeader}
                     <!-- Header -->
                     <div class="flex flex-row justify-between items-start relative">

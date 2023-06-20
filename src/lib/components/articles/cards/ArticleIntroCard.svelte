@@ -9,50 +9,56 @@
     import ndk from '$lib/stores/ndk';
     import { currentUser } from '$lib/store';
     import ArticlePreview from '../editor/ArticlePreview.svelte';
+    import { createDraggableEvent } from '$lib/utils/draggable';
 
     export let article: NDKLongForm;
-
-    let availableArticle: NDKLongForm;
-    let gettingArticle = false;
-    let mounted = false;
-    let decrypted = false;
 
     function articleRequiresDecryption(): boolean {
         return article.kind === 31023;
     }
 
-    onMount(() => { mounted = true });
-
-    $: if (!availableArticle && !gettingArticle && !decrypted && mounted && $ndk.signer && $currentUser) {
-        gettingArticle = true;
+    const articlePromise = new Promise<NDKLongForm>(async (resolve, reject) => {
         if (articleRequiresDecryption()) {
             const encryptedTitle = article.title;
 
             if (!encryptedTitle) {
-                availableArticle = article;
+                resolve(article);
             } else {
                 console.log(`trying to decrypt ${encryptedTitle}`)
-                $ndk.signer.decrypt($currentUser, encryptedTitle).then((decryptedTitle) => {
-                    decrypted = true;
-                    availableArticle = article;
-                    availableArticle.title = decryptedTitle;
-                });
+                const decryptedTitle = await $ndk.signer!.decrypt($currentUser!, encryptedTitle);
+                await article.decrypt($currentUser!);
+                const availableArticle = article;
+                availableArticle.title = decryptedTitle;
+                resolve(availableArticle);
             }
         } else {
-            availableArticle = article;
+            resolve(article);
+        }
+    });
+
+    function articleLink() {
+        if (article.kind === 31023) {
+            return `/my/notes/${article.encode()}`;
+        } else {
+            return `/a/${article.encode()}`;
         }
     }
+
+    const draggable = createDraggableEvent(article);
 </script>
 
-{#if availableArticle}
-    {#await availableArticle.decrypt($currentUser) then}
+{#await articlePromise then article}
+    <div use:draggable>
         <ArticlePreview
-            href={`/my/notes/${availableArticle.encode()}`}
-            title={availableArticle.title??''}
-            body={availableArticle.content}
-            tags={availableArticle.tags}
+            href={articleLink()}
+            title={article.title??''}
+            body={article.summary??article.content}
+            tags={article.tags}
+            image={article.image}
             class="md:px-6 md:py-6 {$$props.class??""}"
             titleClass="md:text-2xl"
         />
-    {/await}
-{/if}
+    </div>
+{:catch e}
+    <p>{error}</p>
+{/await}

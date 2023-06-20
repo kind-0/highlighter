@@ -3,6 +3,7 @@ import { NDKListKinds } from '../ndk-kinds/index.js';
 import { NDKKind, type NDKEvent, type NDKUser, NDKSubscriptionCacheUsage } from '@nostr-dev-kit/ndk';
 import { writable, derived, get as getStore } from 'svelte/store';
 import ndk from './ndk';
+import { db } from '$lib/interfaces/db';
 
 export const lists = writable<Map<string, NDKList>>(new Map());
 export const deletions = writable<Set<string>>(new Set());
@@ -48,7 +49,7 @@ export function getLists(user: NDKUser) {
         }, {
             closeOnEose: true,
             cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
-            groupableDelay: 1000
+            groupableDelay: 5000
         });
 
         deletionSub.on('event', (event: NDKEvent) => {
@@ -66,6 +67,9 @@ export function getLists(user: NDKUser) {
                     // remove the list from the store if the timestamp of the deletion is greater than the list's timestamp
                     if (event.created_at! > list.created_at!) {
                         lists.delete(tag);
+
+                        // delete from the cache the list's event
+                        db.events.delete(list.tagId());
                     }
 
                     return lists;
