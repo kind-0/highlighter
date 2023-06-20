@@ -28,7 +28,7 @@
     <RelaysIcon klass="w-6 h-6" />
     {!iconOnly ? 'Relays' : ''}
 </button>
-<Popover {open} class="{sizes[sizeIndex]} text-base font-light z-50 overflow-auto max-h-screen shadow-lg" transition={blur} placement='bottom' trigger="click" params={{duration: 500}}>
+<Popover {open} class="{sizes[sizeIndex]} text-base font-light z-50 overflow-hidden max-h-screen shadow-lg " transition={blur} placement='bottom' trigger="click" params={{duration: 500}}>
     <div class="flex flex-col gap-4">
         <button on:click={chanceSize}>
             <ViewIcon />
