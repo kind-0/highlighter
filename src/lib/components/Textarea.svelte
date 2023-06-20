@@ -4,7 +4,6 @@
     const { useTextareaAutosize } = createTextareaAutosize();
 
     export let value = '';
-    export let klass = '';
     export let element: HTMLTextAreaElement | null = null;
 </script>
 
@@ -13,8 +12,13 @@
     bind:value
     bind:this={element}
     on:keydown
+    on:keyup
+    on:change
+    {...$$props}
     class="
     rounded-lg p-4
+    text-lg
     bg-white focus:ring-orange-500 focus:border-orange-500
-    dark:bg-zinc-800 dark:text-white {klass}
-" {...$$props}></textarea>
+    resize-none
+    dark:bg-zinc-800 dark:text-white {$$props.class}
+"></textarea>

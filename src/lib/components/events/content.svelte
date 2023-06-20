@@ -15,7 +15,7 @@
     let anchorId;
     let content;
 
-    $: if (note && note !== notePrev) {
+    $: if (note && note?.length !== notePrev?.length) {
         notePrev = note;
 
         content = parseContent(note||"", tags);
@@ -77,6 +77,7 @@
                     break;
                 case 'nostr:note':
                 case 'nostr:nevent':
+                case 'nostr:naddr':
                     paragraphs.push(currentParagraph);
                     paragraphs.push([ {type, value} ]);
                     currentParagraph = [];
@@ -124,7 +125,7 @@
                                 </a>
                             {/if}
                         {:else if type.startsWith("nostr:")}
-                            {#if value.pubkey || value.entity.startsWith('npub')}
+                            {#if value.entity.startsWith('npub')}
                                 <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
                                     <Name pubkey={value.id||value.pubkey} />
                                 </a>

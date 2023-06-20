@@ -114,12 +114,25 @@
                         {skipFooter}
                         {expandReplies}
                     />
-                {:else if e.kind >= 30000 && e.kind < 40000}
+                {:else if e.kind >= 30000 && e.kind < 30022}
                     <ListCard list={NDKList.from(e)} />
                 {:else if e.kind === 9735}
                     <ZapEventCard
                         event={e}
                     />
+                {:else if e.kind >= 30000 && e.kind < 40000}
+                    <Card size="xl">
+                        <div class="text-left">
+                            <Name ndk={$ndk} pubkey={e.pubkey} />'s
+                            {e.kind} "{e.tagValue('d')}"
+                        </div>
+                    </Card>
+                {:else}
+                    <Card size="xl">
+                        <div class="text-center">
+                            Event kind {e.kind} not supported yet
+                        </div>
+                    </Card>
                 {/if}
             </div>
         {:else}
