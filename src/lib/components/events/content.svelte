@@ -13,7 +13,7 @@
     const ranges = []
 
     let anchorId;
-    let content: string;
+    let content;
 
     $: if (note && note !== notePrev) {
         notePrev = note;
@@ -53,16 +53,48 @@
         }
     }
 
-    function addPTags(value: string, i): string {
-        if (i === 0 || (content[i-1] && ['newline', 'text'].includes(content[i-1].type))) {
-            value = '<p>' + value;
+    type Entity = { type: string, value: any };
+
+    function groupInParagraphs(content: Entity[]) {
+        const paragraphs: Entity[][] = [];
+        let currentParagraph: Entity[] = [];
+
+        for (let i = 0; i < content.length; i++) {
+            let {type, value} = content[i];
+            if (typeof value === 'string') value = value.replace(/(<p>|<\/p>)/i, '')
+
+                console.log({type, value});
+
+
+            switch (type) {
+                case 'newline':
+                    paragraphs.push(currentParagraph);
+                    currentParagraph = [];
+                    break;
+                case 'text':
+                case 'link':
+                case 'topic':
+                case 'nostr:npub':
+                case 'nostr:nprofile':
+                    currentParagraph.push({type, value});
+                    break;
+                case 'nostr:note':
+                case 'nostr:nevent':
+                    paragraphs.push(currentParagraph);
+                    paragraphs.push([ {type, value} ]);
+                    currentParagraph = [];
+                    break;
+                default:
+                    currentParagraph.push({type, value});
+                    break;
+            }
         }
 
-        if (i === content.length-1 || (content[i+1] && ['newline', 'text'].includes(content[i+1].type))) {
-            value = value + '</p>';
+        if (currentParagraph.length > 0) {
+            paragraphs.push(currentParagraph);
         }
 
-        return value;
+        return paragraphs;
     }
 </script>
 
@@ -76,37 +108,41 @@
 ">
     <div>
         {#if content}
-            {#each content as { type, value }, i}
-                {#if type === "newline"}
-                    {#each value as _}
-                        {#if addNewLines}
+            {#each groupInParagraphs(content) as paragraphItems}
+                <p>
+                    {#each paragraphItems as { type, value }, i}
+                        {#if type === "newline"}
+                            {#each value as _}
+                            <br />
+                                {#if addNewLines}
+                                {/if}
+                            {/each}
+                        {:else if type === "link"}
+                            <!-- if it looks like this URL ends with an image filetype, load it as an image -->
+                            {#if value.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)}
+                                <img src="{value}" />
+                            {:else}
+                                <a href="{value}" target="_blank" rel="noopener noreferrer">
+                                    {value.replace(/https?:\/\/(www\.)?/, "")}
+                                </a>
+                            {/if}
+                        {:else if type.startsWith("nostr:")}
+                            {#if value.pubkey || value.entity.startsWith('npub')}
+                                <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
+                                    <Name pubkey={value.id||value.pubkey} />
+                                </a>
+                            {:else}
+                                <div class="embedded-card text-sm">
+                                    <GenericEventCard bech32={value.entity} skipReplies={true} />
+                                </div>
+                            {/if}
+                        {:else if type === "topic"}
+                            <b>#{value}</b>
+                        {:else}
+                            {@html value}
                         {/if}
                     {/each}
-                {:else if type === "link"}
-                    <!-- if it looks like this URL ends with an image filetype, load it as an image -->
-                    {#if value.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i)}
-                        <img src="{value}" />
-                    {:else}
-                        <a href="{value}" target="_blank" rel="noopener noreferrer">
-                            {value.replace(/https?:\/\/(www\.)?/, "")}
-                        </a>
-                    {/if}
-                {:else if type.startsWith("nostr:")}
-                    {#if value.pubkey || value.entity.startsWith('npub')}
-                        <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
-                            <Name pubkey={value.id||value.pubkey} />
-                        </a>
-                    {:else}
-                        <div class="embedded-card text-sm">
-                            <GenericEventCard bech32={value.entity} skipReplies={true} />
-                        </div>
-                    {/if}
-                {:else if type === "topic"}
-                    <b>#{value}</b>
-
-                {:else}
-                    {@html addPTags(value, i)}
-                {/if}
+                </p>
             {/each}
         {:else}
         {/if}

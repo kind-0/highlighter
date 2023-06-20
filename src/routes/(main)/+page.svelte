@@ -1,6 +1,6 @@
 <script lang="ts">
     import FullLogo from "$lib/icons/FullLogo.svelte";
-    import RoundedButton from './components/RoundedButton.svelte';
+    import RoundedButton from '$lib/components/RoundedButton.svelte';
 </script>
 
 <div class="mx-auto max-w-5xl sm:px-6 lg:px-8">

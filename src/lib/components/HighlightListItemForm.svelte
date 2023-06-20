@@ -6,7 +6,7 @@
 
     import ndk from '$lib/stores/ndk';
     import { NDKEvent, NDKUser, type NostrEvent } from '@nostr-dev-kit/ndk';
-    import RoundedButton from '../../routes/(main)/components/RoundedButton.svelte';
+    import RoundedButton from '$lib/components/RoundedButton.svelte';
     import { createEventDispatcher } from 'svelte';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
     import { Card, Input } from 'flowbite-svelte';
@@ -50,7 +50,7 @@
                 content: `nostr:${highlight.encode()}\n${comment}`,
                 tags: [
                     ['q', highlight.tagId(), 'quote'],
-                    ['k', highlight.kind]
+                    ['k', highlight.kind?.toString()]
                 ]
             } as NostrEvent)
             await commentEvent.publish();

@@ -4,7 +4,11 @@ import { NDKKind } from './index.js';
 class NDKLongForm extends NDKEvent {
     constructor(ndk: NDK | undefined, rawEvent?: NostrEvent) {
         super(ndk, rawEvent);
-        this.kind = NDKKind.LongForm;
+        this.kind = rawEvent?.kind || NDKKind.LongForm;
+    }
+
+    static from(event: NDKEvent) {
+        return new NDKLongForm(event.ndk, event.rawEvent());
     }
 
     get title(): string | undefined {
@@ -13,6 +17,7 @@ class NDKLongForm extends NDKEvent {
 
     set title(title: string | undefined) {
         if (title) {
+            this.tags = this.tags.filter((tag) => tag[0] !== 'title');
             this.tags.push(['title', title]);
         } else {
             this.removeTag('title');

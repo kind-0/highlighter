@@ -9,7 +9,7 @@
     import Link from './Link.svelte';
     import FullLogo from "$lib/icons/FullLogo.svelte";
     import Logo from '$lib/icons/Logo.svelte';
-    import RoundedButton from '../../components/RoundedButton.svelte';
+    import RoundedButton from '$lib/components/RoundedButton.svelte';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
     import RelaysButton from '$lib/components/RelaysButton.svelte';
 

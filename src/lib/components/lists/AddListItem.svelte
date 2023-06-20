@@ -4,9 +4,8 @@
     import { nip19 } from "nostr-tools";
     import ndk from "$lib/stores/ndk";
     import EventVisibility from '$lib/components/events/editor/EventVisibility.svelte';
-    import NDKRelayList from "$lib/ndk-kinds/lists/relay-list";
     import { createEventDispatcher } from 'svelte';
-    import RoundedButton from "../../../routes/(main)/components/RoundedButton.svelte";
+    import RoundedButton from '$lib/components/RoundedButton.svelte';
     import EventEditorTextarea from "../events/editor/EventEditorTextarea.svelte";
 
     export let list: NDKList;

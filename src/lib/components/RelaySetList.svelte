@@ -4,7 +4,6 @@
     import type NDK from "@nostr-dev-kit/ndk";
     import { onMount } from "svelte";
     import Dexie from "dexie";
-  import RoundedButton from "../../routes/(main)/components/RoundedButton.svelte";
 
     export let ndk: NDK;
 
@@ -26,7 +25,7 @@
             .filter(t => t[0] === 'r')
             .map((tag) => tag[1]);
         localStorage.setItem('relays', JSON.stringify(relayUrls));
-        Dexie.delete('highlighter');
+        Dexie.delete('highlighterV4');
 
         // reload the window
         window.location.reload();

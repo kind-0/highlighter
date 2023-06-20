@@ -59,11 +59,11 @@ export function parseContent(content: string = '', tags = []) {
 	};
 
 	const parseBech32 = () => {
-		const bech32 = first(text.match(/^(nostr:)?n(event|ote|profile|pub)1[\d\w]+/i));
+		const bech32 = first(text.match(/^(nostr:|@)+n(event|ote|profile|pub)1[\d\w]+/i));
 
 		if (bech32) {
 			try {
-				const entity = bech32.replace('nostr:', '');
+				const entity = bech32.replace(/(nostr:|@)/, '');
 				const { type, data } = nip19.decode(entity) as { type: string; data: object };
 				const value = ['note', 'npub'].includes(type) ? { id: data } : data;
 

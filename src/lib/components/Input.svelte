@@ -8,6 +8,7 @@
     bind:value
     bind:this={element}
     on:keydown
+    on:change
     class="
     rounded-lg p-4
     bg-white focus:ring-orange-500 focus:border-orange-500

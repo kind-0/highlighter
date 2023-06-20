@@ -5,80 +5,89 @@
     import NewIcon from '$lib/icons/New.svelte';
 
     import ToolbarButton from '../components/toolbar/button.svelte';
-    import SecretNoteEditor from '../components/secret-notes/editor.svelte';
 
     import { NDKEvent } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
-    import type { NostrEvent } from '@nostr-dev-kit/ndk';
-    import { generateEphemeralSigner, saveEphemeralSigner } from '$lib/signers/ephemeral';
+    import NDKLongForm from '$lib/ndk-kinds/long-form';
 
-    let privateNote;
-
-    async function newNote() {
-        const title = await prompt('Title?');
-
-        if (!title) return;
-
-        const signer = await generateEphemeralSigner();
-        const signerUser = await signer.user();
-
-        const encryptedTitle = await signer.encrypt(signerUser, title);
-
-        // generate root event with new key
-        privateNote = new NDKEvent($ndk, {
-            kind: 30023,
-            content: "",
-            tags: [
-                ["subject", encryptedTitle],
-            ],
-            pubkey: signerUser.hexpubkey(),
-        } as NostrEvent);
-        console.log('debug', { privateNote });
-        await privateNote.sign(signer);
-        await saveEphemeralSigner($ndk, signer, {
-            associatedEvent: privateNote,
-            metadata: { title },
-            mainSigner: $ndk.signer!
-        });
-
-        await privateNote.publish();
-    }
+    import { Card } from 'flowbite-svelte';
+    import { onMount } from 'svelte';
 
     let encryptedNotes: NDKEventStore<NDKEvent>;
     let decryptedNotes: Record<string, NDKEvent | null> = {};
     let loadedNoteIds: string[] = [];
 
+    let encryptedLongForms: NDKEventStore<NDKLongForm>;
+    let decryptingIds = new Set<string>();
+    let decryptedLongForms: Record<string, string> = {};
+
     $: if (!encryptedNotes && $currentUser) {
         encryptedNotes = $ndk.storeSubscribe({
             authors: [$currentUser.hexpubkey()],
-            kinds: [4, 31023 as number],
+            kinds: [4 as number],
             '#p': [$currentUser.hexpubkey()]
         })
     }
 
-    $: {
-        if ($encryptedNotes && $encryptedNotes.length > 0 && loadedNoteIds.length < $encryptedNotes.length) {
-            console.log('encrypted notes', $encryptedNotes?.length, Object.keys(decryptedNotes).length)
-            setTimeout(async () => {
-                loadedNoteIds = $encryptedNotes.map((n: NDKEvent) => n.id);
+    $: if (!encryptedLongForms && $currentUser) {
+        encryptedLongForms = $ndk.storeSubscribe({
+            authors: [$currentUser.hexpubkey()],
+            kinds: [31023 as number],
+        }, { closeOnEose: false }, NDKLongForm)
+    }
 
-                for (const note of $encryptedNotes) {
-                    try {
-                        if (!decryptedNotes[note.id]) {
-                            await note.decrypt($currentUser!);
-                                // if (event.content.key) continue;
+    // $: {
+    //     if ($encryptedNotes && $encryptedNotes.length > 0 && loadedNoteIds.length < $encryptedNotes.length) {
+    //         console.log('encrypted notes', $encryptedNotes?.length, Object.keys(decryptedNotes).length)
+    //         setTimeout(async () => {
+    //             loadedNoteIds = $encryptedNotes.map((n: NDKEvent) => n.id);
 
-                            decryptedNotes[note.id] = note;
+    //             for (const note of $encryptedNotes) {
+    //                 try {
+    //                     if (!decryptedNotes[note.id]) {
+    //                         await note.decrypt($currentUser!);
+    //                             // if (event.content.key) continue;
 
-                        }
-                    } catch (e) {
-                        console.error(e);
-                    }
+    //                         decryptedNotes[note.id] = note;
+
+    //                     }
+    //                 } catch (e) {
+    //                     console.error(e);
+    //                 }
+    //             }
+
+    //             decryptedNotes = decryptedNotes;
+    //         }, 100);
+    //     }
+    // }
+
+    let mounted = false;
+
+    onMount(() => {
+        setTimeout(() => {
+            mounted = true;
+        }, 1000);
+    });
+
+    $: if (mounted && $currentUser && $ndk.signer && $encryptedLongForms.length !== Object.keys(decryptedLongForms).length) {
+        for (const longForm of $encryptedLongForms) {
+            console.log('will decrypt', longForm.tagValue('title'), longForm.rawEvent())
+            const encode = longForm.encode();
+            if (!decryptingIds.has(encode)) {
+                decryptingIds.add(encode);
+
+                if (!longForm.title) {
+                    decryptedLongForms[encode] = longForm.tagValue('d')!;
+                    continue;
                 }
 
-                decryptedNotes = decryptedNotes;
-            }, 100);
+                $ndk.signer.decrypt($currentUser, longForm.title)
+                    .then((title: string) => {
+                        console.log('decrypted', title);
+                        decryptedLongForms[encode] = title;
+                    });
+            }
         }
     }
 
@@ -86,11 +95,19 @@
 </script>
 
 <div class="flex flex-row justify-end">
-    <ToolbarButton on:click={newNote}>
+    <ToolbarButton href="/my/notes/new">
         <NewIcon />
         Create new
     </ToolbarButton>
 </div>
+
+{#each Object.keys(decryptedLongForms) as id (id)}
+    {#key decryptedLongForms[id]}
+        <Card href={`/my/notes/${id}`}>
+            {decryptedLongForms[id] || 'Untitled'}
+        </Card>
+    {/key}
+{/each}
 
 {#if $encryptedNotes}
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -123,6 +140,7 @@
                     event={note}
                     skipHeader={true}
                     skipFooter={true}
+                    replies={[]}
                 />
             <!-- {/if} -->
         {/each}

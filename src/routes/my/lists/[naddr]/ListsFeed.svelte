@@ -9,7 +9,7 @@
     import { onDestroy, onMount } from 'svelte';
     import Tags from './tags.svelte';
     import { currentUser } from '$lib/store';
-    import RoundedButton from '../../../(main)/components/RoundedButton.svelte';
+    import RoundedButton from '$lib/components/RoundedButton.svelte';
 
     let subs: NDKSubscription[] = [];
     let lists: NDKList[] = [];

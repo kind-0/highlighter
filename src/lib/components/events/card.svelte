@@ -120,7 +120,7 @@
     <div class="flex flex-col w-full gap-6">
         <div {draggable} on:dragstart={dragStart}>
             <Card class="
-                flex flex-col gap-4 group h-full
+                flex flex-col gap-2 group h-full
                 {$$props.class}
             " size="full">
                 {#if !skipHeader}

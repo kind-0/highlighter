@@ -2,7 +2,9 @@
     text-xl text-justify leading-loose
     overflow-auto
 ">
-    <slot />
+    <article>
+        <slot />
+    </article>
 </div>
 
 <style>
@@ -31,7 +33,7 @@
         margin-top: 1.5rem;
     }
 
-    :global(article p) {
+    :global(article p:not(:last-child)) {
         margin-bottom: 1rem;
     }
 

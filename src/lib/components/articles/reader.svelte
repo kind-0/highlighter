@@ -18,8 +18,6 @@
     import { onDestroy } from 'svelte';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
     import MarkedContent from './MarkedContent.svelte';
-    import Avatar from '../Avatar.svelte';
-    import Name from '../Name.svelte';
     import AvatarWithName from '../AvatarWithName.svelte';
 
     export let article: NDKEvent | NDKLongForm | string;
@@ -75,10 +73,7 @@
         let articleFilter: NDKFilter;
 
         if (article instanceof NDKEvent) {
-            if (article.isParamReplaceable())
-                articleFilter = { "#a": [article.tagId()] };
-            else
-                articleFilter = { "#e": [article.tagId()] };
+            articleFilter = article.filter();
         } else {
             articleFilter = { "#r": [article.url ?? article] };
         }

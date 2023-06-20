@@ -58,6 +58,7 @@
             <CollapsibleCard
                 {tag}
                 on:removeItem={onRemoveItem}
+                skipTitle={false}
                 skipFooterForPubkeys={currentUserPubkeys}
             />
         {/if}

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ArticleEditor from "$lib/components/articles/editor/ArticleEditor.svelte";
     import NDKLongForm from "$lib/ndk-kinds/long-form";
 
     import ndk from "$lib/stores/ndk";
@@ -7,20 +8,9 @@
     import { page } from '$app/stores';
     import { currentUser } from "$lib/store";
 
-    import Article from "$lib/components/Article.svelte";
-    import CardContent from '$lib/components/events/content.svelte';
-    import type { NDKTag } from "@nostr-dev-kit/ndk";
-    import { Card } from "flowbite-svelte";
-    import ToolbarButton from '../../components/toolbar/button.svelte';
-    import ArticlePreview from "$lib/components/articles/editor/ArticlePreview.svelte";
-
-    export let body: string;
-    export let tags: NDKTag[];
-
     const { naddr } = $page.params;
 
     let event: NDKLongForm;
-    let title: string;
     let loadEvent: Promise<NDKLongForm>;
 
     let mounted = false;
@@ -44,17 +34,20 @@
             event = NDKLongForm.from(e);
             event.ndk = $ndk;
 
-            if (event.kind === 31023) {
+            if (e.kind === 31023) {
+                let title = "";
+
                 try {
                 } catch (e) {}
 
                 if (event.title) {
                     title = await $ndk.signer!.decrypt($currentUser!, event.title);
-                } else {
-                    title = "Untitled";
                 }
+                event.title = title;
                 await event.decrypt($currentUser!, $ndk.signer!);
             }
+
+            console.log('after decryption', event.rawEvent())
 
             resolve(event);
         });
@@ -64,15 +57,7 @@
 {#if loadEvent}
     {#await loadEvent then}
         {#if event.id}
-            <ArticlePreview {title} body={event.content} tags={event.tags} />
-
-            <hr>
-
-            <div class="flex flex-row justify-end">
-                <ToolbarButton href={`/my/notes/${naddr}/edit`}>
-                    Edit
-                </ToolbarButton>
-            </div>
+            <ArticleEditor bind:event />
         {:else}
             <p>Event not found</p>
         {/if}

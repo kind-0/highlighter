@@ -1,5 +1,5 @@
 <script lang="ts">
-    import RoundedButton from "../../routes/(main)/components/RoundedButton.svelte";
+    import RoundedButton from "$lib/components/RoundedButton.svelte";
     import { NDKNip46Signer, NDKPrivateKeySigner, NDKUser } from "@nostr-dev-kit/ndk";
     import ndk, {bunkerNDK} from '$lib/stores/ndk';
     import { closeModal } from "svelte-modals";

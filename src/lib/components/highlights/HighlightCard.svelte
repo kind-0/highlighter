@@ -131,10 +131,12 @@
             />
         </a>
 
-        <div class="text-zinc-700 text-base whitespace-normal text-left">
-        {#each highlight.getMatchingTags('t') as topicTag}
-            <span class="inline-flex items-center rounded-full border border-orange-500 px-3 py-1 text-sm font-medium text-orange-500 mr-2 mb-1">#{topicTag[1]}</span>
-        {/each}
-        </div>
+        {#if highlight.getMatchingTags('t').length > 0}
+            <div class="text-zinc-700 text-base whitespace-normal text-left">
+                {#each highlight.getMatchingTags('t') as topicTag}
+                    <span class="inline-flex items-center rounded-full border border-orange-500 px-3 py-1 text-sm font-medium text-orange-500 mr-2 mb-1">#{topicTag[1]}</span>
+                {/each}
+            </div>
+        {/if}
     </EventCard>
 {/await}

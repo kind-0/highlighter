@@ -6,7 +6,7 @@
     import ndk, { bunkerNDK } from "$lib/stores/ndk";
     import { currentUser } from "$lib/store";
     import { createEventDispatcher } from 'svelte';
-    import RoundedButton from "../../routes/(main)/components/RoundedButton.svelte";
+    import RoundedButton from "$lib/components/RoundedButton.svelte";
 
     const dispatch = createEventDispatcher();
 

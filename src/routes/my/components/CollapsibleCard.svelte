@@ -12,6 +12,7 @@
     const dispatch = createEventDispatcher();
 
     export let tag: NDKTag;
+    export let skipTitle: boolean = false;
     export let skipFooterForPubkeys: string[] | undefined = undefined;
 
     let tagIsList = false;
@@ -68,6 +69,7 @@
     {:else}
         <GenericEventCard
             id={tag[1]}
+            {skipTitle}
             {skipFooter}
             expandReplies={false}
             on:eventLoad={onEventLoaded}

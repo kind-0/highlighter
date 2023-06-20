@@ -1,5 +1,5 @@
 <script lang="ts">
-	import RoundedButton from './../../../../components/RoundedButton.svelte';
+	import RoundedButton from '$lib/components/RoundedButton.svelte';
     import HighlightList from '$lib/components/HighlightList.svelte';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
     import { highlights } from '$lib/stores/highlights';
