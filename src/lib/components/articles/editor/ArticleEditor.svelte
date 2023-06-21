@@ -37,7 +37,6 @@
         event.content = body;
 
         event.created_at = Math.floor(Date.now() / 1000);
-        console.log(event.rawEvent());
 
         if (visibility === 'Secret') {
             event.kind = 31023;
@@ -49,7 +48,7 @@
         await event.sign();
         await event.publish();
 
-        goto(`/my/notes/${event.encode()}`);
+        goto(`/my/notes`);
     }
 
     let bodyEl;
@@ -66,12 +65,12 @@
 
     function onTitleKeyUp() {
         event.title = title;
-        addLongForm(event);
+        addLongForm(event, true);
     }
 
     function onBodyChange() {
         event.content = body;
-        addLongForm(event);
+        addLongForm(event, true);
     }
 </script>
 
@@ -125,6 +124,8 @@
             {title}
             {body}
             tags={event.tags}
+            skipEditButton={true}
+            article={event}
         />
     </div>
 </div>

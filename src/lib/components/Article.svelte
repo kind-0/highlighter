@@ -1,6 +1,6 @@
 <div class="
     text-xl text-justify leading-loose
-    overflow-auto
+    overflow-auto w-full
 ">
     <article class={$$props.class??""}>
         <slot />
@@ -47,6 +47,9 @@
 
     :global(article ul) {
         list-style: disc;
+    }
+
+    :global(article li) {
         margin-left: 1.5rem;
     }
 

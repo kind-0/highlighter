@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { longFormStore } from '$lib/stores/long-form';
     import HighlightCard from '$lib/components/highlights/HighlightCard.svelte';
     import NoteCard from '$lib/components/notes/card.svelte';
     import { getContext } from 'svelte';
@@ -10,12 +11,13 @@
     import NDKList from '$lib/ndk-kinds/lists';
     import { Name } from '@nostr-dev-kit/ndk-svelte-components';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
-    import { filterForId, filterFromNaddr } from '$lib/utils';
+    import { filterForId, filterFromNaddr, naddrFromTagValue } from '$lib/utils';
     import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
     import ListCard from '$lib/components/lists/ListCard.svelte';
     import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
     import NDKLongForm from '$lib/ndk-kinds/long-form';
     import { createDraggableEvent } from '$lib/utils/draggable';
+    import { nip04 } from 'nostr-tools';
 
     export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
@@ -31,6 +33,11 @@
 
     async function loadEvent(): Promise<NDKEvent | undefined> {
         if (event) return event;
+
+        if (id && id.startsWith(`31023:`)) {
+            const naddr = naddrFromTagValue(id);
+            return $longFormStore.get(naddr);
+        }
 
         const p: Promise<NDKEvent | undefined> = new Promise((resolve, reject) => {
             if (!id && !bech32) {
@@ -88,7 +95,7 @@
                         {/await}
                     </div>
                 {:else if e.kind === 1}
-                    <NoteCard                  
+                    <NoteCard
                         event={e}
                         {skipReplies}
                         {skipFooter}
@@ -110,6 +117,7 @@
                 {:else if e.kind === 30023 || e.kind === 31023}
                     <ArticleIntroCard
                         article={NDKLongForm.from(e)}
+                        href={`/a/${e.encode()}`}
                     />
                 {:else if e.kind >= 30000 && e.kind < 40000}
                     <Card size="xl">

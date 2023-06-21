@@ -1,8 +1,11 @@
 <script lang="ts">
     import Article from '$lib/components/Article.svelte';
+    import Button from '$lib/components/buttons/Button.svelte';
     import CardContent from '$lib/components/events/content.svelte';
+    import LockIcon from '$lib/icons/LockIcon.svelte';
+    import type NDKLongForm from '$lib/ndk-kinds/long-form';
     import type { NDKTag } from "@nostr-dev-kit/ndk";
-    import { Card } from "flowbite-svelte";
+    import { Card, Tooltip } from "flowbite-svelte";
     import MarkdownIt from 'markdown-it';
 
     export let title: string;
@@ -10,6 +13,8 @@
     export let tags: NDKTag[];
     export let href: string | undefined = undefined;
     export let image: string | undefined = undefined;
+    export let skipEditButton = false;
+    export let article: NDKLongForm;
 
     const md = new MarkdownIt();
     md.linkify?.set();
@@ -24,19 +29,35 @@
 
 </script>
 
-<Card {href} size="xl" class="max-w-3xl md:px-12 md:py-12 {$$props.class??""}">
-    <div class="flex flex-row gap-4 items-center">
-        {#if image}
-            <img src={image} class="w-32 h-32 rounded-md" />
-        {/if}
-        <Article class="flex flex-col gap-4 md:gap-2">
-            <h1 class="md:text-4xl text-zinc-800 font-black text-left mt-0 {$$props.titleClass??""}">{title}</h1>
-                <div class="article">
-                    <CardContent
-                        note={renderedContent}
-                        {tags}
-                    />
+<Card {href} img={image} class="max-w-3xl group {$$props.class??""}" horizontal>
+    <div class="flex flex-col gap-2 w-full">
+        <div class="flex flex-row gap-4 items-center">
+            <Article class="flex flex-col gap-4 md:gap-2">
+                <div class="flex flex-row items-start justify-between">
+                    <h1 class="md:text-4xl text-zinc-800 font-black text-left mt-0 {$$props.titleClass??""}">{title}</h1>
+
+                    <div class="flex flex-row gap-2 items-center">
+                        {#if !skipEditButton}
+                            <div class="group-hover:opacity-100 opacity-0 transition duration-200">
+                                <Button href={`/my/notes/${article.encode()}/edit`} class="px-8 text-sm">
+                                    Edit
+                                </Button>
+                            </div>
+                        {/if}
+
+                        {#if article.kind === 31023}
+                            <LockIcon class="w-4 h-4 text-zinc-500" />
+                            <Tooltip color="gray">This note is encrypted</Tooltip>
+                        {/if}
+                    </div>
                 </div>
-        </Article>
+                    <div class="article">
+                        <CardContent
+                            note={renderedContent}
+                            {tags}
+                        />
+                    </div>
+            </Article>
+        </div>
     </div>
 </Card>

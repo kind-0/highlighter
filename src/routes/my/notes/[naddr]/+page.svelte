@@ -15,15 +15,18 @@
 </script>
 
 {#if event}
-    <ArticlePreview title={event.title??""} body={event.content} tags={event.tags} />
-
-    <hr>
-
     <div class="flex flex-row justify-end">
-        <ToolbarButton href={`/my/notes/${naddr}/edit`}>
+        <ToolbarButton href={`/my/notes/${naddr}/edit`} class="px-8">
             Edit
         </ToolbarButton>
     </div>
+
+    <ArticlePreview
+        title={event.title??""}
+        body={event.content}
+        tags={event.tags}
+        article={event}
+    />
 {:else}
     <p>Event not found</p>
 {/if}

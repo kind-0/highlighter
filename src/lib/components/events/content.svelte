@@ -65,8 +65,10 @@
 
             switch (type) {
                 case 'newline':
-                    paragraphs.push(currentParagraph);
-                    currentParagraph = [];
+                    if (addNewLines) {
+                        paragraphs.push(currentParagraph);
+                        currentParagraph = [];
+                    }
                     break;
                 case 'text':
                 case 'link':

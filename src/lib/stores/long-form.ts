@@ -7,7 +7,9 @@ import debug from 'debug';
 
 const d = debug('highlighter:long-form');
 
-type LongFormEvents = Map<string, NDKLongForm>;
+type DirtiableLongForm = NDKLongForm & { dirty?: boolean };
+
+type LongFormEvents = Map<string, DirtiableLongForm>;
 
 /**
  * This store contains all UNENCRYPTED long form events.
@@ -30,10 +32,15 @@ export const unsavedLongFormStore = derived(longFormStore, ($longFormStore) => {
 /**
  * Adds a new long form to the store.
  */
-export function addLongForm(longForm: NDKLongForm): void {
+export function addLongForm(longForm: NDKLongForm, dirty = false): void {
+    console.log(`add`)
+    d(`calling addLongForm with dirty=${dirty}`)
     // Update the store by adding the new form under the generated key
     longFormStore.update(storeState => {
-        storeState.set(longForm.encode(), longForm);
+        const entry: DirtiableLongForm = longForm as DirtiableLongForm;
+        entry.dirty = dirty;
+        d(`Adding long form ${longForm.title} to store ${dirty ? 'as dirty' : ''}`)
+        storeState.set(longForm.encode(), entry);
         return storeState;
     });
 }
@@ -98,8 +105,8 @@ async function decryptLongForm(longForm: NDKLongForm, ndk: NDK): Promise<NDKLong
     return longForm;
 }
 
-export function isSaved(longForm: NDKLongForm): boolean {
-    return !!longForm.id;
+export function isSaved(longForm: DirtiableLongForm): boolean {
+    return !longForm.dirty && !!longForm.id;
 }
 
 function isEncrypted(longForm: NDKLongForm): boolean {

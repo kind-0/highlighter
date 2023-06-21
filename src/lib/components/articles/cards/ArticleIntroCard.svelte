@@ -8,6 +8,7 @@
     import { createDraggableEvent } from '$lib/utils/draggable';
 
     export let article: NDKLongForm;
+    export let href: string | undefined = undefined;
 
     function articleLink() {
         return `/my/notes/${article.encode()}`;
@@ -18,12 +19,14 @@
 
 <div use:draggable>
     <ArticlePreview
-        href={articleLink()}
+        href={href??articleLink()}
         title={article.title??''}
         body={article.summary??article.content}
         tags={article.tags}
         image={article.image}
-        class="md:px-6 md:py-6 {$$props.class??""}"
+        class="{$$props.class??""}"
         titleClass="md:text-xl font-bold"
+        naddr={article.encode()}
+        {article}
     />
 </div>

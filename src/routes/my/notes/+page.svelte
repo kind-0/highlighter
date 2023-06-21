@@ -15,6 +15,14 @@
     import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
 
     import { longFormStore } from '$lib/stores/long-form';
+    import { derived } from 'svelte/store';
+
+    const sortedEntries = derived(longFormStore, ($longFormStore) => {
+        if (!$longFormStore) return [];
+
+        return Array.from($longFormStore.values())
+            .sort((a, b) => b.created_at! - a.created_at!);
+    });
 
     // $: if (!encryptedNotes && $currentUser) {
     //     encryptedNotes = $ndk.storeSubscribe({
@@ -62,8 +70,8 @@
 </div>
 
 
-{#if $longFormStore}
-    {#each Array.from($longFormStore.entries()) as [id, longForm] (id)}
+{#if $sortedEntries}
+    {#each $sortedEntries as longForm (longForm.encode())}
         <ArticleIntroCard
             article={longForm}
         />

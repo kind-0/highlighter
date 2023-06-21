@@ -4,12 +4,13 @@
 
     export let pubkey: string | undefined;
     export let subtitle: string | undefined = undefined;
+    export let avatarClass: string = "w-10 h-10";
 </script>
 
 <div class="group block flex-shrink-0">
     <div class="flex items-center gap-2">
         <div class="flex-shrink-0">
-            <Avatar {pubkey} class={$$props.avatarClass} />
+            <Avatar {pubkey} class={avatarClass} />
         </div>
         <div>
             <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><span class={$$props.nameClass}><Name {pubkey} /></span></p>

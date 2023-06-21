@@ -10,6 +10,7 @@
     let event = new NDKLongForm($ndk, {
         kind: 31023,
         pubkey: $currentUser.hexpubkey(),
+        created_at: Math.floor(Date.now() / 1000),
     } as NostrEvent);
 
     addLongForm(event);

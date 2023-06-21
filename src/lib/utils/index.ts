@@ -39,8 +39,6 @@ export function nicelyFormattedSatNumber(amount: number) {
 }
 
 export function filterForId(id: string): NDKFilter {
-
-
     if (!!id.match(/:/)) {
         const [kind, pubkey, identifier] = id.split(':');
         return { kinds: [parseInt(kind)], authors: [pubkey], '#d': [identifier] };
@@ -56,6 +54,16 @@ export function filterFromNaddr(naddr: string): NDKFilter {
 export function idFromNaddr(naddr: string) {
     const ndecode = nip19.decode(naddr).data as any;
     return `${ndecode.kind}:${ndecode.pubkey}:${ndecode.identifier}`;
+}
+
+export function naddrFromTagValue(value: string) {
+    const [kind, pubkey, identifier] = value.split(':');
+
+    return nip19.naddrEncode({
+        kind: parseInt(kind),
+        pubkey,
+        identifier
+    });
 }
 
 export function prettifyContent(content: string) {

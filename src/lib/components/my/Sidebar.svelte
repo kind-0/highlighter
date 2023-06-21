@@ -93,8 +93,8 @@
                     <div class="text-xs font-semibold leading-6 text-gray-400">Unsaved Notes</div>
                     {#each $unsavedLongFormStore as item (item.encode())}
                         <NavigationButton route={`/my/notes/${item.encode()}/edit`}>
-                            <div class="flex flex-1 flex-row items-center justify-between">
-                                <div>{item.title??"Unsaved note"}</div>
+                            <div class="flex flex-1 flex-row items-center justify-between gap-8 w-full">
+                                <div class="truncate">{item.title??"Unsaved note"}</div>
                                 <div class="text-xs text-white">{item.content.length}</div>
                             </div>
                         </NavigationButton>

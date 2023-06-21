@@ -279,7 +279,7 @@
                         >
                             <p>
                                 This tab shows mentions <em>you</em> have done of this list's account
-                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} size="xs" />
+                                <AvatarWithName pubkey={listSignerData.user.hexpubkey()} />
                             </p>
 
                             <p>You can use this feature to mention things you would like to have show up in this feed.</p>

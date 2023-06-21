@@ -6,7 +6,7 @@
     <div class="w-196 pb-4">
     <div class="text-4xl font-semibold flex flex-row gap-2 items-center flex-wrap md:flex-nowrap justify-between md:justify-start">
         <div>Welcome to</div>
-        <div class="title-span"><span class=" font-thin">my</span>HIGHLIGHTER</div>
+        <div class="title-span">HIGHLIGHTER</div>
     </div>
 </div>
     <div class="overflow-hidden rounded-lg bg-white shadow p-6 flex flex-col gap-6">
