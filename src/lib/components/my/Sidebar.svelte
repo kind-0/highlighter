@@ -12,6 +12,7 @@
     import NavigationButton from './navigation/Button.svelte';
 
     import { currentUser } from '$lib/store';
+    import { unsavedLongFormStore } from '$lib/stores/long-form';
 
     import ListItem from './navigation/list-item.svelte';
     import LoginButton from '$lib/ndk-svelte-components/LoginButton.svelte';
@@ -87,10 +88,24 @@
                 </ul>
             </li>
 
+            {#if $unsavedLongFormStore.length > 0}
+                <div class="flex flex-col gap-2">
+                    <div class="text-xs font-semibold leading-6 text-gray-400">Unsaved Notes</div>
+                    {#each $unsavedLongFormStore as item (item.encode())}
+                        <NavigationButton route={`/my/notes/${item.encode()}/edit`}>
+                            <div class="flex flex-1 flex-row items-center justify-between">
+                                <div>{item.title??"Unsaved note"}</div>
+                                <div class="text-xs text-white">{item.content.length}</div>
+                            </div>
+                        </NavigationButton>
+                    {/each}
+                </div>
+            {/if}
+
             <li>
-                <div class="text-xs font-semibold leading-6  text-gray-400 ">Your lists</div>
+                <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
                 {#if renderedList}
-                
+
                     <ul class="-mx-2 mt-2  ">
                         <div class="scrollable-lists pb-8">
                         {#each renderedList ?? [] as item}
@@ -150,7 +165,6 @@
 </div>
 
 <style>
-
 .scrollable-lists
     {
         height: 440px;

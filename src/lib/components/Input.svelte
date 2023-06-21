@@ -8,6 +8,7 @@
     bind:value
     bind:this={element}
     on:keydown
+    on:keyup
     on:change
     class="
     rounded-lg p-4

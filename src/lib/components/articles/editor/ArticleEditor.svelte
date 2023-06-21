@@ -6,12 +6,13 @@
     import ArticleTitle from "./ArticleTitle.svelte";
     import ArticlePreview from "./ArticlePreview.svelte";
     import { goto } from "$app/navigation";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { currentUser } from "$lib/store";
     import ndk from "$lib/stores/ndk";
     import { Card } from "flowbite-svelte";
     import Textarea from '$lib/components/Textarea.svelte';
     import Button from "$lib/components/buttons/Button.svelte";
+    import { addLongForm, removeLongForm, isSaved as isLongFormSaved } from "$lib/stores/long-form";
 
     export let event: NDKLongForm;
 
@@ -22,6 +23,13 @@
 
     onMount(() => {
         title = event.title || "";
+    });
+
+    onDestroy(() => {
+        if (!isLongFormSaved(event)) {
+            if (event.content.length < 10)
+                removeLongForm(event);
+        }
     });
 
     async function save() {
@@ -52,9 +60,18 @@
             e.stopPropagation();
 
             // move focus to body
-            console.log('here');
             bodyEl.focus = true;
         }
+    }
+
+    function onTitleKeyUp() {
+        event.title = title;
+        addLongForm(event);
+    }
+
+    function onBodyChange() {
+        event.content = body;
+        addLongForm(event);
     }
 </script>
 
@@ -62,7 +79,13 @@
     <div class="lg:w-1/2">
         <div class="flex flex-col gap-8">
             <Card size="xl" class="w-full">
-                <ArticleTitle bind:title on:keydown={onTitleKeyDown} class="px-0" />
+                <ArticleTitle
+                    bind:title
+                    on:keydown={onTitleKeyDown}
+                    on:keyup={onTitleKeyUp}
+                    on:change={onTitleKeyUp}
+                    class="px-0"
+                />
 
                 <Textarea
                     bind:this={bodyEl}
@@ -73,6 +96,8 @@
                     "
                     placeholder="Start writing..."
                     bind:value={body}
+                    on:change={onBodyChange}
+                    on:keyup={onBodyChange}
                 />
             </Card>
 

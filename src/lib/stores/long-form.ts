@@ -39,6 +39,16 @@ export function addLongForm(longForm: NDKLongForm): void {
 }
 
 /**
+ * Removes a long form from the store.
+ */
+export function removeLongForm(longForm: NDKLongForm): void {
+    longFormStore.update(storeState => {
+        storeState.delete(longForm.encode());
+        return storeState;
+    });
+}
+
+/**
  * Creates a subscription to retrieve all long forms for a given user.
  */
 export function getLongForms(user: NDKUser): NDKSubscription {
@@ -88,7 +98,7 @@ async function decryptLongForm(longForm: NDKLongForm, ndk: NDK): Promise<NDKLong
     return longForm;
 }
 
-function isSaved(longForm: NDKLongForm): boolean {
+export function isSaved(longForm: NDKLongForm): boolean {
     return !!longForm.id;
 }
 
