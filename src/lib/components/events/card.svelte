@@ -131,7 +131,7 @@
                                 {#if $$slots.header}
                                     <slot name="header" />
                                 {:else}
-                                    <Avatar pubkey={userPubkey} klass="h-8" />
+                                    <Avatar pubkey={userPubkey} class="h-8" />
                                     <div class="text-lg">
                                         <Name pubkey={userPubkey} />
                                     </div>
@@ -172,7 +172,7 @@
                             <a
                                 href="/p/{userPubkey}"
                                 class="flex flex-row gap-4 items-center justify-center">
-                                <Avatar pubkey={userPubkey} size='xs' />
+                                <Avatar pubkey={userPubkey} class="w-8 h-8" />
                                 <div class=" text-gray-500 text-xs hidden sm:block truncate">
                                     {byString||''}
                                     <Name pubkey={userPubkey} />

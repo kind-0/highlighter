@@ -24,7 +24,6 @@
             if (!encryptedTitle) {
                 resolve(article);
             } else {
-                console.log(`trying to decrypt ${encryptedTitle}`)
                 const decryptedTitle = await $ndk.signer!.decrypt($currentUser!, encryptedTitle);
                 await article.decrypt($currentUser!);
                 const availableArticle = article;
@@ -56,7 +55,7 @@
             tags={article.tags}
             image={article.image}
             class="md:px-6 md:py-6 {$$props.class??""}"
-            titleClass="md:text-2xl"
+            titleClass="md:text-xl font-bold"
         />
     </div>
 {:catch e}

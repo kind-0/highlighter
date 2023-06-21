@@ -4,7 +4,7 @@
     import { currentUser } from '$lib/store';
     import { fetchFollowers } from '$lib/currentUser';
     import { currentUserFollowPubkeys as currentUserFollowPubkeysStore } from '$lib/store';
-    import { sortedLists, getLists } from '$lib/stores/list';
+    import { getLists } from '$lib/stores/list';
 
     let prevCurrentUser: string | undefined = undefined;
 

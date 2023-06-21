@@ -53,7 +53,6 @@
                 }
 
                 event = e;
-
                 draggableEvent = createDraggableEvent(e);
 
                 resolve(e);
