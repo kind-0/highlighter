@@ -18,4 +18,6 @@
     placeholder="Title"
     bind:value={title}
     on:keydown
+    on:keyup
+    on:change
 />

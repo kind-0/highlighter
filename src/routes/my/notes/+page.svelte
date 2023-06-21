@@ -16,28 +16,20 @@
 
     import { longFormStore } from '$lib/stores/long-form';
 
-    let encryptedLongForms: NDKEventStore<NDKLongForm>;
-    let decryptingLongFormIds = new Set<string>();
-    let decryptedLongForms: Record<string, string> = {};
+    // $: if (!encryptedNotes && $currentUser) {
+    //     encryptedNotes = $ndk.storeSubscribe({
+    //         authors: [$currentUser.hexpubkey()],
+    //         kinds: [4 as number],
+    //         '#p': [$currentUser.hexpubkey()]
+    //     })
+    // }
 
-    let encryptedNotes: NDKEventStore<NDKEvent>;
-    let decryptingNoteIds = new Set<string>();
-    let decryptedNotes: Record<string, NDKEvent> = {};
-
-    $: if (!encryptedNotes && $currentUser) {
-        encryptedNotes = $ndk.storeSubscribe({
-            authors: [$currentUser.hexpubkey()],
-            kinds: [4 as number],
-            '#p': [$currentUser.hexpubkey()]
-        })
-    }
-
-    $: if (!encryptedLongForms && $currentUser) {
-        encryptedLongForms = $ndk.storeSubscribe({
-            authors: [$currentUser.hexpubkey()],
-            kinds: [31023 as number],
-        }, { closeOnEose: false }, NDKLongForm)
-    }
+    // $: if (!encryptedLongForms && $currentUser) {
+    //     encryptedLongForms = $ndk.storeSubscribe({
+    //         authors: [$currentUser.hexpubkey()],
+    //         kinds: [31023 as number],
+    //     }, { closeOnEose: false }, NDKLongForm)
+    // }
 
     let mounted = false;
 
@@ -47,24 +39,19 @@
     });
 
     // Decrypt notes
-    $: if (mounted && $currentUser && $ndk.signer && $encryptedNotes.length !== decryptingNoteIds.size) {
-        for (const note of $encryptedNotes) {
-            const encode = note.encode();
-            if (!decryptingNoteIds.has(encode)) {
-                decryptingNoteIds.add(encode);
+    // $: if (mounted && $currentUser && $ndk.signer && $encryptedNotes.length !== decryptingNoteIds.size) {
+    //     for (const note of $encryptedNotes) {
+    //         const encode = note.encode();
+    //         if (!decryptingNoteIds.has(encode)) {
+    //             decryptingNoteIds.add(encode);
 
-                note.decrypt($currentUser, $ndk.signer)
-                    .then(() => { decryptedNotes[encode] = note; });
-            }
-        }
-    }
+    //             note.decrypt($currentUser, $ndk.signer)
+    //                 .then(() => { decryptedNotes[encode] = note; });
+    //         }
+    //     }
+    // }
 
     let loadedNote: NDKEvent | null = null;
-
-    let myMap = new Map();
-  myMap.set('key1', 1);
-  myMap.set('key2', 2);
-  myMap.set('key3', 3);
 </script>
 
 <div class="flex flex-row justify-end">
@@ -73,6 +60,7 @@
         Create new
     </ToolbarButton>
 </div>
+
 
 {#if $longFormStore}
     {#each Array.from($longFormStore.entries()) as [id, longForm] (id)}
