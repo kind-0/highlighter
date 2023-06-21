@@ -126,10 +126,10 @@
                 </li>
             {:else}
                 <li class="-mx-6 mt-auto">
-                    <a href="#" class="flex items-center gap-x-4 px-8 py-3 justify-between text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 w-full">
+                    <a href="#" class="flex items-center gap-x-4 px-8 py-3  text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 w-full">
                         <span class="sr-only">Your profile</span>
                         {#if $currentUser}
-                            <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 overflow-hidden" />
+                            <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 " />
                             <span aria-hidden="true">
                                 <Name pubkey={$currentUser.hexpubkey()} />
                             </span>
