@@ -45,7 +45,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-    class="w-full max-h-96 overflow-scroll flex flex-row items-start gap-2"
+    class="w-full flex flex-row items-start gap-2"
     on:click={() => { skipFooter = false; }}
 >
     <div>

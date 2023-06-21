@@ -1,21 +1,27 @@
 <script lang="ts">
-    import ndk from '$lib/stores/ndk';
-    import { NDKEvent, type NDKTag } from '@nostr-dev-kit/ndk';
+    import type { NDKTag } from '@nostr-dev-kit/ndk';
     import NavigationButton from './Button.svelte';
-    import NDKList from '$lib/ndk-kinds/lists';
+    import type NDKList from '$lib/ndk-kinds/lists';
     import { sortedLists} from '$lib/stores/list';
     export let item: NDKList;
-    // export let lists: NDKList[];
+    import { createDraggableEvent } from "$lib/utils/draggable";
 
     let hover = false;
 
     async function addToList(e: DragEvent) {
-        console.log('add to list !!');
         if (!e.dataTransfer) return;
 
         const id = e.dataTransfer.getData('id');
         const kind = e.dataTransfer.getData('kind');
-        const tag = JSON.parse(e.dataTransfer.getData('tag'));
+        let tag = e.dataTransfer.getData('tag');
+
+        // refuse to add to self
+        if (id === item.encode()) {
+            return;
+        }
+
+        tag = JSON.parse(tag);
+
 
         // encrypted notes are added to encrypted tags
         if (kind === '4') {
@@ -55,18 +61,12 @@
 
     $: children = decendants(item);
 
-    function dragStart(event: DragEvent) {
-        if (!event.dataTransfer) return;
-        const tag = item.tagReference();
-        event.dataTransfer.setData('id', item.id as string);
-        event.dataTransfer.setData('tag', JSON.stringify(tag));
-    }
+    const draggableHandler = createDraggableEvent(item);
 </script>
 
 <li>
     <div
-        draggable={true}
-        on:dragstart={dragStart}
+        use:draggableHandler
         on:dragenter={() => (hover = true)}
         on:dragleave={() => (hover = false)}
         on:drop={(e) => {

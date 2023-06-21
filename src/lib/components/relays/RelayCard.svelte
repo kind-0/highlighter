@@ -58,7 +58,7 @@
         {/if}
 
         {#if relayInfo.pubkey}
-            <AvatarWithName pubkey={relayInfo.pubkey} />
+            <AvatarWithName pubkey={relayInfo.pubkey} avatarClass="w-12 h-12" />
         {/if}
 
         {#if relayInfo.supported_nips}

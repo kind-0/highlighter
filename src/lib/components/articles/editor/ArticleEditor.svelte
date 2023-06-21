@@ -1,7 +1,6 @@
 <script lang="ts">
     import type NDKLongForm from "$lib/ndk-kinds/long-form";
 
-    import RoundedButton from "$lib/components/RoundedButton.svelte";
     import EventVisibility from "$lib/components/events/editor/EventVisibility.svelte";
 
     import ArticleTitle from "./ArticleTitle.svelte";
@@ -12,6 +11,7 @@
     import ndk from "$lib/stores/ndk";
     import { Card } from "flowbite-svelte";
     import Textarea from '$lib/components/Textarea.svelte';
+    import Button from "$lib/components/buttons/Button.svelte";
 
     export let event: NDKLongForm;
 
@@ -87,11 +87,9 @@
                 </div>
 
                 <div>
-                    <RoundedButton
-                        on:click={save}
-                    >
+                    <Button on:click={save} class="px-8">
                         Save
-                    </RoundedButton>
+                    </Button>
                 </div>
             </div>
         </div>

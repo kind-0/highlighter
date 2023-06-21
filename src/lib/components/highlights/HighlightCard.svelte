@@ -112,7 +112,7 @@
                     <a href={linkToArticle()}>{new URL(highlight.url).hostname}</a>
                 </div>
             {:else if article?.author}
-                <a href={linkToArticle()}>Note <AvatarWithName pubkey={article.author.hexpubkey()} /></a>
+                <a href={linkToArticle()}>Note <AvatarWithName pubkey={article.author.hexpubkey()} avatarClass="w-10 h-10" /></a>
             {:else if typeof article === 'string'}
                 <a class="font-semibold" href={linkToArticle()}>{article}</a>
             {/if}

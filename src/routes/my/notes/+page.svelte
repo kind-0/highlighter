@@ -14,6 +14,8 @@
     import { onMount } from 'svelte';
     import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
 
+    import { longFormStore } from '$lib/stores/long-form';
+
     let encryptedLongForms: NDKEventStore<NDKLongForm>;
     let decryptingLongFormIds = new Set<string>();
     let decryptedLongForms: Record<string, string> = {};
@@ -58,6 +60,11 @@
     }
 
     let loadedNote: NDKEvent | null = null;
+
+    let myMap = new Map();
+  myMap.set('key1', 1);
+  myMap.set('key2', 2);
+  myMap.set('key3', 3);
 </script>
 
 <div class="flex flex-row justify-end">
@@ -67,15 +74,14 @@
     </ToolbarButton>
 </div>
 
-{#if $encryptedLongForms}
-    {#each $encryptedLongForms as longForm (longForm.id)}
+{#if $longFormStore}
+    {#each Array.from($longFormStore.entries()) as [id, longForm] (id)}
         <ArticleIntroCard
             article={longForm}
-            class="max-h-48 overflow-hidden"
         />
     {/each}
 {/if}
-
+<!--
 {#if decryptedNotes}
     <div class="grid grid-flow-row md:grid-cols-2 xl:grid-cols-4 gap-4">
         {#each Object.values(decryptedNotes).filter(n => !!n) as note}
@@ -87,4 +93,4 @@
             />
         {/each}
     </div>
-{/if}
+{/if} -->

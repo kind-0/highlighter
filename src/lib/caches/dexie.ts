@@ -1,6 +1,9 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { db } from '$lib/interfaces/db';
 import type { NDKCacheAdapter, NDKFilter, NDKSubscription, NDKUserProfile } from '@nostr-dev-kit/ndk';
+import debug from 'debug';
+
+const d = debug('highlighter:cache');
 
 export default class DexieAdapter implements NDKCacheAdapter {
     readonly locking = true;
@@ -57,7 +60,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 }
 
                 const ndkEvent = new NDKEvent(undefined, rawEvent);
-                // console.log(`cache hit by ids`, subscription.filter);
+                d(`cache hit by ids`, subscription.subId, subscription.filter, ndkEvent.rawEvent());
                 subscription.eventReceived(ndkEvent, undefined, true);
             }
 
@@ -158,7 +161,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
         for (const event of events) {
             if (!kinds?.includes(event.kind!)) continue;
 
-            // console.log(`cache hit by kind and tags`, subscription.filter);
+            d(`hit [kind & tags]`, subscription.subId, event.kind);
             subscription.eventReceived(event, undefined, true);
         }
 
@@ -199,8 +202,9 @@ export default class DexieAdapter implements NDKCacheAdapter {
     }
 
     public async query(subscription: NDKSubscription): Promise<void> {
-        // if (!subscription.filter?.kinds || subscription.filter?.kinds?.length === 1) return;
         const filterKeys = Object.keys(subscription.filter || {}).sort();
+
+        d(`cache query for ${filterKeys}`, subscription.subId);
 
         (await this.byAuthors(filterKeys, subscription)) ||
         (await this.byIdsQuery(filterKeys, subscription)) ||

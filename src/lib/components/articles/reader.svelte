@@ -175,7 +175,6 @@
     $: if (article?.id && articleTopicsId !== article.id) {
         articleTopicsId = article.id;
         const articleTopics = (article.tags??[]).filter(t => t[0] === 't').map(t => t[1]).slice(0,10);
-        console.log(`setting topics from ${topics} to ${articleTopics}`)
         topics = articleTopics;
     }
 
@@ -213,7 +212,7 @@
         <!-- Highlight count on mobile -->
         {#if $highlights && $highlights.length > 0}
             <a href="#highlights" class="
-                sm:hidden
+                md:hidden
                 font-sans text-base
                 text-purple-500
             ">{$highlights?.length} highlights</a>
@@ -272,6 +271,7 @@
                 transition duration-100
                 md:mb-96
             ">
+                <a name="highlights">Highlights</a>
                 {#if article && highlightFilter}
                     {#key highlightFilter}
                         <HighlightList

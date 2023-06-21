@@ -188,7 +188,7 @@
     <title>{list.name}</title>
 </svelte:head>
 
-<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-8 max-w-prose">
     <div class="border-b border-gray-200 pb-5 flex flex-row gap-4 items-start">
         <PageTitle
             title={list.name}
@@ -217,7 +217,7 @@
         </PageTitle>
     </div>
 
-    <div class="flex flex-col sm:max-w-prose gap-2 w-full">
+    <div class="flex flex-col sm:max-w-3xl gap-2 w-full">
         {#if list instanceof NDKRelayList}
             <AddRelayListItem {list} />
         {:else if listSignerData}
@@ -234,8 +234,21 @@
 
         <Tabs style="underline">
             <TabItem open title="Public">
-      <DraggableEventC {element}>
-        <div bind:this={element}>
+                <div
+                    on:dragenter={onDragEnter}
+                    on:dragleave={() => (dropZoneActive = false)}
+                    on:drop={(e) => {
+                        addToList(e);
+                        dropZoneActive = false;
+                    }}
+                    ondragover="return false"
+                    class="
+                        {dropZoneActive ? 'bg-zinc-300' : ''}
+                        rounded-xl
+                        transition duration-200 ease-in-out
+                        p-2 py-2 -mx-6
+                    "
+                >
                     <Tags {list} tags={list.tags} {currentUserPubkeys} />
                 </div>
                 </DraggableEventC>

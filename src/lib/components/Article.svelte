@@ -2,7 +2,7 @@
     text-xl text-justify leading-loose
     overflow-auto
 ">
-    <article>
+    <article class={$$props.class??""}>
         <slot />
     </article>
 </div>
@@ -48,6 +48,10 @@
     :global(article ul) {
         list-style: disc;
         margin-left: 1.5rem;
+    }
+
+    :global(article strong) {
+        font-weight: 600;
     }
 
     :global(article a) {
