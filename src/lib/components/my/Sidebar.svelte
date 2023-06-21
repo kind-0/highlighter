@@ -88,15 +88,18 @@
             </li>
 
             <li>
-                <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
+                <div class="text-xs font-semibold leading-6  text-gray-400 ">Your lists</div>
                 {#if renderedList}
-                    <ul class="-mx-2 mt-2">
+                
+                    <ul class="-mx-2 mt-2  ">
+                        <div class="scrollable-lists pb-8">
                         {#each renderedList ?? [] as item}
                             {#if isTopLevel(item)}
                                 <ListItem {item} />
                             {/if}
                         {/each}
-                    </ul>
+                    </div>
+                </ul>
                 {:else}
                     <Skeleton size="sm" class="my-8" />
                 {/if}
@@ -145,3 +148,12 @@
         </div>
     </div>
 </div>
+
+<style>
+
+.scrollable-lists
+    {
+        height: 440px;
+        overflow: auto;
+    }
+</style>

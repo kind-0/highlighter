@@ -251,7 +251,6 @@
                 >
                     <Tags {list} tags={list.tags} {currentUserPubkeys} />
                 </div>
-                </DraggableEventC>
             </TabItem>
 
             {#await encryptedTagsPromise}
