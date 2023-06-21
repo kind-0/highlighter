@@ -48,7 +48,7 @@
 
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col h-full">
     <div class="flex h-16 shrink-0 items-center justify-between flex-row gap-2 font-bold tracking-wider text-zinc-800">
         <div class="flex flex-row items-center gap-2">
             <span class="w-6 h-6 overflow-clip"><LogoIcon /></span>
