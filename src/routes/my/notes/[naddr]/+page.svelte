@@ -1,82 +1,29 @@
 <script lang="ts">
-    import NDKLongForm from "$lib/ndk-kinds/long-form";
-
-    import ndk from "$lib/stores/ndk";
-    import { onMount } from "svelte";
+    import type NDKLongForm from "$lib/ndk-kinds/long-form";
 
     import { page } from '$app/stores';
-    import { currentUser } from "$lib/store";
-
-    import Article from "$lib/components/Article.svelte";
-    import CardContent from '$lib/components/events/content.svelte';
-    import type { NDKTag } from "@nostr-dev-kit/ndk";
-    import { Card } from "flowbite-svelte";
     import ToolbarButton from '../../components/toolbar/button.svelte';
     import ArticlePreview from "$lib/components/articles/editor/ArticlePreview.svelte";
 
-    export let body: string;
-    export let tags: NDKTag[];
+    import { longFormStore } from "$lib/stores/long-form";
 
     const { naddr } = $page.params;
 
-    let event: NDKLongForm;
-    let title: string;
-    let loadEvent: Promise<NDKLongForm>;
+    let event: NDKLongForm | undefined
 
-    let mounted = false;
-
-    onMount(async () => {
-        setTimeout(() => { mounted = true; }, 250);
-    });
-
-    $: if (mounted && !loadEvent && $currentUser && $ndk.signer) {
-        loadEvent = new Promise(async (resolve, reject) => {
-            console.log(`Fetching event ${naddr}`);
-            const e = await $ndk.fetchEvent(naddr);
-
-            console.log(e)
-
-            if (!e) {
-                reject("Event not found");
-                return;
-            }
-
-            event = NDKLongForm.from(e);
-            event.ndk = $ndk;
-
-            if (event.kind === 31023) {
-                try {
-                } catch (e) {}
-
-                if (event.title) {
-                    title = await $ndk.signer!.decrypt($currentUser!, event.title);
-                } else {
-                    title = "Untitled";
-                }
-                await event.decrypt($currentUser!, $ndk.signer!);
-            }
-
-            resolve(event);
-        });
-    }
+    $: if (!event) event = $longFormStore.get(naddr);
 </script>
 
-{#if loadEvent}
-    {#await loadEvent then}
-        {#if event.id}
-            <ArticlePreview {title} body={event.content} tags={event.tags} />
+{#if event}
+    <ArticlePreview title={event.title??""} body={event.content} tags={event.tags} />
 
-            <hr>
+    <hr>
 
-            <div class="flex flex-row justify-end">
-                <ToolbarButton href={`/my/notes/${naddr}/edit`}>
-                    Edit
-                </ToolbarButton>
-            </div>
-        {:else}
-            <p>Event not found</p>
-        {/if}
-    {:catch e}
-        <p>{e}</p>
-    {/await}
+    <div class="flex flex-row justify-end">
+        <ToolbarButton href={`/my/notes/${naddr}/edit`}>
+            Edit
+        </ToolbarButton>
+    </div>
+{:else}
+    <p>Event not found</p>
 {/if}

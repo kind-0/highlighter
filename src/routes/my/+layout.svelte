@@ -13,6 +13,8 @@
     import { NavHamburger } from 'flowbite-svelte';
 
     import ndk from '$lib/stores/ndk';
+    import { onDestroy } from 'svelte';
+    import type { NDKSubscription } from '@nostr-dev-kit/ndk';
 
     let readyToRender = true;
 
@@ -23,12 +25,18 @@
     let isOpen = false;
 
     let subscribed = false;
-    let listSub;
+    let encryptedNotesSub: NDKSubscription | undefined = undefined;
 
     $: if (!subscribed && $currentUser) {
         subscribed = true;
-        listSub = getLongForms($currentUser);
+        encryptedNotesSub = getLongForms($currentUser);
     }
+
+    onDestroy(() => {
+        if (encryptedNotesSub) {
+            encryptedNotesSub.stop();
+        }
+    });
 </script>
 
 <div class="h-full pb-48">

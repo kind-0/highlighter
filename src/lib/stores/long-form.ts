@@ -44,7 +44,7 @@ export function addLongForm(longForm: NDKLongForm): void {
 export function getLongForms(user: NDKUser): NDKSubscription {
     const $ndk = getStore(ndk);
     const sub = $ndk.subscribe({
-        kinds: [NDKKind.LongForm as number, 31023 as number],
+        kinds: [NDKKind.LongForm, 31023 as number],
         authors: [user.hexpubkey()],
     }, {
         closeOnEose: false,
@@ -59,7 +59,7 @@ export function getLongForms(user: NDKUser): NDKSubscription {
         if (isEncrypted(longForm)) {
             decryptLongForm(longForm, $ndk).then((decryptedLongForm) => {
                 d(`Adding decrypted long form ${decryptedLongForm.title} to store`);
-                addLongForm(decryptedLongForm);
+                addLongForm(longForm);
             });
         } else {
             d(`Adding long form ${longForm.title} to store`);

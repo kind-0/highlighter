@@ -1,9 +1,7 @@
 <script lang="ts">
     import Avatar from '$lib/components/Avatar.svelte';
     import Name from '$lib/components/Name.svelte';
-    import type { NDKUser, NDKUserProfile } from '@nostr-dev-kit/ndk';
     import { Card } from 'flowbite-svelte';
-    import ndk from '$lib/stores/ndk';
 
     export let pubkey: string | undefined = undefined;
     export let subtitle: string | undefined = undefined;
