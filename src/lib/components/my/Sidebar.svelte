@@ -107,7 +107,7 @@
                 {#if renderedList}
 
                     <ul class="-mx-2 mt-2  ">
-                        <div class="scrollable-lists pb-8 ">
+                        <div class=" pb-8 ">
                         {#each renderedList ?? [] as item}
                             {#if isTopLevel(item)}
                                 <ListItem {item} />
@@ -165,11 +165,7 @@
 </div>
 
 <style>
-.scrollable-lists
-    {
-     
-        overflow: auto;
-    }
+
 
 .list-container {
     flex-shrink: 1;
