@@ -38,6 +38,7 @@
         px-4
         fixed inset-y-0 z-50 sm:z-auto flex w-72 flex-col
         min-h-screen
+        pb-4
         {isOpen ? 'flex shadow-lg' : 'hidden sm:block'}
     "
     >

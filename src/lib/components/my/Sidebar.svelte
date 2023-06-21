@@ -48,7 +48,7 @@
 
 </script>
 
-<div class="flex flex-col h-full">
+<div class="flex flex-col  h-full">
     <div class="flex h-16 shrink-0 items-center justify-between flex-row gap-2 font-bold tracking-wider text-zinc-800">
         <div class="flex flex-row items-center gap-2">
             <span class="w-6 h-6 overflow-clip"><LogoIcon /></span>
@@ -65,7 +65,7 @@
         flex flex-1 flex-col
     " on:click={() => { isOpen = false; }}
     >
-        <ul class="flex flex-1 flex-col gap-y-7">
+        <ul class="flex flex-1 flex-col gap-y-7 h-full ">
             <li>
                 <ul class="-mx-2 space-y-1">
                     <li>
@@ -87,7 +87,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li class="flex-grow-1 ">
                 <div class="text-xs font-semibold leading-6  text-gray-400 ">Your lists</div>
                 {#if renderedList}
                 
@@ -111,10 +111,10 @@
                 </li>
             {:else}
                 <li class="-mx-6 mt-auto">
-                    <a href="#" class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
+                    <a href="#" class="flex items-center gap-x-4 px-8 py-3 justify-between text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 w-full">
                         <span class="sr-only">Your profile</span>
                         {#if $currentUser}
-                            <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 " />
+                            <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 overflow-hidden" />
                             <span aria-hidden="true">
                                 <Name pubkey={$currentUser.hexpubkey()} />
                             </span>
@@ -153,7 +153,8 @@
 
 .scrollable-lists
     {
-        height: 440px;
+     
         overflow: auto;
     }
+
 </style>
