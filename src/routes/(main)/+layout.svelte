@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentScope, currentUser, type ScopeSelection } from '$lib/store';
+    import { currentScope } from '$lib/store';
     import { getHighlights } from '$lib/stores/highlights';
     import type { NDKFilter, NDKSubscription } from '@nostr-dev-kit/ndk';
     import { onDestroy } from 'svelte';
@@ -18,7 +18,7 @@
         return getHighlights(filter);
     }
 
-    $: if (!subscribed && $currentUser) {
+    $: if (!subscribed) {
         subscribed = true;
         subscribedScopeLabel = $currentScope.label;
         highlightsSub = getHighlightsWithFilter();

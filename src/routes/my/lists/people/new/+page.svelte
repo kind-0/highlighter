@@ -47,11 +47,11 @@
         const tags = Array.from(currentSelection).map((user) => {
             return ['p', user.hexpubkey()];
         });
-        tags.push(['client', 'atlas']);
+        // tags.push(['client', 'atlas']);
         tags.push(['name', listName]);
         tags.push(['d', listName]);
         const event = new NDKEvent($ndk, {
-            kind: 30001,
+            kind: 30000,
             tags,
             content: listDescription,
         } as NostrEvent);

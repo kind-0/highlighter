@@ -1,40 +1,20 @@
 <script lang="ts">
     import type { NDKTag } from '@nostr-dev-kit/ndk';
-    import { currentUser } from '$lib/store';
 
     import CollapsibleCard from '../../components/CollapsibleCard.svelte';
     import type NDKList from '$lib/ndk-kinds/lists/index.js';
+    import { processEvent } from '$lib/stores/list';
 
     export let list: NDKList;
     export let tags: NDKTag[];
     export let currentUserPubkeys: string[] = [];
+    export let encrypted: boolean = false;
 
-    async function onRemoveItem(e: CustomEvent) {
-        const { tag } = e.detail;
-        const tagFilter = (t: NDKTag) => !(t[0] === tag[0] && t[1] === tag[1]);
-
-        // Remove the tag from the list
-        list.tags = list.tags.filter(tagFilter);
-
-        list.created_at = Math.floor(Date.now() / 1000);
-
-        if (list.content?.length > 0) {
-            let tags;
-
-            try {
-                tags = JSON.parse(list.content);
-                if (!tags || !tags) tags = [];
-
-                tags = tags.filter(tagFilter);
-
-                list.content = JSON.stringify(tags);
-                await list.encrypt($currentUser!);
-            } catch (e) {
-            }
-        }
-
-        await list.sign();
-        await list.publish();
+    async function onRemoveItem(index: number) {
+        const listEvent = await list.removeItem(index, encrypted);
+        await listEvent.sign();
+        // listEvent.publish();
+        processEvent(listEvent);
     }
 
     function shouldDisplayTag(tag: NDKTag) {
@@ -53,11 +33,11 @@
 </script>
 
 <div class="flex flex-col gap-2.5">
-    {#each tags as tag, i (i)}
+    {#each tags as tag, i}
         {#if shouldDisplayTag(tag)}
             <CollapsibleCard
                 {tag}
-                on:removeItem={onRemoveItem}
+                on:removeItem={() => setTimeout(() => onRemoveItem(i), 100)}
                 skipTitle={false}
                 skipFooterForPubkeys={currentUserPubkeys}
             />

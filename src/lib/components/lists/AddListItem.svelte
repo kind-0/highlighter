@@ -15,7 +15,7 @@
 
     const dispatch = createEventDispatcher();
     let value = '';
-    let visibility = 'Delegated';
+    export let visibility = 'Delegated';
     let validationError: string | undefined;
 
     function getKind(): NDKKind {

@@ -1,10 +1,8 @@
 <script lang="ts">
-    import { Dropdown, DropdownItem, Tooltip } from 'flowbite-svelte';
+    import { Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Helper, Tooltip } from 'flowbite-svelte';
 
     import DeleteIcon from '$lib/icons/Trash.svelte';
     import MoreOptionsIcon from '$lib/icons/MoreOptions.svelte';
-    import CopyIcon from '$lib/icons/Copy.svelte';
-    import CheckIcon from '$lib/icons/Check.svelte';
 
     import { currentUser } from '$lib/store';
     import ndk from '$lib/stores/ndk';
@@ -23,19 +21,21 @@
     import AvatarWithName from '$lib/components/AvatarWithName.svelte';
     import { getSigner, type SignerStoreItem } from '$lib/stores/signer';
     import { saveEphemeralSigner } from '$lib/signers/ephemeral';
-    import { getLists } from '$lib/stores/list';
+    import { getLists, processEvent } from '$lib/stores/list';
     import PageTitle from '$lib/components/PageTitle.svelte';
     import Button from '$lib/components/buttons/Button.svelte';
     import CopyButton from '$lib/components/buttons/CopyButton.svelte';
-    import DraggableEventC from '$lib/components/utilities/DraggableEventC.svelte';
+    import { writable } from 'svelte/store';
 
     export let list: NDKList;
     let listId;
 
-    let element
     let publicTags: NDKTag[] = [];
 
     let listSignerData: SignerStoreItem | undefined;
+
+    let visibility = 'Delegated';
+    let beforeSecretVisibility = visibility;
 
     if (list.id !== listId) {
         listId = list.id;
@@ -94,6 +94,8 @@
         list.created_at = Math.floor(Date.now() / 1000);
         await list.sign();
         list.publish();
+
+        processEvent(list);
     }
 
     let myFeedLength: number;
@@ -149,37 +151,13 @@
             });
     }
 
-    let copiedEventJSON = false;
+    const encryptedTags = writable<NDKTag[]>([]);
+    let encryptedTagsTimestamp: number;
 
-    function copyJSON(e: Event) {
-        e.stopPropagation();
-        navigator.clipboard.writeText(JSON.stringify(list.rawEvent()));
-        copiedEventJSON = true;
-        setTimeout(() => {
-            copiedEventJSON = false;
-        }, 1500);
-    }
-
-    async function tryToDecrypt(): Promise<NDKTag[]> {
-        console.log(`will try to decrypt ${list.content}`);
-        const tags = await list.encryptedTags();
-        console.log(`decrypted ${list.content}`);
-        return tags;
-    }
-
-    let encryptedTagsPromise: Promise<NDKTag[]> | undefined;
-
-    $: if (list && $currentUser && !encryptedTagsPromise) {
-        encryptedTagsPromise = new Promise(async (resolve, reject) => {
-            try {
-                const tags = await tryToDecrypt();
-                console.log(`decrypted tags`, tags);
-                resolve(tags);
-            } catch (e) {
-                setTimeout(() => {
-                    tryToDecrypt();
-                }, 100 * Math.random());
-            }
+    $: if (list.created_at !== encryptedTagsTimestamp) {
+        encryptedTagsTimestamp = list.created_at!;
+        list.encryptedTags().then((tags) => {
+            encryptedTags.set(tags);
         });
     }
 </script>
@@ -195,22 +173,27 @@
             subtitle={list.description}
         >
             <div class="flex flex-row items-center gap-4">
-                {#if listSignerData?.saved}
-                    <CopyButton data={listSignerData.user.npub} tooltip="Copy this lists' npub" />
-                {/if}
-
-                <Button class="w-10 h-10">
+                <Button class="w-10 h-10 !px-2">
                     <MoreOptionsIcon />
                 </Button>
                 <Dropdown class="z-10">
+                    {#if listSignerData?.saved}
+                        <CopyButton class="" data={listSignerData.user.npub} label="Copy lists' npub" comp={DropdownItem}>
+                            <Helper class="text-xs opacity-80 ml-6 mt-1 font-normal w-56">
+                                You can tag this list in any note to make those notes appear in its feed.
+                            </Helper>
+                        </CopyButton>
+                    {/if}
+
+                    <CopyButton class="flex flex-row items-center gap-2" data={list.encode()} comp={DropdownItem} label="Copy List ID" />
+
+                    <CopyButton class="flex flex-row items-center gap-2" data={list.rawEvent()} comp={DropdownItem} label="Copy List JSON" />
+
+                    <DropdownDivider />
+
                     <DropdownItem class="flex flex-row items-center gap-2" on:click={deleteList}>
                         <DeleteIcon class="w-4 h-4" />
                         Delete List
-                    </DropdownItem>
-
-                    <DropdownItem class="flex flex-row items-center gap-2" on:click={copyJSON}>
-                        <CopyIcon class="w-4 h-4" />
-                        {copiedEventJSON ? 'Copied!' : 'Copy Event JSON'}
                     </DropdownItem>
                 </Dropdown>
             </div>
@@ -223,6 +206,7 @@
         {:else if listSignerData}
             <AddListItem
                 {list}
+                bind:visibility
                 delegatedName={listSignerData.name}
                 listSigner={listSignerData.signer}
                 listSignerUser={listSignerData.user}
@@ -232,8 +216,17 @@
             <AddListItem {list} on:saved={onNoteEditorSaved} />
         {/if}
 
-        <Tabs style="underline">
-            <TabItem open title="Public">
+        <Tabs
+            class="items-center mt-4"
+            activeClasses='px-2 py-2 lg:px-6 lg:py-4 text-zinc-600 bg-orange-900/10 rounded-lg'
+            inactiveClasses='px-2 py-2 lg:px-6 lg:py-4 text-zinc-600 rounded-lg'
+            divider={false}
+        >
+            <TabItem
+                open
+                title="Public"
+                on:focus={() => { visibility = beforeSecretVisibility; }}
+            >
                 <div
                     on:dragenter={onDragEnter}
                     on:dragleave={() => (dropZoneActive = false)}
@@ -253,17 +246,12 @@
                 </div>
             </TabItem>
 
-            {#await encryptedTagsPromise}
-                Loading
-            {:then encryptedTags}
-                {#if encryptedTags.length > 0}
-                    <TabItem title="Secret">
-                        <Tags {list} tags={encryptedTags} {currentUserPubkeys} />
-                    </TabItem>
-                {/if}
-            {:catch e}
-                {e}
-            {/await}
+            <TabItem
+                title="Secret"
+                on:focus={() => { beforeSecretVisibility = visibility; visibility = 'Secret'; }}
+            >
+                <Tags {list} tags={$encryptedTags} {currentUserPubkeys} encrypted={true} />
+            </TabItem>
 
             {#if listSignerData?.saved && $currentUser}
                 <TabItem title={`My Feed ${myFeedLength > 0 ? `(${myFeedLength})` : ''}`}>

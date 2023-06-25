@@ -7,6 +7,12 @@ import { NDKKind } from '../index.js';
 class NDKList extends NDKEvent {
     public _encryptedTags: NDKTag[] | undefined;
 
+    /**
+     * Stores the number of bytes the content was before decryption
+     * to expire the cache when the content changes.
+     */
+    private encryptedTagsLength: number | undefined;
+
     constructor(ndk?: NDK, rawEvent?: NostrEvent) {
         super(ndk, rawEvent);
         if (!this.kind) this.kind = NDKKind.GenericList;
@@ -45,8 +51,8 @@ class NDKList extends NDKEvent {
     /**
      * Returns the decrypted content of the list.
      */
-    async encryptedTags(): Promise<NDKTag[]> {
-        if (this._encryptedTags) return this._encryptedTags;
+    async encryptedTags(useCache = true): Promise<NDKTag[]> {
+        if (this._encryptedTags && this.encryptedTagsLength === this.content.length && useCache) return this._encryptedTags;
 
         if (!this.ndk) throw new Error('NDK instance not set');
         if (!this.ndk.signer) throw new Error('NDK signer not set');
@@ -57,13 +63,16 @@ class NDKList extends NDKEvent {
             if (this.content.length > 0) {
                 try {
                     console.log(`decrypting ${this.content}`);
-                    await this.decrypt(user);
-                    const a = JSON.parse(this.content);
+                    const decryptedContent = await this.ndk.signer.decrypt(user, this.content);
+                    const a = JSON.parse(decryptedContent);
                     if (a && a[0]) {
+                        this.encryptedTagsLength = this.content.length;
                         return this._encryptedTags = a;
                     }
+                    this.encryptedTagsLength = this.content.length;
                     return this._encryptedTags = [];
                 } catch (e) {
+                    console.log(`error decrypting ${this.content}`);
                 }
             }
         } catch (e) {
@@ -112,8 +121,12 @@ class NDKList extends NDKEvent {
         if (encrypted) {
             const user = await this.ndk.signer.user();
             const currentList = await this.encryptedTags();
+
+            console.log(`current list: ${JSON.stringify(currentList)}`)
+
             currentList.push(tag);
             this._encryptedTags = currentList;
+            this.encryptedTagsLength = this.content.length;
             this.content = JSON.stringify(currentList);
             await this.encrypt(user);
         } else {
@@ -121,6 +134,34 @@ class NDKList extends NDKEvent {
         }
 
         this.created_at = Math.floor(Date.now() / 1000);
+    }
+
+    /**
+     * Removes an item from the list.
+     *
+     * @param index The index of the item to remove.
+     * @param encrypted Whether to remove from the encrypted list or not.
+     */
+    async removeItem(index: number, encrypted: boolean): Promise<NDKList> {
+        if (!this.ndk) throw new Error('NDK instance not set');
+        if (!this.ndk.signer) throw new Error('NDK signer not set');
+
+        if (encrypted) {
+            const user = await this.ndk.signer.user();
+            const currentList = await this.encryptedTags();
+
+            currentList.splice(index, 1);
+            this._encryptedTags = currentList;
+            this.encryptedTagsLength = this.content.length;
+            this.content = JSON.stringify(currentList);
+            await this.encrypt(user);
+        } else {
+            this.tags.splice(index, 1);
+        }
+
+        this.created_at = Math.floor(Date.now() / 1000);
+
+        return this;
     }
 }
 

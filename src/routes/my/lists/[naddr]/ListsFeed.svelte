@@ -10,6 +10,7 @@
     import Tags from './tags.svelte';
     import { currentUser } from '$lib/store';
     import RoundedButton from '$lib/components/RoundedButton.svelte';
+    import Button from '$lib/components/buttons/Button.svelte';
 
     let subs: NDKSubscription[] = [];
     let lists: NDKList[] = [];
@@ -79,12 +80,12 @@
     {/each}
 
     {#if loadOffset < lists.length}
-        <RoundedButton
-            class="rounded-lg p-2 mt-4"
+        <Button
+            class="rounded-lg p-2 mt-4 bg-zinc-300"
             on:click={() => loadOffset += Math.max(10, loadOffset * 1.25)}
         >
             Load more
-        </RoundedButton>
+        </Button>
     {/if}
 </div>
 

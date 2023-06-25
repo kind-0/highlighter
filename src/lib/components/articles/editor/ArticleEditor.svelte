@@ -13,6 +13,7 @@
     import Textarea from '$lib/components/Textarea.svelte';
     import Button from "$lib/components/buttons/Button.svelte";
     import { addLongForm, removeLongForm, isSaved as isLongFormSaved } from "$lib/stores/long-form";
+    import Article from "$lib/components/Article.svelte";
 
     export let event: NDKLongForm;
 
@@ -31,6 +32,8 @@
                 removeLongForm(event);
         }
     });
+
+    $: event.kind = visibility === 'Public' ? 30023 : 31023;
 
     async function save() {
         event.title = title;
@@ -70,6 +73,7 @@
 
     function onBodyChange() {
         event.content = body;
+        body = body
         addLongForm(event, true);
     }
 </script>

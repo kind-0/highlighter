@@ -12,14 +12,14 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3
   '@nostr-dev-kit/ndk':
-    specifier: 0.5.13
-    version: 0.5.13(typescript@5.1.3)
+    specifier: 0.6.0
+    version: 0.6.0(typescript@5.1.3)
   '@nostr-dev-kit/ndk-cache-redis':
     specifier: ^1.3.0
     version: 1.3.0(typescript@5.1.3)
   '@nostr-dev-kit/ndk-svelte-components':
-    specifier: ^0.2.10
-    version: 0.2.10(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3)
+    specifier: ^0.3.0
+    version: 0.3.0(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3)
   '@popperjs/core':
     specifier: ^2.11.7
     version: 2.11.7
@@ -44,6 +44,9 @@ dependencies:
   add:
     specifier: ^2.0.6
     version: 2.0.6
+  classnames:
+    specifier: ^2.3.2
+    version: 2.3.2
   dexie:
     specifier: ^3.2.4
     version: 3.2.4
@@ -586,12 +589,12 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk-svelte-components@0.2.10(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3):
-    resolution: {integrity: sha512-lFPqHXKJTSFOF52W6p4uWCTdGhc580PEqgH9mWzW0q2eRmrFLFYZj+/3Iv/XV+Mu+auGZjvtJgbGJ7gEt01flg==}
+  /@nostr-dev-kit/ndk-svelte-components@0.3.0(postcss@8.4.21)(svelte@3.59.1)(typescript@5.1.3):
+    resolution: {integrity: sha512-LBvhT+iGRyW0Tgxc+UyqrNSB92z3r8Yef5cBWaDt6dL3C0A2r+toFsifJrKW5TDZzxv6IrDHDxDqg6jXtV0UaQ==}
     peerDependencies:
       svelte: ^3.54.0
     dependencies:
-      '@nostr-dev-kit/ndk': 0.5.13(typescript@5.1.3)
+      '@nostr-dev-kit/ndk': 0.6.0(typescript@5.1.3)
       rehype-autolink-headings: 6.1.1
       rehype-slug: 5.1.0
       svelte: 3.59.1
@@ -640,8 +643,8 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk@0.5.13(typescript@5.1.3):
-    resolution: {integrity: sha512-Lu5vHzKmV3NrQyIxbneft7QlY2KpxOhsNOo1sN71z1b4plBSDrUT8xBgPTzm1itfL1Xw0kxy6pa/LSdVlsA3oQ==}
+  /@nostr-dev-kit/ndk@0.6.0(typescript@5.1.3):
+    resolution: {integrity: sha512-0ptE6OIZhFW+aRRIXAI8PvUIoVU6iQLpiwFtJj48XAUO2EC3WiSuqKLshjg6wj1bbo9qGs1PyFS9AUhUlWWJtg==}
     dependencies:
       '@noble/hashes': 1.3.1
       '@noble/secp256k1': 2.0.0
@@ -1830,6 +1833,10 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.2
+
+  /classnames@2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
 
   /cluster-key-slot@1.1.2:
     resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}

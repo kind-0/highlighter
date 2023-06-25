@@ -19,16 +19,26 @@
     const md = new MarkdownIt();
     md.linkify?.set();
 
-    let renderedContent = body;
+    let renderedContent = "";
     let renderedContentBeforeMarkdown = "";
+    let rerender = 1;
+    let prevLength = 0;
 
-    $: if (renderedContentBeforeMarkdown !== body) {
+    $: {
+        // this is super hacky, but for some reason the <Card> component is preventing re-rendering
+        // when dropping in a new tag. This is a workaround to force a re-render.
+        if (prevLength > 0 && body.length - prevLength > 40) {
+            rerender++;
+        }
+
+        prevLength = body.length;
         renderedContentBeforeMarkdown = body;
         renderedContent = md.render(body);
     }
 
 </script>
 
+{#key rerender}
 <Card {href} img={image} class="max-w-3xl group {$$props.class??""}" horizontal>
     <div class="flex flex-col gap-2 w-full">
         <div class="flex flex-row gap-4 items-center">
@@ -52,12 +62,15 @@
                     </div>
                 </div>
                     <div class="article">
-                        <CardContent
-                            note={renderedContent}
-                            {tags}
-                        />
+                        {#if renderedContent.length > 0}
+                            <CardContent
+                                note={renderedContent}
+                                {tags}
+                            />
+                        {/if}
                     </div>
             </Article>
         </div>
     </div>
 </Card>
+{/key}

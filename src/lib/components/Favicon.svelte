@@ -28,13 +28,13 @@
 {#if domain !== null}
     <img
         src={`https://${domain}/favicon.ico`}
-        alt="Favicon"
+        alt=""
         style="display: none;"
         on:load={handleImageLoad}
         on:error={handleImageError}
     />
 
     {#if faviconUrl !== null}
-        <img src={faviconUrl} alt="Favicon" class={$$props.class} />
+        <img src={faviconUrl} alt="" class={$$props.class} />
     {/if}
 {/if}

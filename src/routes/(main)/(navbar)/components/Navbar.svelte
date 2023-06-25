@@ -3,9 +3,10 @@
     import ConsoleIcon from '$lib/icons/Console.svelte';
     import AboutIcon from '$lib/icons/About.svelte';
 
+    import CurrentUser from '$lib/components/CurrentUser.svelte';
+
     import { currentUser, currentScope } from '$lib/store';
 
-    import Avatar from '$lib/components/Avatar.svelte';
     import Link from './Link.svelte';
     import FullLogo from "$lib/icons/FullLogo.svelte";
     import Logo from '$lib/icons/Logo.svelte';
@@ -77,10 +78,7 @@
                             <RoundedButton class="text-center" href="/my">
                                 My Notes
                             </RoundedButton>
-                            <Avatar
-                                pubkey={$currentUser?.hexpubkey()}
-                                class="w-10 h-10 border-2 border-slate-200"
-                            />
+                            <CurrentUser />
                         {:else}
                             <LoginButton />
                         {/if}

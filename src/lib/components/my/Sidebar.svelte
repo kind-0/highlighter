@@ -6,6 +6,7 @@
     import CloseIcon from '$lib/icons/Close.svelte';
 
     import RelaysButton from '$lib/components/RelaysButton.svelte';
+    import CurrentUser from '$lib/components/CurrentUser.svelte';
 
     import Avatar from '$lib/components/Avatar.svelte';
     import Name from '$lib/components/Name.svelte';
@@ -23,6 +24,9 @@
     import { sortedLists } from '$lib/stores/list';
 
     import { debounce } from 'throttle-debounce';
+    import Button from '../buttons/Button.svelte';
+    import PlusCircle from '$lib/icons/PlusCircle.svelte';
+    import PlusSmallIcon from '$lib/icons/PlusSmallIcon.svelte';
 
     let renderedList: NDKList[] | undefined = undefined;
 
@@ -49,8 +53,8 @@
 
 </script>
 
-<div class="flex flex-col  h-full">
-    <div class="flex h-16 shrink-0 items-center justify-between flex-row gap-2 font-bold tracking-wider text-zinc-800">
+<div class="flex flex-col h-full">
+    <div class="flex h-16 shrink-0 items-center justify-between flex-row gap-2 font-bold tracking-wider text-zinc-800 px-2">
         <div class="flex flex-row items-center gap-2">
             <span class="w-6 h-6 overflow-clip"><LogoIcon /></span>
             <a href="/my" class="flex flex-row">
@@ -68,7 +72,7 @@
     >
         <ul class="flex flex-1 flex-col gap-y-7 h-full ">
             <li>
-                <ul class="-mx-2 space-y-1">
+                <ul class="space-y-1">
                     <li>
                         <NavigationButton route="/my/highlights">
                             <HighlightIcon class="w-6 h-6" />
@@ -81,8 +85,18 @@
                         </NavigationButton>
 
                         <NavigationButton route="/my/notes">
-                            <NoteIcon class="w-6 h-6" />
-                            Private Notes
+                            <div class="flex flex-row justify-between w-full">
+                                <div class="flex flex-row items-center gap-2">
+                                    <NoteIcon class="w-6 h-6" />
+                                    Private Notes
+                                </div>
+
+                                <Button href="/my/notes/new" class="
+                                    rounded-md p-1
+                                ">
+                                    <PlusSmallIcon class="w-4 h-4" />
+                                </Button>
+                            </div>
                         </NavigationButton>
                     </li>
                 </ul>
@@ -106,7 +120,7 @@
                 <div class="text-xs font-semibold leading-6 text-gray-400">Your lists</div>
                 {#if renderedList}
 
-                    <ul class="-mx-2 mt-2  ">
+                    <ul class="mt-2">
                         <div class=" pb-8 ">
                         {#each renderedList ?? [] as item}
                             {#if isTopLevel(item)}
@@ -125,14 +139,11 @@
                     <LoginButton />
                 </li>
             {:else}
-                <li class="-mx-6 mt-auto">
+                <li class="mt-auto">
                     <a href="#" class="flex items-center gap-x-4 px-8 py-3  text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 w-full">
                         <span class="sr-only">Your profile</span>
                         {#if $currentUser}
-                            <Avatar pubkey={$currentUser.hexpubkey()} klass="h-8 w-8 " />
-                            <span aria-hidden="true">
-                                <Name pubkey={$currentUser.hexpubkey()} />
-                            </span>
+                            <CurrentUser />
                         {/if}
                     </a>
                 </li>

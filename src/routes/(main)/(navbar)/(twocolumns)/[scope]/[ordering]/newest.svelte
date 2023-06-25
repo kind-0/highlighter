@@ -1,9 +1,9 @@
 <script lang="ts">
-	import RoundedButton from '$lib/components/RoundedButton.svelte';
     import HighlightList from '$lib/components/HighlightList.svelte';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
     import { highlights } from '$lib/stores/highlights';
     import { throttle } from 'throttle-debounce';
+    import Button from '$lib/components/buttons/Button.svelte';
 
     export let scope: string;
 
@@ -37,4 +37,4 @@
 
 <HighlightList items={renderedHighlights} />
 
-<RoundedButton class="mt-8 py-4" on:click={loadMore}>Load More</RoundedButton>
+<Button type="secondary" class="mt-8 py-3 w-full" on:click={loadMore}>Load More</Button>
