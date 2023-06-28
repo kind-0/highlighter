@@ -13,7 +13,7 @@
     async function onRemoveItem(index: number) {
         const listEvent = await list.removeItem(index, encrypted);
         await listEvent.sign();
-        // listEvent.publish();
+        listEvent.publish();
         processEvent(listEvent);
     }
 
