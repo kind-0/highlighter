@@ -27,9 +27,10 @@
         font-semibold
         flex flex-row items-center gap-2
         text-left
+        truncate
         {$$props.class}
     ">
-        <div class="font-normal">
+        <div class="font-normal truncate">
             {#if value === 'Public'}
                 Public (as <Name {ndk} user={$currentUser} />)
             {:else if value === 'Delegated'}

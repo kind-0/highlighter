@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { NDKNip46Signer, NDKPrivateKeySigner, NDKUser } from "@nostr-dev-kit/ndk";
+    import { NDKNip46Signer, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
     import ndk, {bunkerNDK} from '$lib/stores/ndk';
     import { closeModal } from "svelte-modals";
     import { onMount } from "svelte";
@@ -95,9 +95,7 @@
         }
     }
 
-
-
-    let mode: string | undefined = 'nsecbunker';
+    let mode: string | undefined;
 </script>
 
 <ModalWrapper class="md:max-w-2xl !bg-transparent shadow-none">
