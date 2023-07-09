@@ -56,7 +56,7 @@
             <CloseIcon />
         </button>
 
-        <Sidebar />
+        <Sidebar on:close={() => { isOpen = false; }} />
     </div>
 
     <div
@@ -83,7 +83,7 @@
 
     <main
         class="
-        py-10 sm:pl-72 h-full pb-48
+        lg:py-10 sm:pl-72 h-full pb-48
         {isOpen ? 'opacity-10' : ''}
     "
     >

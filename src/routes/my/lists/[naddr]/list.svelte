@@ -166,10 +166,10 @@
     <title>{list.name}</title>
 </svelte:head>
 
-<div class="flex flex-col gap-8 max-w-prose">
-    <div class="border-b border-gray-200 pb-5 flex flex-row gap-4 items-start">
+<div class="flex flex-col gap-4 lg:gap-8 max-w-prose">
+    <div class="lg:border-b border-gray-200 lg:pb-5 flex flex-row gap-4 items-start">
         <PageTitle
-            title={list.name}
+            title={list.name??"Untitled List"}
             subtitle={list.description}
         >
             <div class="flex flex-row items-center gap-4">
