@@ -3,7 +3,6 @@
     import HighlightIcon from '$lib/icons/Highlight.svelte';
     import BookmarkIcon from '$lib/icons/Bookmark.svelte';
     import NoteIcon from '$lib/icons/MyHighlights.svelte';
-    import CloseIcon from '$lib/icons/Close.svelte';
 
     import RelaysButton from '$lib/components/RelaysButton.svelte';
     import CurrentUser from '$lib/components/CurrentUser.svelte';
@@ -25,8 +24,12 @@
 
     import { debounce } from 'throttle-debounce';
     import Button from '../buttons/Button.svelte';
-    import PlusCircle from '$lib/icons/PlusCircle.svelte';
     import PlusSmallIcon from '$lib/icons/PlusSmallIcon.svelte';
+    import { page } from '$app/stores';
+
+    import { createEventDispatcher } from "svelte";
+
+    const dispatch = createEventDispatcher();
 
     let renderedList: NDKList[] | undefined = undefined;
 
@@ -48,9 +51,6 @@
         }
         return true;
     }
-
-    let isOpen = false;
-
 </script>
 
 <div class="flex flex-col h-full">
@@ -62,13 +62,15 @@
             </a>
         </div>
 
-        <RelaysButton iconOnly={true} />
+        <div class="hidden lg:block">
+            <RelaysButton iconOnly={true} />
+        </div>
     </div>
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <nav class="
         flex flex-1 flex-col
-    " on:click={() => { isOpen = false; }}
+    " on:click={() => { dispatch('close') }}
     >
         <ul class="flex flex-1 flex-col gap-y-7 h-full ">
             <li>
@@ -140,7 +142,7 @@
                 </li>
             {:else}
                 <li class="mt-auto">
-                    <a href="#" class="flex items-center gap-x-4 px-8 py-3  text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 w-full">
+                    <a href="#" class="flex items-center gap-x-4 px-8 py-3  text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 w-full" on:click|stopPropagation={() => {}}>
                         <span class="sr-only">Your profile</span>
                         {#if $currentUser}
                             <CurrentUser />
@@ -150,29 +152,6 @@
             {/if}
         </ul>
     </nav>
-
-    <div
-        class="
-        flex flex-row items-center justify-between
-        sm:hidden
-        {isOpen ? 'opacity-10' : ''}
-    "
-    >
-        <div class="flex flex-row gap-2">
-            <NavHamburger
-                on:click={() => {
-                    isOpen = true;
-                }}
-            />
-            <div class="flex h-16 shrink-0 items-center flex-row gap-2 font-bold tracking-wider text-zinc-800">
-                <span class="w-6 h-6"><LogoIcon /></span>
-                <a href="/my" class="flex flex-row">
-                    <span class="text-zinc-400 font-light">my</span>
-                    <span class="text-zinc-900 uppercase">Highlighter</span>
-                </a>
-            </div>
-        </div>
-    </div>
 </div>
 
 <style>
