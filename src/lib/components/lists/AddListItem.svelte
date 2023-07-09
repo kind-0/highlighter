@@ -123,7 +123,7 @@
     {/if}
 </div>
 
-<div class="flex flex-row justify-between">
+<div class="flex flex-row gap-4 justify-between">
     <EventVisibility
         {delegatedName}
         delegatedUser={listSignerUser}
@@ -131,7 +131,7 @@
     />
 
     <div>
-        <Button class="px-8" on:click={save}>
+        <Button class="px-8 flex-1" on:click={save}>
             Save
         </Button>
     </div>

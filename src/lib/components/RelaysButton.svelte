@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Popover, Button } from 'flowbite-svelte'
+    import { Popover, Button, Tooltip } from 'flowbite-svelte'
     import { blur, fade, slide } from 'svelte/transition';
     import RelaysIcon from '$lib/icons/Relays.svelte';
 
@@ -26,6 +26,7 @@
 
 <button class="flex flex-row items-center gap-2 text-sm" on:click|stopPropagation={toggle}>
     <RelaysIcon klass="w-6 h-6" />
+    <Tooltip placement="bottom">Relays</Tooltip>
     {!iconOnly ? 'Relays' : ''}
 </button>
 <Popover {open} class="{sizes[sizeIndex]} text-base font-light z-50 overflow-hidden max-h-screen shadow-lg " transition={blur} placement='bottom' trigger="click" params={{duration: 500}}>
