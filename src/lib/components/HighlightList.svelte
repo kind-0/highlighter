@@ -11,13 +11,15 @@
     setContext("skipTitle", skipTitle);
 </script>
 
-<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-4">
     {#each items as item (item.id)}
         <HighlightListItem
+            class=""
             {expandedContext}
             highlight={item}
             {skipTitle}
             disableClick={true}
+            itemClass={$$props.itemsClass}
         />
     {/each}
 </div>

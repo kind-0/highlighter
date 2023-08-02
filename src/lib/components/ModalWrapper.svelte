@@ -1,6 +1,9 @@
 <script lang="ts">
     import { closeModal } from "svelte-modals";
     import { fade } from "svelte/transition";
+
+    export let title: string | undefined;
+    export let subtitle: string | undefined;
 </script>
 
 <div class="
@@ -11,18 +14,30 @@
     w-screen
 " transition:fade on:click={closeModal}>
     <div class="
-        mx-2
-        sm:mx-auto
-        rounded-lg sm:rounded-xl p-6
+        card
+        rounded-lg sm:rounded-xl
+        max-w-3xl
         shadow-xl
-        bg-zinc-100
-        dark:bg-zinc-900 dark:text-white
         flex flex-col gap-8
         relative
-        max-w-prose w-full
         overflow-y-auto
         {$$props.class}
     " style="pointer-events: auto; max-height: 80vh;" on:click|stopPropagation={()=>{}}>
-        <slot />
+        {#if title}
+            <div class="flex flex-col gap-2 items-center p-8">
+                <div class="card-title text-base-100-content text-4xl font-bold">
+                    {title}
+                </div>
+
+                {#if subtitle}
+                    <div class="text-sm text-accent2">
+                        {subtitle}
+                    </div>
+                {/if}
+            </div>
+        {/if}
+        <div class="card-body">
+            <slot />
+        </div>
     </div>
 </div>

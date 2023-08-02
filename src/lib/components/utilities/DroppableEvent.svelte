@@ -14,7 +14,7 @@
     function onDragEnter(e: DragEvent) {
         e.preventDefault();
         e.stopPropagation();
- 
+
         if (!e.dataTransfer) return;
 
         // set dropZoneActive if none of the tags have this id
@@ -41,6 +41,9 @@
     function parseDragData(dataTransfer: DataTransfer): { id: string, tag: NDKTag } {
         const dataString = dataTransfer.getData('application');
         console.log({dataString});
+
+        if (!dataString || dataString === '') return;
+
         const { id, tag } = JSON.parse(dataString);
 
         return { id, tag };

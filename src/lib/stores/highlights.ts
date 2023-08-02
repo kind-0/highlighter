@@ -37,7 +37,6 @@ export const articleHighlights = derived(highlights, ($highlights) => {
     return articleHighlights;
 });
 
-
 export function getHighlights(filter: NDKFilter = {}): NDKSubscription {
     const $ndk = getStore(ndk);
     filter.kinds = [NDKKind.Highlight as number];
@@ -75,5 +74,5 @@ export function getHighlights(filter: NDKFilter = {}): NDKSubscription {
         // }, { closeOnEose: true, groupableDelay: 500 });
     });
 
-    return sub
+    return sub;
 }

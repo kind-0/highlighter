@@ -4,6 +4,7 @@ declare global {
             id: string;
             pubkey: string;
             kind: number;
+            relay?: string;
             createdAt: number;
             json: string;
         }

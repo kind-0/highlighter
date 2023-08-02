@@ -123,16 +123,17 @@
     {/if}
 </div>
 
-<div class="flex flex-row gap-4 justify-between">
+<div class="self-end join">
     <EventVisibility
         {delegatedName}
         delegatedUser={listSignerUser}
         bind:value={visibility}
+        class="join-item"
     />
 
     <div>
-        <Button class="px-8 flex-1" on:click={save}>
+        <button class="btn join-item btn-primary px-14" on:click={save}>
             Save
-        </Button>
+        </button>
     </div>
 </div>

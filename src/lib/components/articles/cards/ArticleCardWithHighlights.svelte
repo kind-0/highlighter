@@ -60,7 +60,7 @@
             <div class="flex flex-col">
                 {#if articleTitle(article) && article instanceof NDKEvent}
                     <a href={`/a/${article.encode()}`} class="
-                        text-3xl font-bold font-sans leading-normal text-left text-zinc-700
+                        text-3xl font-bold font-sans leading-normal text-left
                     ">
                         {articleTitle(article)}
                     </a>
@@ -68,7 +68,7 @@
                     <div class="flex flex-row gap-2 items-center">
                         <Favicon url={article} class="w-8 h-8 rounded-md" />
                         <a href={`/load?url=${encodeURIComponent(article)}`} class="
-                            text-3xl font-bold font-sans leading-normal text-left text-zinc-700
+                            text-3xl font-bold font-sans leading-normal text-left
                         ">
                             {new URL(article).hostname}
                         </a>
@@ -107,11 +107,11 @@
                 />
             {/if}
 
-            <div class="text-orange-500 bg-zinc-100 border-y border-zinc-200 -mx-4 -mb-4 px-4 py-2 flex flex-row justify-between items-center">
+            <div class="border-y -mx-4 -mb-4 px-4 py-2 flex flex-row justify-between items-center">
                 <div>
                     <span class="font-semibold">{highlights.length}</span>
                     highlights
-                    <span class="text-zinc-500">by</span>
+                    <span class="">by</span>
                     <span class="font-semibold">{highlightAuthors(highlights).length}</span>
                     authors
                 </div>
@@ -127,8 +127,8 @@
     error {e}
 {/await}
 
-<style>
+<!-- <style>
     * {
         font-family: 'Montserrat', sans-serif;
     }
-</style>
+</style> -->

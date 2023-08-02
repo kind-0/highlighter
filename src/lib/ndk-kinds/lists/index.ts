@@ -1,5 +1,6 @@
-import NDK, { NDKEvent, NDKUser, type NDKTag, type NostrEvent, NDKRelay, type NDKSigner } from '@nostr-dev-kit/ndk';
+import NDK, { NDKEvent, NDKUser, type NDKTag, type NostrEvent, NDKRelay, type NDKSigner, type NDKFilter, mergeFilters } from '@nostr-dev-kit/ndk';
 import { NDKKind } from '../index.js';
+import { filterForId } from '$lib/utils/index.js';
 
 /**
  * Represents any NIP-33 list kind.
@@ -91,6 +92,21 @@ class NDKList extends NDKEvent {
         return this.tags.filter((t) => {
             return !['d', 'name', 'description'].includes(t[0]);
         });
+    }
+
+    async fetchItems(): Promise<Set<NDKEvent>> {
+        let filters: NDKFilter[] = []
+
+        if (!this.ndk) throw new Error('NDK instance not set');
+
+        filters = this.items.map(i => filterForId(i[1]));
+
+        console.log(`filters: ${JSON.stringify(filters)}`);
+        console.log(mergeFilters(filters));
+
+        return this.ndk.fetchEvents(
+            mergeFilters(filters)
+        );
     }
 
     async addItem(relay: NDKRelay, mark?: string, encrypted?: boolean): Promise<void>;

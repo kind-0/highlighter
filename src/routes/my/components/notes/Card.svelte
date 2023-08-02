@@ -92,6 +92,7 @@
 
 <div class="relative flex flex-row w-full group">
     <div
+        tabindex="0"
         class="flex flex-col h-full flex-grow"
         draggable={true}
         on:dragstart={dragStart}
@@ -102,7 +103,7 @@
             flex flex-col h-full gap-4
             border border-zinc-200 hover:border-zinc-200
             rounded-xl
-            bg-white hover:bg-slate-50 transition duration-200 ease-in-out
+            transition duration-200 ease-in-out
             {showCompact ? 'px-6 py-4' : 'px-6 pt-6 pb-4'}
         " style="max-height: 40rem;">
 

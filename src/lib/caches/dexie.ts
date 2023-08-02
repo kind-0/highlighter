@@ -1,7 +1,8 @@
 import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { db } from '$lib/interfaces/db';
-import type { NDKCacheAdapter, NDKFilter, NDKSubscription, NDKUserProfile } from '@nostr-dev-kit/ndk';
+import { NDKRelay, type NDKCacheAdapter, type NDKFilter, type NDKSubscription, type NDKUserProfile } from '@nostr-dev-kit/ndk';
 import debug from 'debug';
+import { matchFilter } from 'nostr-tools';
 
 const d = debug('highlighter:cache');
 
@@ -16,7 +17,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
         const hasAllKeys = filterKeys.length === f.length && f.every((k) => filterKeys.includes(k));
 
         if (hasAllKeys) {
-            for (const pubkey of subscription.filter?.authors!) {
+            for (const pubkey of subscription.filters[0]?.authors!) {
                 const event = await db.events.where({ pubkey }).first();
                 if (!event) continue;
 
@@ -24,12 +25,11 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 try {
                     rawEvent = JSON.parse(event.json);
                 } catch (e) {
-                    // console.log('failed to parse event', e);
+                    console.log('failed to parse event', e);
                     continue;
                 }
 
                 const ndkEvent = new NDKEvent(undefined, rawEvent);
-                // console.log(`cache hit by authors`, subscription.filter);
                 subscription.eventReceived(ndkEvent, undefined, true);
             }
 
@@ -47,7 +47,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
         const hasAllKeys = filterKeys.length === f.length && f.every((k) => filterKeys.includes(k));
 
         if (hasAllKeys) {
-            for (const id of subscription.filter.ids!) {
+            for (const id of subscription.filters[0].ids!) {
                 const event = await db.events.where({ id }).first();
                 if (!event) continue;
 
@@ -60,7 +60,6 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 }
 
                 const ndkEvent = new NDKEvent(undefined, rawEvent);
-                d(`cache hit by ids`, subscription.subId, subscription.filter, ndkEvent.rawEvent());
                 subscription.eventReceived(ndkEvent, undefined, true);
             }
 
@@ -78,14 +77,14 @@ export default class DexieAdapter implements NDKCacheAdapter {
         const hasAllKeys = filterKeys.length === f.length && f.every((k) => filterKeys.includes(k));
 
         if (hasAllKeys) {
-            for (const _kind of subscription.filter['kinds']) {
+            for (const _kind of subscription.filters[0]['kinds']) {
                 const kind = parseInt(_kind as any);
                 const replaceableKind = kind >= 30000 && kind < 40000;
 
                 if (!replaceableKind) continue;
 
-                for (const author of subscription.filter['authors']) {
-                    for (const dTag of subscription.filter['#d']) {
+                for (const author of subscription.filters[0]['authors']) {
+                    for (const dTag of subscription.filters[0]['#d']) {
                         const replaceableId = `${kind}:${author}:${dTag}`;
                         const event = await db.events.where({ id: replaceableId }).first();
                         if (!event) continue;
@@ -100,7 +99,8 @@ export default class DexieAdapter implements NDKCacheAdapter {
 
                         const ndkEvent = new NDKEvent(undefined, rawEvent);
                         // console.log(`cache hit by NIP-33`, subscription.filter);
-                        subscription.eventReceived(ndkEvent, undefined, true);
+                        const relay = event.relay ? new NDKRelay(event.relay) : undefined;
+                        subscription.eventReceived(ndkEvent, relay, true);
                     }
                 }
             }
@@ -119,8 +119,8 @@ export default class DexieAdapter implements NDKCacheAdapter {
         if (!hasAllKeys) return false;
 
         // Rest of the code remains the same
-        for (const kind of subscription.filter['kinds']!) {
-            for (const author of subscription.filter['authors']!) {
+        for (const kind of subscription.filters[0].kinds!) {
+            for (const author of subscription.filters[0].authors!) {
                 const events = await db.events.where({ kind, pubkey: author }).toArray();
 
                 for (const event of events) {
@@ -153,15 +153,12 @@ export default class DexieAdapter implements NDKCacheAdapter {
             if (!isKind && !isTag) return false;
         }
 
-        // console.log(`will try to check for cache hit by kind and tags`, subscription.filter);
-
         const events = await this.filterByTag(filterKeys, subscription.filter);
         const kinds = subscription.filter.kinds as number[];
 
         for (const event of events) {
             if (!kinds?.includes(event.kind!)) continue;
 
-            d(`hit [kind & tags]`, subscription.subId, event.kind);
             subscription.eventReceived(event, undefined, true);
         }
 
@@ -187,6 +184,9 @@ export default class DexieAdapter implements NDKCacheAdapter {
                     let rawEvent;
                     try {
                         rawEvent = JSON.parse(event.json);
+
+                        // Make sure all passed filters match the event
+                        if (!matchFilter(filter, rawEvent)) continue;
                     } catch (e) {
                         // console.log('failed to parse event', e);
                         continue;
@@ -204,18 +204,16 @@ export default class DexieAdapter implements NDKCacheAdapter {
     public async query(subscription: NDKSubscription): Promise<void> {
         const filterKeys = Object.keys(subscription.filter || {}).sort();
 
-        d(`cache query for ${filterKeys}`, subscription.subId);
-
+        (await this.byKindAndAuthor(filterKeys, subscription)) ||
         (await this.byAuthors(filterKeys, subscription)) ||
         (await this.byIdsQuery(filterKeys, subscription)) ||
         (await this.byNip33Query(filterKeys, subscription)) ||
-        (await this.byKindAndAuthor(filterKeys, subscription)) ||
         (await this.byTagsAndOptionallyKinds(filterKeys, subscription));
     }
 
-    public async setEvent(event: NDKEvent, filter: NDKFilter): Promise<void> {
+    public async setEvent(event: NDKEvent, _filter: NDKFilter, relay?: NDKRelay): Promise<void> {
         if (false) {
-            let profile = profileFromEvent(event, {});
+            const profile = profileFromEvent(event, {});
 
             db.users.put({
                 id: event.pubkey,
@@ -247,6 +245,7 @@ export default class DexieAdapter implements NDKCacheAdapter {
                     pubkey: event.pubkey,
                     kind: event.kind as number,
                     createdAt: event.created_at as number,
+                    relay: relay?.url,
                     json: JSON.stringify(event.rawEvent()),
                 });
 

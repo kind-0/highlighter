@@ -1,18 +1,21 @@
 <script lang="ts">
     import { openModal } from 'svelte-modals'
-    import { Tooltip } from 'flowbite-svelte';
 
     import BookmarkIcon from '$lib/icons/Bookmark.svelte';
-
     import BookmarkModal from '$lib/modals/Bookmark.svelte';
 
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import { currentUser } from '$lib/store';
 
     export let event: NDKEvent;
+
+    $: tooltip = $currentUser ? 'Bookmark' : 'You are not logged in';
 </script>
 
-<button
-    class="text-slate-500 hover:text-orange-500 w-4 h-4 {$$props.class}"
-    on:click={() => { openModal(BookmarkModal, { event }) }}
-><BookmarkIcon /></button>
-<Tooltip color="black">Bookmark</Tooltip>
+<div class="tooltip" data-tip={tooltip}>
+    <button
+        class="w-4 h-4 {$$props.class}"
+        class:cursor-not-allowed={!$currentUser}
+        on:click={() => { openModal(BookmarkModal, { event }) }}
+    ><BookmarkIcon /></button>
+</div>

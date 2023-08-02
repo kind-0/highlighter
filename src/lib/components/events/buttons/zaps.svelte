@@ -5,7 +5,7 @@
     import ZapIcon from '$lib/icons/Zap.svelte';
 
     import ZapModal from '$lib/modals/Zap.svelte';
-    import { onDestroy, onMount } from 'svelte';
+    import { onDestroy } from 'svelte';
     import { type NDKEvent, zapInvoiceFromEvent } from '@nostr-dev-kit/ndk';
     import { nicelyFormattedMilliSatNumber } from '$lib/utils';
     import { currentUser } from '$lib/store';
@@ -44,24 +44,29 @@
             return acc + zapInvoice.amount;
         }, 0);
     }
+
+    let tooltip: string;
+    $: tooltip = $currentUser ? 'Zap' : 'You are not logged in';
+
 </script>
 
 {#if event?.id && $currentUser}
-    <button class="
-        text-slate-500 hover:text-orange-500
-        flex flex-row items-center gap-2
-        {$$props.class}
-    " on:click={() => { openModal(ZapModal, { event }) }}>
-        <ZapIcon class="
-            w-4 h-4
-            {zappedByCurrentUser ? 'text-orange-500' : ''}
-        " />
-        {#if zappedAmount > 0}
-            <div class="
+    <div class="tooltip flex flex-row items-center gap-1.5" data-tip={tooltip}>
+        <button
+            class="flex flex-row items-center gap-1.5"
+            class:cursor-not-allowed={!$currentUser}
+            on:click={() => { openModal(ZapModal, { event }) }}
+        >
+            <ZapIcon class="
+                w-4 h-4
+                {zappedByCurrentUser ? 'text-primary-500' : ''}
+                {$$props.class}" />
+            {#if zappedAmount > 0}
+                <div class="
                 text-sm
-                {zappedByCurrentUser ? 'text-orange-500' : ''}
-            ">{nicelyFormattedMilliSatNumber(zappedAmount)}</div>
-        {/if}
-    </button>
-    <Tooltip color="black">Zap</Tooltip>
+                {zappedByCurrentUser ? 'text-primary-500' : ''}
+                ">{nicelyFormattedMilliSatNumber(zappedAmount)}</div>
+            {/if}
+        </button>
+    </div>
 {/if}

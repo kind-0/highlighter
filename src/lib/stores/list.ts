@@ -1,9 +1,12 @@
 import NDKList from '../ndk-kinds/lists';
 import { NDKListKinds } from '../ndk-kinds/index.js';
-import { NDKKind, type NDKEvent, type NDKUser, NDKSubscriptionCacheUsage } from '@nostr-dev-kit/ndk';
+import { NDKKind, type NDKEvent, type NDKUser, NDKSubscriptionCacheUsage, type NDKFilter, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { writable, derived, get as getStore } from 'svelte/store';
 import ndk from './ndk';
 import { db } from '$lib/interfaces/db';
+
+
+export const blockedListNames = [ 'mute' ];
 
 export const lists = writable<Map<string, NDKList>>(new Map());
 export const deletions = writable<Set<string>>(new Set());
@@ -18,7 +21,69 @@ export const sortedLists = derived(lists, ($lists) => {
     });
 });
 
+/**
+ * Sorted list of people-list events (kind 39801)
+ */
+export const sortedUserList = derived(sortedLists, ($sortedLists) => {
+    if (!$sortedLists) {
+        return [];
+    }
+
+    return $sortedLists.filter((list: NDKList) => {
+        if (blockedListNames.includes(list.name!)) return;
+
+        const correctKind = list.kind === NDKKind.CategorizedPeopleList;
+        const pTags = list.tags.filter((tag) => tag[0] === 'p').length;
+        const mostlyPTags = pTags / list.tags.length > 0.5;
+
+        return correctKind && mostlyPTags;
+    });
+});
+
+/**
+ * Sorted list of highlight-list events (kind 39802)
+ */
+export const sortedHighlightList = derived(sortedLists, ($sortedLists) => {
+    if (!$sortedLists) {
+        return [];
+    }
+
+    return $sortedLists.filter((list: NDKList) => list.kind === 39802);
+});
+
+/**
+ * Creates a derived store of sorted lists with a specific kind.
+ */
+export function sortedListWithKind(kinds: number | number[]) {
+    return derived(sortedLists, ($sortedLists) => {
+        if (!$sortedLists) {
+            return [];
+        }
+
+        if (typeof kinds === 'number') {
+            kinds = [kinds];
+        }
+
+        return $sortedLists.filter((list: NDKList) => kinds.includes(list.kind));
+    });
+}
+
 const requestedDeletions = new Set<string>();
+
+export function getListsFromFilter(filter: NDKFilter): NDKSubscription {
+    const $ndk = getStore(ndk);
+    const sub = $ndk.subscribe(filter,
+        {
+            closeOnEose: false,
+            groupable: false,
+            cacheUsage: NDKSubscriptionCacheUsage.PARALLEL
+        }
+    );
+
+    sub.on('event', processEvent);
+
+    return sub;
+}
 
 export function getLists(user: NDKUser) {
     const $ndk = getStore(ndk);

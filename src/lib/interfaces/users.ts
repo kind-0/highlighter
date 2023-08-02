@@ -5,19 +5,13 @@ import { liveQuery, type Observable } from 'dexie';
 import { browser } from '$app/environment';
 import { db } from '$lib/interfaces/db';
 
-interface ILoadOpts {
-    hexpubkey?: string;
-}
-
 const UserInterface = {
     get: (opts: GetUserParams): Observable<App.UserProfile> => {
         if (opts.hexpubkey && browser) {
-            console.log(`received query for user ${opts.hexpubkey}`)
             db.users
                 .where({ id: opts.hexpubkey })
                 .first()
                 .then((user) => {
-                    console.log(`coming back for user ${opts.hexpubkey}`, !!user)
                     if (!user) {
                         const ndk = getStore(ndkStore);
                         const user = ndk.getUser(opts);
@@ -26,8 +20,6 @@ const UserInterface = {
                             ...(user.profile || {}),
                             id: user.hexpubkey(),
                         };
-
-                        console.log('sending fetchProfile request', user.hexpubkey());
 
                         user.fetchProfile({ groupableDelay: 200 } as NDKFilterOptions).then(async (events) => {
                             userProfile = { ...userProfile, ...(user.profile || {}) };

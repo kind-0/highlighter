@@ -47,7 +47,7 @@
     " on:click={closeModal}>
         <CloseIcon />
     </button>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-8">
         <h2 class="text-zinc-500 font-semibold text-base uppercase">SPLITS</h2>
 
         <UserCard pubkey={event.pubkey}>

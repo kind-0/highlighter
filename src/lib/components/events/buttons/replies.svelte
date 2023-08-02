@@ -1,6 +1,5 @@
 <script lang="ts">
     import { openModal } from 'svelte-modals'
-    import { Tooltip } from 'flowbite-svelte';
 
     import CommentIcon from '$lib/icons/Comment.svelte';
 
@@ -8,6 +7,7 @@
     import type { NDKEvent, NDKSigner, NDKUser } from '@nostr-dev-kit/ndk';
 
     import { signers } from '$lib/stores/signer';
+    import { currentUser } from '$lib/store';
 
     export let event: NDKEvent;
 
@@ -26,13 +26,13 @@
         openModal(ReplyModal, { event, delegatedSigner, delegatedUser });
     }
 
+    let tooltip: string;
 
+    $: tooltip = $currentUser ? 'Reply' : 'You are not logged in';
 </script>
 
-<button class="
-    text-slate-500 hover:text-orange-500
-    flex flex-row items-center gap-2
-" on:click={open}>
-    <CommentIcon class="w-4 h-4" />
-</button>
-<Tooltip color="default">Reply</Tooltip>
+<div class="tooltip" data-tip={tooltip}>
+    <button class="w-4 h-4 {$$props.class}" on:click={open}>
+        <CommentIcon />
+    </button>
+</div>

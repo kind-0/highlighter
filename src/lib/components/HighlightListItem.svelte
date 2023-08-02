@@ -7,6 +7,7 @@
     import NoteCard from '$lib/components/notes/card.svelte';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
+    import MarginNoteCard from './events/margin-note/MarginNoteCard.svelte';
 
     export let highlight: NDKHighlight;
     export let skipTitle: boolean = false;
@@ -30,10 +31,10 @@
         quotePubkeys = $quotes.map((q: NDKEvent) => q.pubkey);
     }
 
-    quotes = $ndk.storeSubscribe({ kinds: [1], '#q': [highlight.id] }, { closeOnEose: true, groupableDelay: 200 });
+    quotes = $ndk.storeSubscribe({ kinds: [1], '#q': [highlight.id] }, { closeOnEose: true, groupableDelay: 500 });
 
     function shouldDisplayQuote(highlight: NDKHighlight, quotes: NDKEvent[]) {
-        if (!$quotes || $quotes.length !== 1) {
+        if (!$quotes || $quotes.length === 0) {
             return true;
         }
 
@@ -44,19 +45,19 @@
 {#await articlePromise then article}
     <div class="
         flex flex-col
+        {$$props.class}
         {collapsedQuotes? '' : 'gap-8'}
     ">
         {#if shouldDisplayQuote(highlight, $quotes||[])}
-            <div class="text-lg">
-                <HighlightCard
-                    {highlight}
-                    {article}
-                    {expandedContext}
-                    {skipButtons}
-                    {skipTitle}
-                    {disableClick}
-                />
-            </div>
+            <HighlightCard
+                class={$$props.itemClass}
+                {highlight}
+                {article}
+                {expandedContext}
+                {skipButtons}
+                {skipTitle}
+                {disableClick}
+            />
 
             {#if ($quotes||[]).length > 0}
                 {#if collapsedQuotes}
@@ -71,7 +72,7 @@
                             </div>
 
                             <button
-                                class="text-xs font-medium text-zinc-600 hover:text-zinc-500"
+                                class="text-xs font-medium"
                                 on:click={() => { collapsedQuotes = false }}>
                                 Show {$quotes?.length} notes...
                             </button>
@@ -91,7 +92,7 @@
         {:else}
             {#each ($quotes||[]) as quote}
                 <div class="text-lg">
-                    <NoteCard event={quote} expandReplies={false} />
+                    <MarginNoteCard event={quote} />
                 </div>
             {/each}
         {/if}

@@ -3,7 +3,6 @@
 	import GenericEventCard from '$lib/components/events/generic/card.svelte';
     import type { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
     import { onDestroy } from 'svelte';
-    import { derived } from 'svelte/store';
 
     export let filter: NDKFilter;
     export let feedLength: number = 0;

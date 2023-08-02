@@ -1,51 +1,74 @@
 <script lang="ts">
-    import Tags from "svelte-tags-input";
+    import MenuItem from '$lib/components/Sidebar/MenuItem.svelte';
+    import Input from '$lib/components/Input.svelte';
+    import { CaretDown, Hash } from 'phosphor-svelte';
 
     export let values: string[] = [];
 
-    let focused = false;
-    let _value: string = '';
-    let value: string = '';
+    function addTopic(name: string) {
+        name = name.replace(/^#/, '').trim();
 
-    $: _value = values.map(v => v.trim()).filter(v => v.length > 0).join(', ');
+        if (values.includes(name)) return;
+        values.push(name);
+        values = values;
+    }
+
+    function toggleTopic(name: string) {
+        if (values.includes(name)) {
+            values = values.filter(t => t !== name);
+        } else {
+            addTopic(name);
+        }
+
+        values = values;
+    }
+
+    function keyDown(e: KeyboardEvent) {
+        if (e.key === 'Enter') {
+            addTopic(value);
+            value = '';
+        }
+    }
+
+    let value: string = '';
 </script>
 
-{#if focused}
-    <div class="rounded-lg">
-        <Tags
-            bind:tags={values}
-            on:blur={() => focused = false}
-            allowPaste={true}
-            onlyUnique={true}
-            allowBlur={true}
-            placeholder="Tags"
-            class="rounded-lg"
-        />
+<div class="dropdown dropdown-start">
+    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <label tabindex="0" class="btn m-1 {$$props.class??''}">
+        <div class="flex flex-row items-center gap-2 font-normal whitespace-nowrap">
+            <Hash class="w-6 h-6" />
+            {#if values.length > 0}
+                <span class="truncate">
+                    {#if values.length > 3}
+                        {values.length} tags
+                    {:else}
+                        {values.slice(0, 3).join(', ')}
+                    {/if}
+                </span>
+            {:else}
+                Add tags
+                <CaretDown class="w-4 h-4" />
+            {/if}
+        </div>
+    </label>
+    <div class="menu overflow-x-hidden z-[1] p-2 shadow rounded-box bg-base-300 overflow-y-auto max-h-96 dropdown-content ">
+        <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+        <ul tabindex="0" class="">
+                <Input
+                    placeholder="Add topic"
+                    autofocus={true}
+                    on:keydown={keyDown}
+                    bind:value
+                />
+            {#each values as topic}
+                <MenuItem
+                    on:click={(e) => { e.preventDefault(); toggleTopic(topic); }}
+                >
+                    {topic}
+                </MenuItem>
+            {/each}
+        </ul>
     </div>
-{:else}
-    {#if values.length > 0}
-        <button on:click={() => { focused = true }}>
-            <div class="text-zinc-700 text-base whitespace-normal text-left">
-                {#each values as v}
-                    <span class="inline-flex items-center rounded-full border border-orange-500 px-3 py-1 text-sm font-medium text-orange-500 mr-2 mb-1">#{v}</span>
-                {/each}
-            </div>
-        </button>
-    {:else}
-        <button
-            class="
-                border border-orange-500
-                text-orange-500
-                px-4 py-2 rounded-lg
-                text-sm
-            "
-            on:click={() => focused = true}
-        >
-            Add tags
-        </button>
-    {/if}
-{/if}
-
-<style>
-
-</style>
+</div>

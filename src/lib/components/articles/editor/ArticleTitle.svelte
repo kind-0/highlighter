@@ -6,11 +6,10 @@
 
 <Input
     class="
-        bg-white text-4xl p-2
-        font-black
+        bg-transparent
+        text-4xl p-2
         w-full
-        text-zinc-800
-        placeholder-zinc-300
+        placeholder-base-300-contrast
         rounded-b-none outline-none
         border-0 focus:ring-0 focus-within:ring-0 focus-within:border-0 focus:border-0
         {$$props.class??""}

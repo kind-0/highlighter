@@ -6,10 +6,11 @@
     import { closeModal } from 'svelte-modals';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Input from '$lib/components/Input.svelte';
-    import { sortedLists } from '$lib/stores/list';
+    import { sortedListWithKind, sortedLists } from '$lib/stores/list';
     import type NDKList from '$lib/ndk-kinds/lists';
 
     export let event: NDKEvent;
+    export let listKind: number = 30001;
 
     let newListName: string;
 
@@ -27,10 +28,8 @@
             return;
         }
 
-        console.log(event);
-
         const newListEvent = new NDKEvent($ndk, {
-            kind: 30001,
+            kind: listKind,
             tags: [
                 ['d', newListName ],
                 event.tagReference(),
@@ -41,11 +40,13 @@
 
         newListName = '';
     }
+
+    const listWithKind = sortedListWithKind(listKind);
 </script>
 
 <ModalWrapper class="max-w-sm">
     <button class="
-        text-zinc-500 hover:text-zinc-300 transition duration-300
+        transition duration-300
         absolute top-2 right-2
     " on:click={closeModal}>
         <CloseIcon />
@@ -55,35 +56,33 @@
 
         <ul class="
             rounded-lg
-            divide-y divide-zinc-200
-            border border-zinc-300
+            divide-y divide-base-300
+            border border-base-300
             overflow-y-auto
             w-full
-            bg-white
             max-h-96
         ">
-            {#each $sortedLists as list}
+            {#each $listWithKind as list}
                 <li>
                     <button class="
                         p-3 truncate
-                        hover:bg-zinc-100
                         w-full
+                        hover:text-accent
                         text-left
                     " on:click={()=>{addToList(list)}}>{list.name}</button>
                 </li>
             {/each}
         </ul>
 
-        <div class="flex flex-row">
+        <div class="join join-vertical md:join-horizontal">
             <Input type="text" klass="
-                w-2/3 rounded-l-lg
+                join-item
             " placeholder="New List" bind:value={newListName} />
 
             <button class="
-                bg-orange-500 hover:bg-orange-400 transition duration-300
-                text-white font-semibold
-                rounded-r-md w-1/3
-                -ml-2
+                btn btn-primary
+                join-item
+                w-1/3
             " on:click={createNewList}>
                 New List
             </button>

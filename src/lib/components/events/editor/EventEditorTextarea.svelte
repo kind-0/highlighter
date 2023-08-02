@@ -14,11 +14,11 @@
     use:useTextareaAutosize
     class="
         focus:outline-none
+        textarea textarea-bordered
+        bg-base-300
         text-lg
         shadow
         w-full
-        border border-zinc-200
         rounded-xl
-        bg-white transition duration-200 ease-in-out
         resize-none
 " placeholder={`Start typing, or write a nostr id ${focus ? "(npub..., note1..., nevent1...)" : "" }`} />

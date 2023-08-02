@@ -1,0 +1,1 @@
+export type ProcessableTypes = 'video' | 'audio' | 'overcast';

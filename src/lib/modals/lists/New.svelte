@@ -27,31 +27,34 @@
         if ($currentUser) {
             getLists($currentUser);
         }
-        goto(`/my/lists/${list.encode()}`);
+        goto(`/lists/${list.encode()}`);
         closeModal();
     }
 </script>
 
 <ModalWrapper class="max-w-sm">
     <button class="
-        text-zinc-500 hover:text-zinc-300 transition duration-300
+        transition duration-300
         absolute top-2 right-2
     " on:click={closeModal}>
         <CloseIcon />
     </button>
     <div class="flex flex-col gap-8">
-        <h2 class="text-zinc-500 font-semibold text-base uppercase">NEW LIST</h2>
+        <h2 class="font-semibold text-base uppercase">NEW LIST</h2>
 
-        <div class="flex flex-col">
+        <div class="flex flex-col join join-vertical">
             <Input type="text" class="
-                rounded-t-lg
+                border-0
+                mb-1
+                bg-base-100
                 w-full
-                border-b-0
+                join-item
                 text-xl
             " placeholder="Name" bind:value={name} autofocus />
             <Textarea class="
-                rounded-b-lg
-                w-full text-xl
+                border-0
+                join-item
+                text-sm
             " placeholder="Description" bind:value={description} />
         </div>
 

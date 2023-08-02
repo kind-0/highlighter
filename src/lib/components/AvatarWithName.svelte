@@ -13,8 +13,8 @@
             <Avatar {pubkey} class={avatarClass} />
         </div>
         <div>
-            <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><span class={$$props.nameClass}><Name {pubkey} /></span></p>
-            <div class="text-xs text-gray-500 truncate">
+            <p class="text-sm font-medium"><span class={$$props.nameClass}><Name {pubkey} /></span></p>
+            <div class="text-xs truncate">
                 {#if subtitle}
                     {subtitle}
                 {:else if $$slots.bio}

@@ -19,7 +19,10 @@
         try {
             if (expandedContext && article && article.content?.length < 2000) {
                 floatedHighlightBorder = true;
+
                 contextWithHighlight = article.content.replace(highlight.content, `<span class='mark-wrapper'><span class="mark-wrapper-inner"></span><mark>${highlight.content}</mark></span>`);
+            } else {
+                contextWithHighlight = `<mark>${highlight.content}</mark>`;
             }
         } catch (e) {
             console.trace(highlight);
@@ -27,10 +30,15 @@
         }
     }
 
-    $: if (highlight.content !== highlightedId && !article?.content) {
+    $: if (highlight.id !== highlightedId && !article?.content) {
         highlightedId = highlight.id;
 
         if (highlight.context) {
+
+            if (!highlight.context.match(highlight.content)) {
+                console.log(`could not find it`)
+            }
+
             contextWithHighlight = highlight.context.replace(highlight.content, `<mark>${highlight.content}</mark>`);
         } else {
             contextWithHighlight = `<mark>${highlight.content}</mark>`;
@@ -38,10 +46,13 @@
     }
 </script>
 
-<div class="pl-4 py-4 relative
-    {floatedHighlightBorder ? '' : 'border-l-4 border-orange-300'}
-">
-    <NoteContent note={contextWithHighlight} tags={(article??highlight).tags} />
+<div class="flex flex-row justify-center items-stretch gap-4">
+    {#if !floatedHighlightBorder}
+        <div class="bg-accent h-100 rounded-lg quote-line shrink-0"></div>
+    {/if}
+    <div class="flex-grow">
+        <NoteContent note={contextWithHighlight} tags={(article??highlight).tags} />
+    </div>
 </div>
 
 <style>
@@ -50,12 +61,16 @@
     }
 
     :global(.mark-wrapper-inner) {
-        z-index: 9999;
+        z-index: 9;
         position: absolute;
         margin-top: -10px;
         left: 0;
-        @apply border-l-4 border-orange-300;
+        @apply border-l-8 border-accent;
         width: 10px;
         height: 50px;
+    }
+
+    .quote-line {
+        width: 8px !important;
     }
 </style>

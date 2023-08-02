@@ -55,7 +55,7 @@
                 ">
                     <Avatar pubkey={highlight.pubkey} klass="w-4 h-4" />
                     by
-                    <a href="/p/{npub}">
+                    <a href="/p/{npub}/highlights">
                         <Name pubkey={highlight.pubkey} />
                     </a>
                 </div>

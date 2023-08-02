@@ -1,11 +1,10 @@
-<button on:click class="
-    bg-primary-500 hover:bg-primary-600
-    text-white font-semibold
-    uppercase text-lg
-    rounded-md px-6 py-4
-    transition-colors duration-200
-    tracking-wider
-    {$$props.class??''}
-">
+<script lang="ts">
+    import ButtonWithBorderGradient2 from "./buttons/ButtonWithBorderGradient2.svelte";
+</script>
+
+<ButtonWithBorderGradient2 on:click rounded="rounded-md"
+    class="tracking-wider {$$props.class??''}"
+    innerClass="bg-base-100"
+>
     <slot />
-</button>
+</ButtonWithBorderGradient2>

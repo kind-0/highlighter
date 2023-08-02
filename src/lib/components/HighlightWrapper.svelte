@@ -16,17 +16,19 @@
             // get the selection
             const sel = window.getSelection();
             if (!sel) return;
-            var selectedRange = sel.getRangeAt(0);
-            // get the text content of the selection
-            selection = sel.toString();
-            if (wrapperEl.contains(selectedRange.commonAncestorContainer)) {
-                const d = {
-                    selection: getText(),
-                    paragraph: getParagraph(),
-                    sentence: getSentence(),
+            try {
+                var selectedRange = sel.getRangeAt(0);
+                // get the text content of the selection
+                selection = sel.toString();
+                if (wrapperEl.contains(selectedRange.commonAncestorContainer)) {
+                    const d = {
+                        selection: getText(),
+                        paragraph: getParagraph(),
+                        sentence: getSentence(),
+                    }
+                    dispatch('selectionchange', d);
                 }
-                dispatch('selectionchange', d);
-            }
+            } catch (e) {}
         }
 
         // when wrapperEl is selected

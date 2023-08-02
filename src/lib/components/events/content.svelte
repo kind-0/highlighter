@@ -5,7 +5,6 @@
     export let note: string;
     export let tags: any[];
     export let addNewLines: boolean = true;
-    export let kind: number | undefined = undefined;
     let notePrev: string;
 
     const links = []
@@ -103,8 +102,6 @@
     leading-normal
     h-full flex flex-col sm:text-justify
     overflow-auto
-    font-semibold
-    card-content
 ">
     <div>
         {#if content}
@@ -113,9 +110,9 @@
                     {#each paragraphItems as { type, value }, i}
                         {#if type === "newline"}
                             {#each value as _}
-                            <br />
-                                {#if addNewLines}
-                                {/if}
+                                <!-- {#if addNewLines} -->
+                                    <br />
+                                <!-- {/if} -->
                             {/each}
                         {:else if type === "link"}
                             <!-- if it looks like this URL ends with an image filetype, load it as an image -->
@@ -128,20 +125,26 @@
                             {/if}
                         {:else if type.startsWith("nostr:")}
                             {#if value.entity.startsWith('npub')}
-                                <a href="/p/{value.id||value.pubkey}" class="text-purple-600">
-                                    <Name pubkey={value.id||value.pubkey} />
+                                <a href="/p/{value.entity}" class="text-accent">
+                                    <Name pubkey={value.id} />
                                 </a>
                             {:else if value.entity.startsWith('nprofile')}
-                                <a href="/p/{value.pubkey}" class="text-purple-600">
+                                <a href="/p/{value.entity}" class="text-accent">
                                     <Name pubkey={value.pubkey} />
                                 </a>
                             {:else}
                                 <div class="embedded-card text-sm">
-                                    <GenericEventCard bech32={value.entity} skipReplies={true} />
+                                    <GenericEventCard
+                                        bech32={value.entity}
+                                        skipReplies={true}
+                                        embeddedMode={true}
+                                    />
                                 </div>
                             {/if}
                         {:else if type === "topic"}
-                            <b>#{value}</b>
+                            <a href="/highlights/t/{value}" class="text-accent font-semibold">
+                                #{value}
+                            </a>
                         {:else}
                             {@html value}
                         {/if}
@@ -155,12 +158,12 @@
 
 
 <style>
-    div {
+    /* div {
         font-family: 'Montserrat', sans-serif;
         font-weight: 300;
-    }
+    } */
 
-    :global(.card-content p:not(:last-child)) {
+    /* :global(.card-content p:not(:last-child)) {
         margin-bottom: 1rem;
-    }
+    } */
 </style>

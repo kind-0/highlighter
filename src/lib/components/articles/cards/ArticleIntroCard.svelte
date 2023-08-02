@@ -11,7 +11,7 @@
     export let href: string | undefined = undefined;
 
     function articleLink() {
-        return `/my/notes/${article.encode()}`;
+        return `/notes/${article.encode()}`;
     }
 
     const draggable = createDraggableEvent(article);

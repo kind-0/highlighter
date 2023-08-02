@@ -6,8 +6,10 @@
 
     import { getContext } from 'svelte';
     import {Name} from '@nostr-dev-kit/ndk-svelte-components';
+    import type { NDKUser } from '@nostr-dev-kit/ndk';
 
     export let pubkey: string | undefined = undefined;
+    export let user: NDKUser | undefined = undefined;
     export let userProfile: App.UserProfile | undefined = undefined;
 
     getContext('ndk');
@@ -34,4 +36,10 @@
     }
 </script>
 
-<Name ndk={$ndk} {pubkey} class={$$props.class}/>
+<Name
+    ndk={$ndk}
+    {pubkey}
+    {user}
+    class={$$props.class}
+    on:click
+/>

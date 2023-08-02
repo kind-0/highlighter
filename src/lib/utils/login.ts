@@ -20,7 +20,9 @@ export async function login(ndk: NDK, bunkerNDK?: NDK, method?: LoginMethod): Pr
 
             const signer = new NDKPrivateKeySigner(key);
             ndk.signer = signer;
-            return signer.user();
+            const user = await signer.user();
+            if (user) user.ndk = ndk;
+            return user;
         case 'nip07':
             return nip07SignIn(ndk);
         case 'nip46': {

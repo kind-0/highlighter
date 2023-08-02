@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Card } from "flowbite-svelte";
     import { onMount } from "svelte";
     import AvatarWithName from "../AvatarWithName.svelte";
 
@@ -45,28 +44,30 @@
     }
 </script>
 
-<Card size="full"  draggable={true} on:dragstart={dragStart}>
-    <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-        {relayInfo?.name ?? relayUrl}
-    </h5>
+<div class="card card-bordered {$$props.class}" draggable={true} on:dragstart={dragStart}>
+    <div class="card-body">
+        <h5 class="card-title text-base-100-content">
+            {relayInfo?.name ?? relayUrl}
+        </h5>
 
-    {#if relayInfo}
-        {#if relayInfo.description}
-            <p class="mb-4 text-gray-700 dark:text-gray-400">
-                {relayInfo.description}
-            </p>
+        {#if relayInfo}
+            {#if relayInfo.description}
+                <p class="">
+                    {relayInfo.description}
+                </p>
+            {/if}
+
+            {#if relayInfo.pubkey}
+                <AvatarWithName pubkey={relayInfo.pubkey} avatarClass="w-12 h-12" />
+            {/if}
+
+            {#if relayInfo.supported_nips}
+                <p class="">
+                    Supported NIPs: {relayInfo.supported_nips.join(', ')}
+                </p>
+            {/if}
+
+            <div class="text-accent font-semibold">{relayUrl}</div>
         {/if}
-
-        {#if relayInfo.pubkey}
-            <AvatarWithName pubkey={relayInfo.pubkey} avatarClass="w-12 h-12" />
-        {/if}
-
-        {#if relayInfo.supported_nips}
-            <p class="mb-4 text-gray-700 dark:text-gray-400">
-                Supported NIPs: {relayInfo.supported_nips.join(', ')}
-            </p>
-        {/if}
-
-        <div class="text-orange-500 font-semibold">{relayUrl}</div>
-    {/if}
-</Card>
+    </div>
+</div>

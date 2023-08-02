@@ -8,6 +8,10 @@
 </div>
 
 <style>
+    :global(article h2) {
+        @apply text-base-100-content;
+    }
+
     :global(article h1) {
         font-weight: 600;
         font-size: 2rem;
@@ -58,7 +62,7 @@
     }
 
     :global(article a) {
-        color:blueviolet;
+        color: #FF685E;
     }
 
     :global(article img) {
@@ -70,5 +74,10 @@
     :global(article mark) {
         color: black;
         padding: 1px;
+        @apply transition duration-300;
+    }
+
+    :global(article.highlighter) {
+        cursor: url(/images/highlight.svg) 0 30, auto;
     }
 </style>

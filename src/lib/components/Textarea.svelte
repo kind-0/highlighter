@@ -67,9 +67,8 @@
     use:dropTextarea
     {...$$props}
     class="
-        rounded-lg p-4
+        textarea textarea-bordered
         text-lg
-        bg-white focus:ring-orange-500 focus:border-orange-500
         resize-none
-        dark:bg-zinc-800 dark:text-white {$$props.class}
+        {$$props.class}
 "></textarea>

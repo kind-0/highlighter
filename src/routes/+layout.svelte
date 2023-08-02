@@ -6,6 +6,9 @@
     import { currentUserFollowPubkeys as currentUserFollowPubkeysStore } from '$lib/store';
     import { getLists } from '$lib/stores/list';
     import { login } from '$lib/utils/login';
+    import '../app.postcss';
+    import { Modals, closeModal } from 'svelte-modals'
+    import { fade } from 'svelte/transition'
 
     let prevCurrentUser: string | undefined = undefined;
 
@@ -26,17 +29,13 @@
         }
     });
 
-
-
     $: if ($currentUser && $currentUser?.npub !== prevCurrentUser) {
         prevCurrentUser = $currentUser?.npub;
 
-        // added
         const cachedFollows = localStorage.getItem('currentUserFollowPubkeysStore');
         if (cachedFollows) {
             $currentUserFollowPubkeysStore = JSON.parse(cachedFollows);
         }
-        // end of added
 
         fetchFollowers();
     }
@@ -44,8 +43,23 @@
 
 <slot />
 
+<Modals>
+    <div
+        slot="backdrop"
+        class="backdrop z-10 fixed"
+        on:click={closeModal}
+        transition:fade={{ duration: 100 }}>
+    />
+</Modals>
+
 <style>
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
+    .backdrop {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        backdrop-filter: blur(0.15rem);
+        left: 0;
+        background: rgba(0,0,0,0.50)
+    }
 </style>

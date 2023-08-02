@@ -1,24 +1,22 @@
 <script lang="ts">
     import { NDKEvent, type NDKFilter } from '@nostr-dev-kit/ndk';
-    import type { NDKSubscription } from '@nostr-dev-kit/ndk';
-    import ScopeDropdown from '$lib/components/ScopeDropdown.svelte';
-    import HighlightList from '$lib/components/HighlightList.svelte';
     import ndk, { type NDKEventStore } from '$lib/stores/ndk';
-    import HighlightListItemForm from '$lib/components/HighlightListItemForm.svelte';
+    import NewHighlight from '$lib/components/highlights/NewHighlight.svelte';
     import { currentUser, currentUserFollowPubkeys, currentScope } from '$lib/store';
     import { fade } from 'svelte/transition';
     import { fetchFollowers } from '$lib/currentUser';
     import { derived, type Readable } from 'svelte/store';
+    import MarginNotePopup from './MarginNotePopup.svelte';
 
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
     import type NDKLongForm from '$lib/ndk-kinds/long-form';
-    import { Card } from 'flowbite-svelte';
     import NewUserInstruction from '../NewUserInstruction.svelte';
     import { onDestroy } from 'svelte';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
     import MarkedContent from './MarkedContent.svelte';
     import AvatarWithName from '../AvatarWithName.svelte';
+    import RightDrawerLayout from '$lib/layouts/RightDrawerLayout.svelte';
 
     export let article: NDKEvent | NDKLongForm | string;
     export let content: string | undefined = undefined;
@@ -88,7 +86,7 @@
             const seenContent = new Set();
 
             $highlights.forEach(item => {
-                let content = item.content+item.pubkey;
+                let content = item.content.trim()+item.pubkey;
                 if (!seenContent.has(content)) {
                     seenContent.add(content);
                     uniqueItems.push(item);
@@ -104,6 +102,7 @@
     });
 
     let newHighlightItem: NDKHighlight | undefined;
+    let openedHighlight: NDKHighlight | undefined;
 
     /**
      * Choose the context for the highlight
@@ -158,6 +157,7 @@
 
     function onNewHighlightClose() {
         newHighlightItem = undefined;
+        openedHighlight = undefined;
     }
 
     function articleTitle() {
@@ -175,120 +175,124 @@
     $: if (article?.id && articleTopicsId !== article.id) {
         articleTopicsId = article.id;
         const articleTopics = (article.tags??[]).filter(t => t[0] === 't').map(t => t[1]).slice(0,10);
-        topics = articleTopics;
+        topics = articleTopics || [];
     }
 
+    function highlightClicked(e: Event) {
+        const highlight = e.detail;
+        openedHighlight = highlight;
+        topics = [];
+    }
 </script>
 
 <svelte:head>
     <title>{articleTitle() || "Highlighter.com"}</title>
 </svelte:head>
 
-<div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
-    <Card size="xl" class="md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
-        <!-- Title -->
-        {#if articleTitle()}
-            <h1 class="text-5xl text-zinc-800 font-black leading-normal text-left">{articleTitle()}</h1>
-        {/if}
+<RightDrawerLayout>
+    <div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
+        <div class="card md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
+            <div class="card-body">
+                <!-- Title -->
+                {#if articleTitle()}
+                    <h1 class="card-title flex flex-row justify-center text-3xl font-bold text-center leading-normal">{articleTitle()}</h1> {/if}
 
-        <div class="flex flex-row justify-between mb-2">
-            <!-- Author / URL -->
-            {#if article?.author && article?.author?.hexpubkey()}
-                <AvatarWithName
-                    pubkey={article.author.hexpubkey()}
-                    avatarClass="w-12 h-12 rounded-full"
-                    nameClass="text-xl font-black"
-                />
-            {:else if url}
-                <div class="text-slate-600 text-xs whitespace-nowrap">
-                    {url}
+                <div class="flex flex-row justify-between mb-2">
+                    <!-- Author / URL -->
+                    {#if article?.author && article?.author?.hexpubkey()}
+                        <AvatarWithName
+                            pubkey={article.author.hexpubkey()}
+                            avatarClass="w-12 h-12 rounded-full"
+                            nameClass="text-xl font-semibold"
+                        />
+                    {:else if url}
+                        <div class="text-slate-600 text-xs whitespace-nowrap">
+                            {url}
+                        </div>
+                    {:else}
+                        <div></div>
+                    {/if}
                 </div>
-            {:else}
-                <div></div>
-            {/if}
+
+
+                <!-- Highlight count on mobile -->
+                {#if $highlights && $highlights.length > 0}
+                    <a href="#highlights" class="
+                        md:hidden
+                        font-sans text-base
+                        text-purple-500
+                    ">{$highlights?.length} highlights</a>
+                {/if}
+
+                {#if article?.image}
+                    <div class="flex flex-row justify-center">
+                        <img src={article.image} class="max-h-64" />
+                    </div>
+                {/if}
+
+                <!-- Content -->
+                <HighlightWrapper on:selectionchange={onSelectionChange}>
+                    <article class="my-2">
+                        <Article class="highlighter">
+                            {#if $$slots.default}
+                                <slot />
+                            {:else}
+                                <MarkedContent
+                                    {renderAsHtml}
+                                    content={content??""}
+                                    {unmarkedContent}
+                                    highlights={$highlights}
+                                    tags={article.tags}
+                                    addNewLines={true}
+                                    on:highlight-clicked={highlightClicked}
+                                />
+                            {/if}
+                        </Article>
+                    </article>
+                </HighlightWrapper>
+            </div>
         </div>
 
+        <!-- Sidebar -->
+        <div class="relative flex-grow" id="sidebarContainer">
+            <div class="px-4 md:h-screen h-screen">
+                <!-- <NewUserInstruction /> -->
 
-        <!-- Highlight count on mobile -->
-        {#if $highlights && $highlights.length > 0}
-            <a href="#highlights" class="
-                md:hidden
-                font-sans text-base
-                text-purple-500
-            ">{$highlights?.length} highlights</a>
-        {/if}
-
-        {#if article?.image}
-            <div class="flex flex-row justify-center">
-                <img src={article.image} class="w-full" />
-            </div>
-        {/if}
-
-        <!-- Content -->
-        <HighlightWrapper on:selectionchange={onSelectionChange}>
-            <article class="my-2">
-                <Article>
-                    {#if $$slots.default}
-                        <slot />
-                    {:else if renderAsHtml}
-                        {@html content}
-                    {:else}
-                        <MarkedContent
-                            content={content??""}
-                            {unmarkedContent}
-                            highlights={$highlights}
-                            tags={article.tags}
-                            addNewLines={article?.kind !== 30023}
+                {#if newHighlightItem}
+                    <div class="z-50 fixed top-20" transition:fade>
+                        <NewHighlight
+                            highlight={newHighlightItem}
+                            on:close={onNewHighlightClose}
+                            bind:topics
                         />
-                    {/if}
-                </Article>
-            </article>
-        </HighlightWrapper>
-    </Card>
-
-    <!-- Sidebar -->
-    <div class="relative">
-        <div class="px-4 md:h-screen md:fixed overflow-auto md:w-5/12">
-            <div class="flex flex-row justify-end mb-4">
-                <ScopeDropdown bind:scope />
-            </div>
-
-            <NewUserInstruction />
-
-            {#if newHighlightItem}
-                <div class="mb-8" transition:fade>
-                    <HighlightListItemForm
-                        article={article.id ? article : undefined}
-                        highlight={newHighlightItem}
-                        on:close={onNewHighlightClose}
-                        bind:topics
-                    />
-                </div>
-            {/if}
-
-            <div class="
-                {newHighlightItem ? 'opacity-50' : ''}
-                transition duration-100
-                md:mb-96
-            ">
-                <a name="highlights">Highlights</a>
-                {#if article && highlightFilter}
-                    {#key highlightFilter}
-                        <HighlightList
-                            expandedContext={false}
-                            skipTitle={true}
-                            items={$deduppedHighlights}
-                        />
-                    {/key}
+                    </div>
                 {/if}
+
+                {#if openedHighlight}
+                    <div class="z-50 fixed top-20" transition:fade>
+                        <NewHighlight
+                            highlight={openedHighlight}
+                            on:close={onNewHighlightClose}
+                            bind:topics
+                        />
+                    </div>
+                {/if}
+
+                <div class="
+                    {(newHighlightItem || openedHighlight) ? 'opacity-50' : ''}
+                    transition duration-100
+                    md:mb-96
+                ">
+                    <a href='#' class="md:hidden" name="highlights">Highlights</a>
+                    {#if article && highlightFilter}
+                        {#key highlightFilter}
+                            {#each $deduppedHighlights as highlight}
+                                <MarginNotePopup markId={highlight.id} user={highlight.author} />
+                            {/each}
+                        {/key}
+                    {/if}
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<style>
-    h1, article {
-        font-family: 'Montserrat', sans-serif;
-        font-family: 'Outfit', sans-serif;
-    }
-</style>
+</RightDrawerLayout>

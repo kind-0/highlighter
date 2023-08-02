@@ -17,7 +17,9 @@
     import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
     import NDKLongForm from '$lib/ndk-kinds/long-form';
     import { createDraggableEvent } from '$lib/utils/draggable';
-    import { nip04 } from 'nostr-tools';
+    import MarginNoteCard from '../margin-note/MarginNoteCard.svelte';
+    import { isMarginNote } from './types';
+    import { NDKListKinds } from '$lib/ndk-kinds';
 
     export let bech32: string | undefined = undefined;
     export let id: string | undefined = undefined;
@@ -26,6 +28,7 @@
     export let skipFooter: boolean = false;
     export let expandReplies: boolean = true;
     export let event: NDKEvent | undefined = undefined;
+    export let embeddedMode: boolean = false;
     export let draggable = true;
 
     const dispatcher = createEventDispatcher();
@@ -74,30 +77,34 @@
 
 {#key id}
     {#await loadEvent()}
-        <Card size="full">
-            <div role="status" class="max-w-lg animate-pulse my-8"><div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-4"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-9/12 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-10/12 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-11/12 mb-2.5"></div> <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-9/12"></div> <span class="sr-only">Loading...</span></div>
-        </Card>
+        <div class="flex flex-row gap-4 items-center">
+            <span class="loading loading-infinity loading-lg"></span>
+            Loading event...
+        </div>
     {:then e}
         {#if e}
             <div
                 class="w-full"
                 use:draggableEvent
             >
-                {#if e.kind === 9802}
-                    <div class="border rounded-lg border-zinc-300">
-                        {#await NDKHighlight.from(e).article then article}
-                            <HighlightCard
-                                highlight={NDKHighlight.from(e)}
-                                {skipReplies}
-                                {article}
-                                skipTitle={skipTitle??getContext("skipTitle")??true}
-                            />
-                        {/await}
-                    </div>
+                {#if isMarginNote(e)}
+                    <MarginNoteCard event={e} />
+                {:else if e.kind === 9802}
+                    {#await NDKHighlight.from(e).getArticle() then article}
+                        <HighlightCard
+                            highlight={NDKHighlight.from(e)}
+                            {skipReplies}
+                            {article}
+                            skipTitle={skipTitle??getContext("skipTitle")??true}
+                            {skipFooter}
+                            {embeddedMode}
+                        />
+                    {/await}
                 {:else if e.kind === 1}
                     <NoteCard
                         event={e}
                         {skipReplies}
+                        skipHeader={skipTitle}
                         {skipFooter}
                         {expandReplies}
                     />
@@ -105,41 +112,52 @@
                     <NoteCard
                         event={e}
                         {skipReplies}
+                        skipHeader={skipTitle}
                         {skipFooter}
                         {expandReplies}
                     />
-                {:else if e.kind >= 30000 && e.kind < 30022}
+                {:else if NDKListKinds.includes(e.kind)}
                     <ListCard list={NDKList.from(e)} />
                 {:else if e.kind === 9735}
-                    <ZapEventCard
-                        event={e}
-                    />
+                    <ZapEventCard event={e} />
                 {:else if e.kind === 30023 || e.kind === 31023}
                     <ArticleIntroCard
                         article={NDKLongForm.from(e)}
                         href={`/a/${e.encode()}`}
                     />
-                {:else if e.kind >= 30000 && e.kind < 40000}
-                    <Card size="xl">
-                        <div class="text-left">
-                            <Name ndk={$ndk} pubkey={e.pubkey} />'s
-                            {e.kind} "{e.tagValue('d')}"
-                        </div>
-                    </Card>
+                {:else if e.kind >= 30000 && e.kind < 30022}
+                    <ListCard list={NDKList.from(e)} />
+                {:else if e.kind === 31337}
+                    <NoteCard
+                        event={e}
+                        {skipReplies}
+                        {skipFooter}
+                        {expandReplies}
+                    />
                 {:else}
-                    <Card size="xl">
-                        <div class="text-center">
-                            Event kind {e.kind} not supported yet
-                        </div>
-                    </Card>
+                    <NoteCard
+                        event={e}
+                        {skipReplies}
+                        {skipFooter}
+                        {expandReplies}
+                    />
                 {/if}
             </div>
         {:else}
-            @{id}
+            <NoteCard
+                event={e}
+                {skipReplies}
+                {skipFooter}
+                {expandReplies}
+            />
         {/if}
     {:catch e}
-        <Card size="full">
-            {e}
-        </Card>
+        <div class="card">
+            <div class="card-body">
+                <div class="text-left">
+                    Error loading event: {e}
+                </div>
+            </div>
+        </div>
     {/await}
 {/key}

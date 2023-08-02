@@ -8,7 +8,7 @@
         on:click
         {...$$props}
         class="
-            border rounded-md p-2 px-4
+            btn btn-{$$props.type}
             flex flex-row items-center gap-2
             transition-all duration-200
             {type}
@@ -21,7 +21,7 @@
         on:click
         {...$$props}
         class="
-            border rounded-md p-2 px-4
+        btn btn-{$$props.type}
             transition-all duration-200
             {type}
             {$$props['class'] ?? ''}
@@ -29,16 +29,3 @@
         <slot />
 </button>
 {/if}
-
-<style lang="postcss">
-    .primary {
-        @apply bg-orange-900/10 hover:bg-orange-900/20
-            text-zinc-600 hover:text-black rounded-lg;
-    }
-
-    .secondary {
-        @apply bg-zinc-700 hover:bg-zinc-600
-            text-white
-            text-sm;
-    }
-</style>
