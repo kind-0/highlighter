@@ -4,17 +4,19 @@
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
     import { searchQuery, processingInstructions } from '$lib/stores/search';
-    import Stars from '$lib/icons/Stars.svelte';
     import NostrIcon from '$lib/icons/NostrIcon.svelte';
+    import MicIcon from '$lib/icons/MicIcon.svelte';
+    import LongForm from '$lib/icons/LongForm.svelte';
+    import Hashtag from '$lib/icons/Hashtag.svelte';
+    import WebIcon from '$lib/icons/WebIcon.svelte';
 
     let loading = false;
-    let hasFocus = false;
+    export let hasFocus = false;
 
     function process() {
         loading = true;
         getSearchProcessingInstructions($searchQuery).then((p) => {
             $processingInstructions = p;
-            debugger;
             loading = false;
 
             if ($processingInstructions?.dvm) {
@@ -61,7 +63,7 @@
 </script>
 
 <!-- TODO responsive search input, maybe expand wide when hasFocus -->
-<div class="dropdown w-full" class:dropdown-open={hasFocus}>
+<div class="dropdown dropdown-open w-full" class:dropdown-open={hasFocus}>
     <div class="relative rounded-md shadow-sm flex-grow h-full">
         <div class="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-3">
             <MagnifyingGlass class="w-6 h-6 z-10 brightness-125" />
@@ -94,19 +96,34 @@
 
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <ul tabindex="0" class="absolute dropdown-content z-50 menu p-4 my-1 bg-base-300 rounded-box shadow-2xl shadow-black w-full overflow-auto">
-        <div class="px-4 py-4 bg-base-100 rounded-lg flex flex-row items-center gap-4 mb-2 text-accent2">
-            <span class="star-icon bg-base-100 rounded-lg">
-                <Stars class="w-14 h-14 p-2" />
-            </span>
-            Highlight from any kind of sources, web articles, podcasts, videos, nostr notes. Anything!
+        <div class="flex flex-col md:flex-row w-fit items-center gap-4 mx-auto mb-10">
+            <div class="flex md:hidden flex-row gap-2">
+                <img src="/images/search/search-right.svg" />
+                <img src="/images/search/search-left.svg" />
+            </div>
+
+            <div class="w-1/5 md:flex flex-col items-end hidden">
+                <img src="/images/search/search-left.svg" />
+            </div>
+            <div class="w-full md:w-3/5 flex flex-col items-center gap-4 text-center">
+                <div class="text-4xl font-bold text-base-100-content md:whitespace-nowrap">
+                    Highlight anything
+                </div>
+
+                <div class="text-accent2">
+                    Web articles, Podcasts, Videos, Nostr notes...
+                </div>
+            </div>
+            <div class="w-1/5 md:flex flex-col items-center hidden">
+                <img src="/images/search/search-right.svg" />
+            </div>
         </div>
-        <li class="menu-title">Examples</li>
         <!-- svelte-ignore a11y-missing-attribute -->
         <li>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <a
-                class="flex flex-row items-center justify-between whitespace-nowrap w-full"
+                class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
                 data-href="https://overcast.fm/+npr8xdWfc"
                 on:click={useSuggestion}
             >
@@ -121,16 +138,16 @@
                     </div>
                 </div>
 
-                <div class="flex flex-row gap-2 items-center">
-                    <span class="text-base-300-content flex flex-col items-end"> https://overcast.fm/+npr8xdWfc </span>
-                    <img src="https://overcast.fm/apple-touch-icon.png" class="w-6 h-6 mr-1 inline-block rounded-lg" />
+                <div class="md:flex flex-row gap-2 items-center hidden">
+                    <span class="text-base-300-content text-xs md:text-base flex flex-col items-end"> https://overcast.fm/+npr8xdWfc </span>
+                    <MicIcon class="w-12 h-12" />
                 </div>
             </a>
         </li>
         <div class="divider my-0" />
         <li>
             <a
-                class="flex flex-row items-center justify-between whitespace-nowrap w-full"
+                class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
                 data-href="naddr1qqxnzd3exqcnzvehxqungdfhqgsph3c2q9yt8uckmgelu0yf7glruudvfluesqn7cuftjpwdynm2gygrqsqqqa28mesjl6"
                 on:click={useSuggestion}
             >
@@ -148,16 +165,19 @@
                     </div>
                 </div>
 
-                <div class="flex flex-row gap-2 items-center">
+                <div class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> naddr1qqxnzd3exqcnzvehxqung... </span>
-                    <Article class="w-6 h-6 mr-1 inline-block rounded-lg text-accent2" />
+                    <LongForm class="w-12 h-12" />
                 </div>
             </a>
         </li>
 
         <div class="divider my-0" />
         <li>
-            <a class="flex flex-row items-center justify-between whitespace-nowrap w-full" data-href="#bitcoin" on:click={useSuggestion}>
+            <a
+                class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
+                data-href="#bitcoin" on:click={useSuggestion}
+            >
                 <div class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <Hash class="w-12 h-fit mr-1 inline-block rounded-sm text-base-100-content" />
@@ -169,9 +189,9 @@
                     </div>
                 </div>
 
-                <div class="flex flex-row gap-2 items-center">
+                <div class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> #bitcoin </span>
-                    <NostrIcon class="w-6 h-6 mr-1 inline-block rounded-lg text-accent2" />
+                    <Hashtag class="w-12 h-12" />
                 </div>
             </a>
         </li>
@@ -197,11 +217,11 @@
                     </div>
                 </div>
 
-                <div class="flex flex-row gap-2 items-center">
+                <div class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-xs text-base-300-content flex flex-col items-end">
                         <div class="text-base-300-content text-sm">https://medium.com/btc24/nost...</div>
                     </span>
-                    <MediumLogo class="w-6 h-6 mr-1 inline-block rounded-lg text-accent2" />
+                    <WebIcon class="w-12 h-12" />
                 </div>
             </a>
         </li>
@@ -227,9 +247,9 @@
                     </div>
                 </div>
 
-                <div class="flex flex-row gap-2 items-center">
+                <div class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> note194n247lecqgcskk5rmmfgr... </span>
-                    <NostrIcon class="w-6 h-6 mr-1 inline-block rounded-lg text-accent2" />
+                    <NostrIcon class="w-12 h-12 mr-1 inline-block rounded-lg bg-base-300 p-2 text-zinc-400" />
                 </div>
             </a>
         </li>
