@@ -6,7 +6,13 @@ const config = {
 	kit: {
 		adapter: adapter({ out: 'build' }),
 	},
-	preprocess: vitePreprocess()
+	preprocess: vitePreprocess(),
+	onwarn: (warning, handler) => {
+		if (warning.code.startsWith('a11y-')) {
+			return;
+		}
+		handler(warning);
+	},
 };
 
 export default config;
