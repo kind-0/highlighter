@@ -9,10 +9,10 @@
     <radialGradient id="paint0_radial_1_2{rand}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20.385 -14.9511) scale(50.3568)">
     <stop stop-color="#00FFFF"/>
     <stop offset="1" stop-color="#FF00FF"/>
-        </radialGradient>
+    </radialGradient>
     <radialGradient id="paint1_radial_1_2{rand}" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(8.31069 -3.0911) scale(19.4359 19.4359)">
     <stop stop-color="#FF00FF"/>
     <stop offset="1" stop-color="#FF931E"/>
-        </radialGradient>
+    </radialGradient>
     </defs>
-</svg>
+    </svg>
