@@ -23,12 +23,21 @@
      * Publishes the job request
      */
     async function requestService() {
+        if (!url) return;
+
+        // correct url
+        url = url.replace(/#t=.*$/i, '');
+
         jobRequest = new NDKTranscriptionDVM($ndk);
 
         jobRequest.bid = processBid * 1000;
-        jobRequest.addInput(url!, "url");
+        jobRequest.addInput(url, "url");
         jobRequest.job = 'speech-to-text';
-        jobRequest.addParam('range', startTime.toString(), endTime.toString());
+
+        if (startTime.toString().length > 0 && endTime.toString().length > 0) {
+            jobRequest.addParam('range', startTime.toString(), endTime.toString());
+        }
+
         jobRequest.output = 'text/plain';
 
         if (title) jobRequest.tags.push(['title', title]);
@@ -66,25 +75,26 @@
 </script>
 
         <div class="flex flex-row gap-6">
-            <span class="star-icon">
-                <Stars class="w-20 h-20 border-2 border-accent2 p-4 rounded-xl" />
-            </span>
+            {#if image}
+                <img src={image} class="w-20 h-20 rounded-xl object-cover" />
+            {:else}
+                <span class="star-icon">
+                    <Stars class="w-20 h-20 border-2 border-accent2 p-4 rounded-xl" />
+                </span>
+            {/if}
 
-            <div class="flex flex-col gap-2 brightness-200">
-                <h5 class="card-title">
+            <div class="flex flex-col gap-2 truncate">
+                <h5 class="card-title text-base-100-content">
                     Transcribe {friendly(type)}?
                 </h5>
-                <p class="mb-3">
-                    would you like to transcribe this {friendly(type)}?
-                </p>
+
+                {#if title}
+                    <h1 class="lg:text-lg whitespace-nowrap truncate mb-2">
+                        <span class="truncate text-accent2">{title}</span>
+                    </h1>
+                {/if}
             </div>
         </div>
-
-        {#if title}
-            <h1 class="card-title lg:text-2xl max-w-xl whitespace-normal mb-2">
-                <span class="truncate">{title}</span>
-            </h1>
-        {/if}
 
         {#if type === 'video'}
             <video class="w-full h-64">

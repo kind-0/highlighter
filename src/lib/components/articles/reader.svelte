@@ -191,13 +191,13 @@
 
 <RightDrawerLayout>
     <div class="flex flex-col md:flex-row w-full mx-auto md:px-6">
-        <div class="card md:w-7/12 leading-loose flex flex-col gap-2 text-lg">
+        <div class="card md:w-7/12 leading-loose flex flex-col gap-2 text-lg card-compact md:card-normal">
             <div class="card-body">
                 <!-- Title -->
                 {#if articleTitle()}
-                    <h1 class="card-title flex flex-row justify-center text-3xl font-bold text-center leading-normal">{articleTitle()}</h1> {/if}
+                    <h1 class="card-title flex flex-row justify-center text-2xl md:text-3xl font-black md:text-center leading-normal">{articleTitle()}</h1> {/if}
 
-                <div class="flex flex-row justify-between mb-2">
+                <div class="flex flex-row justify-between mb-2 overflow-clip items-center">
                     <!-- Author / URL -->
                     {#if article?.author && article?.author?.hexpubkey()}
                         <AvatarWithName
@@ -206,7 +206,7 @@
                             nameClass="text-xl font-semibold"
                         />
                     {:else if url}
-                        <div class="text-slate-600 text-xs whitespace-nowrap">
+                        <div class="text-slate-600 text-xs whitespace-normal">
                             {url}
                         </div>
                     {:else}
@@ -214,15 +214,6 @@
                     {/if}
                 </div>
 
-
-                <!-- Highlight count on mobile -->
-                {#if $highlights && $highlights.length > 0}
-                    <a href="#highlights" class="
-                        md:hidden
-                        font-sans text-base
-                        text-purple-500
-                    ">{$highlights?.length} highlights</a>
-                {/if}
 
                 {#if article?.image}
                     <div class="flex flex-row justify-center">
@@ -283,13 +274,14 @@
                     transition duration-100
                     md:mb-96
                 ">
-                    <a href='#' class="md:hidden" name="highlights">Highlights</a>
                     {#if article && highlightFilter}
-                        {#key highlightFilter}
-                            {#each $deduppedHighlights as highlight}
-                                <MarginNotePopup markId={highlight.id} user={highlight.author} />
-                            {/each}
-                        {/key}
+                        <div class="flex flex-col gap-4">
+                            {#key highlightFilter}
+                                {#each $deduppedHighlights as highlight}
+                                    <MarginNotePopup markId={highlight.id} user={highlight.author} />
+                                {/each}
+                            {/key}
+                        </div>
                     {/if}
                 </div>
             </div>

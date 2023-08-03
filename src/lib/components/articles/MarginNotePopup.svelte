@@ -57,7 +57,7 @@ Each <MarginNotePopup> component represents a single margin note.
 
 {#if verticalHeight}
     <div
-        class="absolute"
+        class="md:absolute"
         class:hidden={!!$rightDrawerContent}
         style="top: {verticalHeight}px; z-index: 999999; left: 1"
     >

@@ -50,15 +50,19 @@
     function useSuggestion(e: MouseEvent) {
         e.preventDefault();
         e.stopPropagation();
-        hasFocus = false;
 
         const target = e.currentTarget as HTMLAnchorElement;
-        const href = target.getAttribute('data-href');
+        const href = target.getAttribute('href');
 
         if (href) {
             $searchQuery = href;
 
             hasFocus = false;
+
+            // move focus to search input
+            const input = document.querySelector('input[type=search]') as HTMLInputElement;
+            input.focus();
+
 
             // send an enter to trigger the search
             process();
@@ -96,7 +100,6 @@
             bind:value={$searchQuery}
             on:keyup={keyUp}
             on:focus={() => (hasFocus = true)}
-            on:blur={() => (hasFocus = false)}
         />
         {#if loading}
             <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center pl-3">
@@ -105,8 +108,7 @@
         {/if}
     </div>
 
-    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-4 my-1 bg-base-300 rounded-box shadow-2xl shadow-black w-full overflow-auto">
+    <ul class="absolute dropdown-content z-50 menu p-4 my-1 bg-base-300 rounded-box shadow-2xl shadow-black w-full overflow-auto">
         <div class="flex flex-col md:flex-row w-fit items-center gap-4 mx-auto mb-10">
             <div class="flex md:hidden flex-row gap-2">
                 <img src="/images/search/search-right.svg" />
@@ -129,57 +131,54 @@
                 <img src="/images/search/search-right.svg" />
             </div>
         </div>
-        <!-- svelte-ignore a11y-missing-attribute -->
         <li>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <!-- svelte-ignore a11y-no-static-element-interactions -->
             <a
                 class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
-                data-href="https://overcast.fm/+npr8xdWfc"
+                href="https://overcast.fm/+npr8xdWfc"
                 on:click={useSuggestion}
             >
-                <div class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
+                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-fit mr-1 inline-block rounded-sm" />
 
-                    <div class="flex flex-col gap-0.5 items-start truncate">
+                    <span class="flex flex-col gap-0.5 items-start truncate">
                         <span class="text-base-100-content truncate text-lg"> Podcast (Overcast) </span>
 
-                        <div class="text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution</div>
-                    </div>
-                </div>
+                        <span class="text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution</span>
+                    </span>
+                </span>
 
-                <div class="md:flex flex-row gap-2 items-center hidden">
+                <span class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content text-xs md:text-base flex flex-col items-end"> https://overcast.fm/+npr8xdWfc </span>
                     <MicIcon class="w-12 h-12" />
-                </div>
+                </span>
             </a>
         </li>
         <div class="divider my-0" />
         <li>
             <a
                 class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
-                data-href="naddr1qqxnzd3exqcnzvehxqungdfhqgsph3c2q9yt8uckmgelu0yf7glruudvfluesqn7cuftjpwdynm2gygrqsqqqa28mesjl6"
+                href="naddr1qqxnzd3exqcnzvehxqungdfhqgsph3c2q9yt8uckmgelu0yf7glruudvfluesqn7cuftjpwdynm2gygrqsqqqa28mesjl6"
                 on:click={useSuggestion}
             >
-                <div class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
+                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         src="https://nostr.build/i/p/nostr.build_4fb6accf6b24cdb58be127d9a509c3acd3e859bbe24b5c194b82bf30bc1e511a.jpg"
                         class="w-12 h-fit mr-1 inline-block rounded-sm"
                     />
 
-                    <div class="flex flex-col gap-0.5 items-start truncate">
+                    <span class="flex flex-col gap-0.5 items-start truncate">
                         <span class="text-base-100-content truncate text-lg"> Nostr Long-form Article </span>
 
-                        <div class="text-xs truncate opacity-50 w-full">Imagined vs actual startup journey</div>
-                    </div>
-                </div>
+                        <span class="text-xs truncate opacity-50 w-full">Imagined vs actual startup journey</span>
+                    </span>
+                </span>
 
-                <div class="md:flex flex-row gap-2 items-center hidden">
+                <span class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> naddr1qqxnzd3exqcnzvehxqung... </span>
                     <LongForm class="w-12 h-12" />
-                </div>
+                </span>
             </a>
         </li>
 
@@ -187,23 +186,23 @@
         <li>
             <a
                 class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
-                data-href="#bitcoin" on:click={useSuggestion}
+                href="#bitcoin" on:click={useSuggestion}
             >
-                <div class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
+                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <Hash class="w-12 h-fit mr-1 inline-block rounded-sm text-base-100-content" />
 
-                    <div class="flex flex-col gap-0.5 items-start truncate">
+                    <span class="flex flex-col gap-0.5 items-start truncate">
                         <span class="text-base-100-content truncate text-lg"> Nostr Hashtag </span>
 
-                        <div class="text-xs truncate opacity-50 w-full">Bitcoin highlights</div>
-                    </div>
-                </div>
+                        <span class="text-xs truncate opacity-50 w-full">Bitcoin highlights</span>
+                    </span>
+                </span>
 
-                <div class="md:flex flex-row gap-2 items-center hidden">
+                <span class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> #bitcoin </span>
                     <Hashtag class="w-12 h-12" />
-                </div>
+                </span>
             </a>
         </li>
 
@@ -211,57 +210,57 @@
         <li>
             <a
                 class="flex flex-row items-center justify-between whitespace-nowrap w-full"
-                data-href="https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9"
+                href="https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9"
                 on:click={useSuggestion}
             >
-                <div class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
+                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         src="https://miro.medium.com/v2/resize:fill:176:176/1*ps6SOtxwztUT8gdVXllskg@2x.jpeg"
                         class="w-12 h-fit mr-1 inline-block rounded-sm"
                     />
 
-                    <div class="flex flex-col gap-0.5 items-start truncate">
+                    <span class="flex flex-col gap-0.5 items-start truncate">
                         <span class="text-base-100-content truncate text-lg"> Website </span>
 
-                        <div class="text-xs truncate opacity-50 w-full">Imagined vs actual startup journey</div>
-                    </div>
-                </div>
+                        <span class="text-xs truncate opacity-50 w-full">Imagined vs actual startup journey</span>
+                    </span>
+                </span>
 
-                <div class="md:flex flex-row gap-2 items-center hidden">
+                <span class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-xs text-base-300-content flex flex-col items-end">
-                        <div class="text-base-300-content text-sm">https://medium.com/btc24/nost...</div>
+                        <span class="text-base-300-content text-sm">https://medium.com/btc24/nost...</span>
                     </span>
                     <WebIcon class="w-12 h-12" />
-                </div>
+                </span>
             </a>
         </li>
 
         <div class="divider my-0" />
-        <li>
+        <li on:click={() => {console.log('here')}}>
             <a
                 class="flex flex-row items-center justify-between whitespace-nowrap w-full"
-                data-href="note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa"
+                href="note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa"
                 on:click={useSuggestion}
             >
-                <div class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
+                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         src="https://nostr.build/i/p/nostr.build_6b9909bccf0f4fdaf7aacd9bc01e4ce70dab86f7d90395f2ce925e6ea06ed7cd.jpeg"
                         class="w-12 h-fit mr-1 inline-block rounded-sm"
                     />
 
-                    <div class="flex flex-col gap-0.5 items-start truncate">
+                    <span class="flex flex-col gap-0.5 items-start truncate">
                         <span class="text-base-100-content truncate text-lg"> Nostr Short-note </span>
 
-                        <div class="text-xs truncate opacity-50 w-full">nostr has its issues. but for those who figure it out</div>
-                    </div>
-                </div>
+                        <span class="text-xs truncate opacity-50 w-full block">nostr has its issues. but for those who figure it out</span>
+                    </span>
+                </span>
 
-                <div class="md:flex flex-row gap-2 items-center hidden">
+                <span class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> note194n247lecqgcskk5rmmfgr... </span>
                     <NostrIcon class="w-12 h-12 mr-1 inline-block rounded-lg bg-base-300 p-2 text-zinc-400" />
-                </div>
+                </span>
             </a>
         </li>
     </ul>

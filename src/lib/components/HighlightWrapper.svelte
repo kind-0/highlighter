@@ -11,7 +11,11 @@
 
     let listener: any;
 
+    let hasTouchInterface: boolean;
+
     onMount(() => {
+        hasTouchInterface = !!('ontouchstart' in window || navigator.maxTouchPoints);
+
         listener = () => {
             // get the selection
             const sel = window.getSelection();
@@ -32,12 +36,20 @@
         }
 
         // when wrapperEl is selected
-        document.addEventListener("selectionchange", listener);
+        if (hasTouchInterface) {
+            wrapperEl.addEventListener("touchend", listener);
+        } else {
+            wrapperEl.addEventListener("selectionchange", listener);
+        }
     })
 
     onDestroy(() => {
         if (listener) {
-            document.removeEventListener("selectionchange", listener);
+            if (hasTouchInterface) {
+                wrapperEl.addEventListener("touchend", listener);
+            } else {
+                wrapperEl.addEventListener("selectionchange", listener);
+            }
         }
     })
 </script>

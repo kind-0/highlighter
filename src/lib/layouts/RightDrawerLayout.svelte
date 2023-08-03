@@ -14,7 +14,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <label for="my-drawer" class="drawer-overlay" on:click|preventDefault={() => { $rightDrawerContent = undefined; }}></label>
-        <div class="w-[50vw] min-h-full bg-base-200 text-base-content p-10 pt-28 shadow-xl">
+        <div class="w-[90vw] md:w-[50vw] min-h-full bg-base-200 text-base-content p-10 pt-28 shadow-xl">
             {#if $rightDrawerContent}
                 <ThreadView event={$rightDrawerContent} />
             {/if}

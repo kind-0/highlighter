@@ -39,7 +39,7 @@
 
 <div class="flex flex-row gap-4 my-4 items-center">
     From
-    <input type="text" class="input input-bordered" placeholder="Start time" bind:value={startTime} />
+    <input type="text" class="input input-bordered w-24" placeholder="Start time" bind:value={startTime} />
     to
-    <input type="text" class="input input-bordered" placeholder="Start time" bind:value={endTime} />
+    <input type="text" class="input input-bordered w-24" placeholder="Start time" bind:value={endTime} />
 </div>

@@ -8,8 +8,6 @@ export async function GET({url}) {
     const text = await response.text();
     const res: any = { };
 
-    console.log({loadUrl, contentType});
-
 
     if (loadUrl.startsWith('https://overcast.fm/+')) {
         contentType = 'embed/overcast';

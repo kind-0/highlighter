@@ -123,7 +123,22 @@
     }
 </script>
 
-<div class="flex flex-col gap-4 overflow-y-auto">
+<div
+        class="backdrop z-10 fixed md:hidden"
+        ></div>
+
+<style>
+    .backdrop {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: rgba(0,0,0,0.50)
+    }
+</style>
+
+<div class="flex flex-col gap-4 absolute md:static top-0 w-screen md:w-auto hs-[80vh] md:h-auto z-50">
     <div class="
         card card-compact card-bordered
         rounded-md
@@ -160,15 +175,14 @@
 
             <!-- Footer -->
             <div class="
-                flex flex-row
+                flex flex-col md:flex-row
                 gap-8
                 items-end justify-between
                 w-full
                 rounded-b-lg
                 py-4 pb-0
             ">
-                <div class="flex flex-row gap-4 items-center whitespace-nowrap">
-                    <div class="flex flex-col gap-4">
+                <div class="flex flex-row md:flex-col gap-0 md:gap-4 items-center md:items-start whitespace-nowrap">
                         <TopicInput
                             class="btn-outline btn-neutral !rounded-full"
                             bind:values={topics}
@@ -178,7 +192,7 @@
                             newListKind={NDKKind.HighlightList}
                             bind:selectedLists
                             class="btn-outline btn-neutral !rounded-full"
-                            dropdownClass="dropdown-top"
+                            dropdownClass=""
                         >
                             <div class="flex flex-row items-center gap-2 font-normal whitespace-nowrap">
                                 <Folder class="w-6 h-6" />
@@ -199,7 +213,6 @@
                                 {/if}
                             </div>
                         </ListSelectionDropdown>
-                    </div>
                 </div>
 
                 <div class="

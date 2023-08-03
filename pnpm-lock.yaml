@@ -15,14 +15,14 @@ dependencies:
     specifier: ^1.3.1
     version: 1.3.1
   '@nostr-dev-kit/ndk':
-    specifier: 0.8.0
-    version: link:../../nostr/nostr-dev-kit/ndk
+    specifier: 0.8.1
+    version: 0.8.1(typescript@5.1.3)
   '@nostr-dev-kit/ndk-cache-redis':
     specifier: ^1.3.0
     version: 1.3.0(typescript@5.1.3)
   '@nostr-dev-kit/ndk-svelte-components':
-    specifier: 0.8.0
-    version: 0.8.0(postcss@8.4.21)(svelte@4.1.1)(typescript@5.1.3)
+    specifier: 0.8.1-0
+    version: 0.8.1-0(postcss@8.4.21)(svelte@4.1.1)(typescript@5.1.3)
   '@rollup/plugin-commonjs':
     specifier: ^24.0.1
     version: 24.0.1(rollup@3.27.0)
@@ -626,12 +626,12 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk-svelte-components@0.8.0(postcss@8.4.21)(svelte@4.1.1)(typescript@5.1.3):
-    resolution: {integrity: sha512-ni/9UTJT2KVBgB4Qsqf4KeaT4/ZEOfQvB4xx9axtoNTQFwa3v017Q0IRb3ao8S2Q3/yH9vf7HsKJeAex5QAbkA==}
+  /@nostr-dev-kit/ndk-svelte-components@0.8.1-0(postcss@8.4.21)(svelte@4.1.1)(typescript@5.1.3):
+    resolution: {integrity: sha512-ViGb3bHTcKrM4IqH76O0XHXp4Stkw/0dxOT9ilSYFkGBE0mJBCEh/uNyOlA4FQVoTD3ft0JMftmp9APjXVvHyg==}
     peerDependencies:
       svelte: ^3.54.0
     dependencies:
-      '@nostr-dev-kit/ndk': 0.7.7(typescript@5.1.3)
+      '@nostr-dev-kit/ndk': 0.8.1(typescript@5.1.3)
       classnames: 2.3.2
       hurdak: github.com/ConsignCloud/hurdak/91a8e9364123876715a1986c1d2dfc07eece20bf
       ramda: 0.29.0
@@ -683,8 +683,8 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk@0.7.7(typescript@5.1.3):
-    resolution: {integrity: sha512-IRTW16q40zzuSBkpYpDUcZJRrbw26JTeicfZN6O/2Gw7D2w6Pe42VqFwpbcP9xOnFPEGP2eNV6SwXQ3y0tjBtw==}
+  /@nostr-dev-kit/ndk@0.8.1(typescript@5.1.3):
+    resolution: {integrity: sha512-uI41sCs+7CxtKGIKXQGZjdwvksfeCwd83bB2yrJCePx4oIkEMMH1gVRYsNfQIMFBPejnU2bfBqcO2zEP9RzIFg==}
     dependencies:
       '@noble/hashes': 1.3.1
       '@noble/secp256k1': 2.0.0

@@ -34,7 +34,15 @@
 
     let deleted = false;
 
-    function toggleDrawer() {
+    function toggleDrawer(e: MouseEvent) {
+        const { target } = e;
+
+        // if target is an <a> or <button> return
+        if (target instanceof HTMLAnchorElement || target instanceof HTMLButtonElement) {
+            return;
+        }
+
+
         $rightDrawerContent = event;
     }
 </script>
@@ -43,7 +51,7 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="
-        card card-compact !bg-base-300 !rounded-2xl group {$$props.class??""}
+        card card-compact !rounded-2xl group {$$props.class??""}
     " on:mouseenter on:mouseleave on:click={toggleDrawer}>
         <div class="card-body flex flex-col text-base gap-2">
             {#if !skipHeader}

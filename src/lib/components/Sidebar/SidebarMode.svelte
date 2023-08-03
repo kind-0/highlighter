@@ -16,7 +16,7 @@
     }
 </script>
 
-<div class="tabs tabs-boxed rounded-full gap-2 flex-nowrap">
+<div class="tabs tabs-boxed rounded-full gap-2 flex-nowrap mx-auto md:mx-0">
     <a href="/highlights/global/newest" class="tab"
     class:tab-active={currentMode === 'highlights'}>
         <span>Discover</span>
