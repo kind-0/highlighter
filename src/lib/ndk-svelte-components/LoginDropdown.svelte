@@ -1,10 +1,5 @@
 <script lang="ts">
-    import { openModal } from 'svelte-modals';
-    import LoginModal from './LoginModal/LoginModal.svelte';
-    import ndk, { bunkerNDK } from '$lib/stores/ndk';
-    import { currentUser } from '$lib/store';
-    import { login } from '$lib/utils/login';
-
+    import ndk from '$lib/stores/ndk';
     import LoginNip07Button from './LoginNip07Button.svelte';
     import LoginGuestButton from './LoginGuestButton.svelte';
     import LoginNip46Button from './LoginNip46Button.svelte';
