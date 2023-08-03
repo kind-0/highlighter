@@ -139,7 +139,7 @@
             >
                 <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
-                    <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-fit mr-1 inline-block rounded-sm" />
+                    <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-12 mr-1 inline-block rounded-sm object-cover" />
 
                     <span class="flex flex-col gap-0.5 items-start truncate">
                         <span class="text-base-100-content truncate text-lg"> Podcast (Overcast) </span>
