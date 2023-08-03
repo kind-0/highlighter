@@ -23,9 +23,9 @@
     "a11y-mouse-events-have-key-events": "ignore",
     "a11y-missing-content": "ignore",
     "a11y-no-noninteractive-tabindex":"ignore",
+    "a11y-no-noninteractive-element-interactions":"ignore",
     "a11y-click-events-have-key-events":"ignore",
     "a11y-no-static-element-interactions":"ignore",
-
   },
   "files.exclude": {
     "**/src-tauri": true

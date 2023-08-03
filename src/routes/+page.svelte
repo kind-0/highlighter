@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex flex-col h-screen overflow-x-hidden">
-    <Navbar />
+    <Navbar isHiddenDrawerBtn={true} isHiddenRelayBtn={true} />
     <div class="hero flex flex-column justify-center">
         <div class="w-full md:max-w-2xl lg:max-w-3xl mx-auto flex flex-col gap-5 md:gap-12">
             <div class="relative">
