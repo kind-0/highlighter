@@ -3,16 +3,38 @@
     import LoginNip07Button from './LoginNip07Button.svelte';
     import LoginGuestButton from './LoginGuestButton.svelte';
     import LoginNip46Button from './LoginNip46Button.svelte';
+    import CloseIcon from '$lib/icons/Close.svelte';
+
+    let hasFocus = false;
+
+    async function toggleLogin() {
+        if (hasFocus) {
+            // Close dropdown
+            if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+                hasFocus = false;
+            }
+            return
+        }
+        hasFocus = true;
+    }
 </script>
 
 {#if !$ndk.signer}
-    <!-- TODO on:focus btn change to X btn-circle -->
     <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-rounded-full p-1 rounded-full border border-accent2 bg-base-200 hover:bg-accent2  text-base-100-content hover:text-base-200 transition">
+        <label on:click={toggleLogin} on:blur={toggleLogin} on:keypress={toggleLogin} tabindex="0" class="btn btn-rounded-full p-1 rounded-full border border-accent2 bg-base-200 {!hasFocus ? 'hover:bg-accent2' : 'hover:bg-base-200 hover:border-accent2 text-zinc-500 hover:text-zinc-300'} text-base-100-content hover:text-base-200 transition">
+            {#if !hasFocus}
             <span
                 class="block flex items-center px-4 md:px-9 h-full font-semibold uppercase text-sm md:text-base whitespace-nowrap normal-case"
                 >Log In</span
             >
+            {:else}
+            <div class="px-2">
+                <div class="btn-close w-6 h-6 rounded-full transition duration-300">
+                    <CloseIcon />
+                </div>
+            </div>
+            {/if}
         </label>
         <ul tabindex="0" class="mt-5 dropdown-content z-[1] divide-y divide-neutral-800 menu p-0 shadow rounded-box w-80">
             <li>
