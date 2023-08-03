@@ -1,18 +1,18 @@
 <script lang="ts">
-    import ndk, { type NDKEventStore } from '$lib/stores/ndk';
-    import { NDKJobRequest } from '$lib/ndk-kinds/jobs/NDKJobRequest';
+    import ndk from '$lib/stores/ndk';
     import { createEventDispatcher } from "svelte";
     import type { ProcessableTypes } from './types';
     import TranscriptionTimeRange from './TranscriptionTimeRange.svelte';
     import Stars from '$lib/icons/Stars.svelte';
     import ButtonWithBorderGradient2 from '$lib/components/buttons/ButtonWithBorderGradient2.svelte';
+    import { NDKTranscriptionDVM } from '@nostr-dev-kit/ndk';
 
     const dispatch = createEventDispatcher();
 
     export let type: ProcessableTypes;
     export let url: string;
     export let embedUrl: string | undefined = undefined;
-    export let jobRequest: NDKJobRequest | undefined = undefined;
+    export let jobRequest: NDKTranscriptionDVM | undefined = undefined;
     export let title: string | undefined = undefined;
     export let image: string | undefined = undefined;
 
@@ -23,14 +23,17 @@
      * Publishes the job request
      */
     async function requestService() {
-        jobRequest = new NDKJobRequest($ndk);
+        jobRequest = new NDKTranscriptionDVM($ndk);
 
         jobRequest.bid = processBid * 1000;
         jobRequest.addInput(url!, "url");
         jobRequest.job = 'speech-to-text';
         jobRequest.addParam('range', startTime.toString(), endTime.toString());
         jobRequest.output = 'text/plain';
-        await jobRequest.sign();
+
+        if (title) jobRequest.tags.push(['title', title]);
+        if (image) jobRequest.tags.push(['image', image]);
+
         await jobRequest.publish();
 
         dispatch('jobRequested');

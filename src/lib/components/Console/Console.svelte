@@ -4,7 +4,7 @@
     import ndk, { type NDKEventStore } from '$lib/stores/ndk';
     import { NDKJobRequest } from '$lib/ndk-kinds/jobs/NDKJobRequest';
     import JobRequestEventsFeed from '$lib/components/jobs/request/event-feed/JobRequestEventsFeed.svelte';
-    import JobRequestCard from '$lib/components/jobs/request/JobRequestCard.svelte';
+    import JobRequestTranscription from '$lib/components/jobs/request/JobRequestTranscription.svelte';
     import { tryToLoadBech32, tryToLoadDVM } from '../../utils/search/matchers';
     import { searchQuery, processingInstructions } from '$lib/stores/search';
 
@@ -53,7 +53,7 @@
     {#if $processingInstructions?.url}
         <div class="flex flex-col gap-4">
             <div class="card card-body">
-                <JobRequestCard
+                <JobRequestTranscription
                     bind:jobRequest
                     type={$processingInstructions.type}
                     title={$processingInstructions.title}

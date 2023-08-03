@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { zapInvoiceFromEvent, type NDKEvent } from "@nostr-dev-kit/ndk";
+    import { zapInvoiceFromEvent, type NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
     import AcceptResultButtons from "./AcceptResultButtons.svelte";
     import { currentUser } from "$lib/store";
     import { onDestroy } from "svelte";
@@ -31,7 +31,7 @@
     $: if (eventCount !== events.length) {
         eventCount = events.length;
 
-        resultEvent = events.find(event => event.kind === 68002) as NDKJobResult;
+        resultEvent = events.find(event => event.kind === NDKKind.DVMJobResult) as NDKJobResult;
         paymentRequestEvent = chooseEventWithAmount(events);
         subscribeToZapEvents();
 
@@ -47,14 +47,14 @@
     }
 
     function setIsJobFinishedButNotServed() {
-        return !resultEvent && !!events.some((e: NDKEvent) => e.kind === 68003 && e.tagValue('status') === 'finished');
+        return !resultEvent && !!events.some((e: NDKEvent) => e.kind === NDKKind.DVMJobFeedback && e.tagValue('status') === 'finished');
     }
 
     function setJobStatus() {
         // get the most recent event which has a status tag and kind 68003
         const statusEvent = events.filter(event => {
             const status = event.tagValue('status');
-            return status && event.kind === 68003;
+            return status && event.kind === NDKKind.DVMJobFeedback;
         }).sort((a, b) => {
             const aTimestamp = a.created_at!;
             const bTimestamp = b.created_at!;
@@ -89,7 +89,7 @@
 
         // first find a job-result event with an amount
         event = events.find(event => {
-            const isResult = event.kind === 68002;
+            const isResult = event.kind === NDKKind.DVMJobResult;
             const amountTag = event.tagValue('amount');
             return isResult && amountTag && parseInt(amountTag) > 0;
         });

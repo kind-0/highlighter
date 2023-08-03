@@ -3,6 +3,7 @@
     import { getSearchProcessingInstructions } from '$lib/utils/search/index.js';
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
+    import { fade } from 'svelte/transition';
     import { searchQuery, processingInstructions } from '$lib/stores/search';
     import NostrIcon from '$lib/icons/NostrIcon.svelte';
     import MicIcon from '$lib/icons/MicIcon.svelte';
@@ -49,6 +50,7 @@
     function useSuggestion(e: MouseEvent) {
         e.preventDefault();
         e.stopPropagation();
+        hasFocus = false;
 
         const target = e.currentTarget as HTMLAnchorElement;
         const href = target.getAttribute('data-href');
@@ -56,15 +58,24 @@
         if (href) {
             $searchQuery = href;
 
+            hasFocus = false;
+
             // send an enter to trigger the search
             process();
         }
     }
 </script>
 
+{#if hasFocus}
+<div
+        class="backdrop z-10 fixed"
+        on:click={() => { hasFocus = false }}
+        transition:fade={{ duration: 100 }}></div>
+{/if}
+
 <!-- TODO responsive search input, maybe expand wide when hasFocus -->
-<div class="dropdown dropdown-open w-full" class:dropdown-open={hasFocus}>
-    <div class="relative rounded-md shadow-sm flex-grow h-full">
+<div class="dropdown w-full" class:dropdown-open={hasFocus}>
+    <div class="relative rounded-md shadow-sm flex-grow h-full z-50">
         <div class="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-3">
             <MagnifyingGlass class="w-6 h-6 z-10 brightness-125" />
         </div>
@@ -255,3 +266,16 @@
         </li>
     </ul>
 </div>
+
+
+<style>
+    .backdrop {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        backdrop-filter: blur(0.15rem);
+        left: 0;
+        background: rgba(0,0,0,0.50)
+    }
+</style>

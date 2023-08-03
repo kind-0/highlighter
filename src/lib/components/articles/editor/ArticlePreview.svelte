@@ -6,6 +6,7 @@
     import type NDKLongForm from '$lib/ndk-kinds/long-form';
     import type { NDKTag } from "@nostr-dev-kit/ndk";
     import MarkdownIt from 'markdown-it';
+    import MarkdownItTaskLists from 'markdown-it-task-list-plus';
 
     export let title: string;
     export let body: string;
@@ -17,6 +18,7 @@
 
     const md = new MarkdownIt();
     md.linkify?.set();
+    md.use(MarkdownItTaskLists);
 
     let renderedContent = "";
     let renderedContentBeforeMarkdown = "";

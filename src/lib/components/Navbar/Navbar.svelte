@@ -18,7 +18,7 @@
 
 <nav class="navbar bg-base-100 shrink-0 sticky top-0 z-20 py-4 lg:px-10 bg-base-100/80 justify-between gap-4">
     <div class="
-        {navbarOpened ? 'hidden md:flex' : 'flex'}
+        {navbarOpened ? 'hidden lg:flex' : 'flex'}
         flex-row items-center sm:gap-4 navbar-start
     ">
         <div class="flex-none {!isHiddenSidebar ? 'lg:hidden' : ''}">
@@ -41,14 +41,14 @@
 
     <div class="
         navbar-center
-        {navbarOpened ? 'w-full md:w-1/2' : 'w-1/2'}
+        {navbarOpened ? 'w-full lg:w-1/2' : 'w-1/2'}
     ">
         <SearchInput bind:hasFocus={navbarOpened} />
     </div>
 
     <div class="
         navbar-end
-        {navbarOpened ? 'hidden md:flex' : 'flex'}
+        {navbarOpened ? 'hidden lg:flex' : 'flex'}
     ">
         <div class="flex items-center md:order-2 gap-4">
             <div class="hidden {isHiddenRelayBtn ? '' : 'md:block'}">
