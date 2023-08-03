@@ -8,9 +8,9 @@
 {#if !$ndk.signer}
     <!-- TODO on:focus btn change to X btn-circle -->
     <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-rounded-full p-1 border-0 from-gradient1 to-gradient2 bg-gradient-to-r rounded-full">
+        <label tabindex="0" class="btn btn-rounded-full p-1 rounded-full border border-accent2 bg-base-200 hover:bg-accent2  text-base-100-content hover:text-base-200 transition">
             <span
-                class="block flex items-center px-4 md:px-9 h-full font-semibold rounded-full bg-base-100 text-base-100-content brightness-200 hover:bg-transparent transition uppercase text-sm md:text-base whitespace-nowrap normal-case"
+                class="block flex items-center px-4 md:px-9 h-full font-semibold uppercase text-sm md:text-base whitespace-nowrap normal-case"
                 >Log In</span
             >
         </label>
