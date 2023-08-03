@@ -15,7 +15,7 @@
     <div class="dropdown dropdown-end">
         <label tabindex="0" class="btn btn-rounded-full p-1 border-0 from-gradient1 to-gradient2 bg-gradient-to-r rounded-full">
             <span
-                class="block flex items-center px-9 h-full font-semibold rounded-full bg-base-100 text-base-100-content brightness-200 hover:bg-transparent transition uppercase text-base whitespace-nowrap normal-case"
+                class="block flex items-center px-4 md:px-9 h-full font-semibold rounded-full bg-base-100 text-base-100-content brightness-200 hover:bg-transparent transition uppercase text-sm md:text-base whitespace-nowrap normal-case"
                 >Log In</span
             >
         </label>
@@ -28,8 +28,8 @@
             <div class="p-4">
                 <div class="flex flex-col items-start px-4">
                     <div class="text-sm text-base">
-                        Highlighter is a tool built using the <span class="text-accent2">Nostr Protocol</span>,
-                        which means you can login using keys instead of a centralized identity provider.
+                        Highlighter is a tool built using the <span class="text-accent2">Nostr Protocol</span>, which means you can login using keys
+                        instead of a centralized identity provider.
                     </div>
                 </div>
             </div>
