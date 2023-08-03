@@ -41,7 +41,7 @@
 
     <div class="
         navbar-center
-        {navbarOpened ? 'w-full lg:w-1/2' : 'w-1/2'}
+        {navbarOpened ? 'w-full lg:w-[700px] transition' : 'w-1/2 max-w-2xl'}
     ">
         <SearchInput bind:hasFocus={navbarOpened} />
     </div>
