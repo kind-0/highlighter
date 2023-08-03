@@ -16,7 +16,7 @@
         if (jobEvents) unsubscribeFromJob();
 
         jobEvents = $ndk.storeSubscribe({
-            kinds: [1,5,7, 9735, 68001 as number, 68002 as number,68003 as number],
+            kinds: [1,5,7, 9735, 65000 as number, 65001 as number],
             ...jobRequest.filter()
         }, { closeOnEose: false, groupable: onlyJobsWithResults });
 

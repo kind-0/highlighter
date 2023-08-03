@@ -15,11 +15,7 @@
     import Avatar from "../Avatar.svelte";
     import Name from "../Name.svelte";
 
-
-
     import tsToNicePassedTimeString from "$lib/utils/tsToNicePassedTimeString";
-
-
 
     import { createDraggableEvent } from "$lib/utils/draggable";
 
@@ -32,7 +28,6 @@
     export let byString: string | undefined = undefined;
     export let expandReplies = false;
     export let draggable = true;
-    export let embeddedMode = false;
 
     export let replies: NDKEvent[];
 
