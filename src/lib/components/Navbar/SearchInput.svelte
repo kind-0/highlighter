@@ -165,7 +165,7 @@
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         src="https://nostr.build/i/p/nostr.build_4fb6accf6b24cdb58be127d9a509c3acd3e859bbe24b5c194b82bf30bc1e511a.jpg"
-                        class="w-12 h-fit mr-1 inline-block rounded-sm"
+                        class="w-12 h-12 object-cover mr-1 inline-block rounded-sm"
                     />
 
                     <span class="flex flex-col gap-0.5 items-start truncate">
@@ -190,7 +190,7 @@
             >
                 <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
                     <!-- svelte-ignore a11y-missing-attribute -->
-                    <Hash class="w-12 h-fit mr-1 inline-block rounded-sm text-base-100-content" />
+                    <Hash class="w-12 h-12 object-cover mr-1 inline-block rounded-sm text-base-100-content" />
 
                     <span class="flex flex-col gap-0.5 items-start truncate">
                         <span class="text-base-100-content truncate text-lg"> Nostr Hashtag </span>
@@ -217,7 +217,7 @@
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         src="https://miro.medium.com/v2/resize:fill:176:176/1*ps6SOtxwztUT8gdVXllskg@2x.jpeg"
-                        class="w-12 h-fit mr-1 inline-block rounded-sm"
+                        class="w-12 h-12 object-cover mr-1 inline-block rounded-sm"
                     />
 
                     <span class="flex flex-col gap-0.5 items-start truncate">
@@ -247,7 +247,7 @@
                     <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         src="https://nostr.build/i/p/nostr.build_6b9909bccf0f4fdaf7aacd9bc01e4ce70dab86f7d90395f2ce925e6ea06ed7cd.jpeg"
-                        class="w-12 h-fit mr-1 inline-block rounded-sm"
+                        class="w-12 h-12 object-cover mr-1 inline-block rounded-sm"
                     />
 
                     <span class="flex flex-col gap-0.5 items-start truncate">
