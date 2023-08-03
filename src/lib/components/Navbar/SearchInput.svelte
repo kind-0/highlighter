@@ -79,7 +79,7 @@
 
 <!-- TODO responsive search input, maybe expand wide when hasFocus -->
 <div class="dropdown w-full" class:dropdown-open={hasFocus}>
-    <div class="relative rounded-md shadow-sm flex-grow h-full z-50">
+    <div class="relative rounded-full shadow-sm flex-grow h-full z-50">
         <div class="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-3">
             <MagnifyingGlass class="w-6 h-6 z-10 brightness-125" />
         </div>
