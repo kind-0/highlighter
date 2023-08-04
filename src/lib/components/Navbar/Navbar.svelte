@@ -16,7 +16,7 @@
     $: homeLink = $currentUser ? `/highlights/network/newest` : '/';
 </script>
 
-<nav class="navbar bg-base-100 shrink-0 sticky top-0 z-20 py-4 lg:px-10 bg-base-100/80 justify-between gap-4">
+<nav class="navbar bg-base-100 shrink-0 sticky top-0 z-20 py-4 lg:px-10 bg-base-100/80 justify-center gap-4">
     <div class="
         {navbarOpened ? 'hidden lg:flex' : 'flex'}
         flex-row items-center sm:gap-4 navbar-start
@@ -40,8 +40,8 @@
     </div>
 
     <div class="
-        navbar-center
-        {navbarOpened ? 'w-full lg:w-1/2' : 'w-1/2'}
+        navbar-center transition-all duration-100 ease-in-out
+        {navbarOpened ? 'w-full md:w-[700px]' : 'w-1/2'}
     ">
         <SearchInput bind:hasFocus={navbarOpened} />
     </div>
