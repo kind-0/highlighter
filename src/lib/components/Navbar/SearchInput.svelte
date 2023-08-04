@@ -112,7 +112,6 @@
     </div>
 
     <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-box shadow-2xl shadow-black w-full">
-
         <div class="relative flex w-full justify-center py-4 mb-4">
             <div class="flex flex-row justify-between w-full h-full absolute left-0 px-4">
                 <div class="flex">
@@ -144,26 +143,43 @@
         <div class="divider my-0" />
         <li>
             <a
-                class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
-                href="https://overcast.fm/+npr8xdWfc"
+                class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 justify-between w-full"
+                data-href="https://overcast.fm/+npr8xdWfc"
                 on:click={useSuggestion}
             >
-                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
-                    <!-- svelte-ignore a11y-missing-attribute -->
-                    <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-12 mr-1 inline-block rounded-sm object-cover" />
+                <div class="flex flex-row gap-5 w-full md:w-1/2">
+                    <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-fit inline-block rounded-sm" />
 
-                    <span class="flex flex-col gap-0.5 items-start truncate">
-                        <span class="text-base-100-content truncate text-lg"> Podcast (Overcast) </span>
+                    <div class="w-0 mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
+                        <p class="text-base-100-content truncate text-base w-full leading-normal font-medium"> Podcast (Overcast)</p>
 
-                        <span class="text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution</span>
-                    </span>
-                </span>
+                        <p class="font-medium leading-[18px] text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution bla bla bla</p>
+                    </div>
+                </div>
 
-                <span class="md:flex flex-row gap-2 items-center hidden">
-                    <span class="text-base-300-content text-xs md:text-base flex flex-col items-end"> https://overcast.fm/+npr8xdWfc </span>
+                <div class="hidden md:flex flex-row flex-grow gap-5 items-center justify-start">
+                    <div class="w-0 ml-10 flex flex-grow justify-end">
+                        <p class="text-base-300-content text-xs truncate"> https://overcast.fm/+npr8xdWfc</p>
+                    </div>
                     <MicIcon class="w-12 h-12" />
                 </span>
             </a>
+
+            <!-- <a
+                class="flex flex-col w-full bg-gray-700"
+                data-href="https://overcast.fm/+npr8xdWfc"
+                on:click={useSuggestion}
+            >
+                <div class="flex flex-row w-full">
+                    <div class="flex flex-row w-1/2 bg-blue-700">
+                        <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-fit mr-1 inline-block rounded-sm" />
+                        <div class="w-0 flex flex-col flex-grow flex-col bg-green-200">
+                            <p class="block text-base-100-content truncate text-lg"> Podcast (Overcast) asdlfk 1234567890sdf  asdfa sf a s12345678901234567890</p>
+                            <p class="text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution alksdfio sikidkai asfas df </p>
+                        </div>
+                    </div>
+                </div>
+            </a> -->
         </li>
         <div class="divider my-0" />
         <li>
