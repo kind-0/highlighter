@@ -112,27 +112,27 @@
     </div>
 
     <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-box shadow-2xl shadow-black w-full">
-        <div class="relative flex w-full justify-center py-4 mb-4">
-            <div class="flex flex-row justify-between w-full h-full absolute left-0 px-4">
+        <div class="relative flex w-full justify-center py-4 mb-0 md:mb-4">
+            <div class="flex flex-row justify-between w-full h-full absolute left-0 px-1 md:px-4">
                 <div class="flex">
-                    <div class="pl-6 pt-6">
-                        <Web3DIcon />
+                    <div class="pl-0 md:pl-6 pt-6">
+                        <Web3DIcon class="w-8 h-8 md:w-12 md:h-12" />
                     </div>
-                    <div class="pl-6 pt-5">
-                        <Hashtag3DIcon />
+                    <div class="pl-0 md:pl-6 pt-2 md:pt-5">
+                        <Hashtag3DIcon class="w-5 h-5 md:w-8 md:h-8"/>
                     </div>
                 </div>
                 <div class="flex">
-                    <div class="pr-6 pt-4">
-                        <Longform3DIcon />
+                    <div class="pr-0 md:pr-6 pt-2 md:pt-4">
+                        <Longform3DIcon class="w-5 h-5 md:w-8 md:h-8"/>
                     </div>
-                    <div class="pr-8 pt-6">
-                        <Mic3DIcon />
+                    <div class="pr-0 md:pr-8 pt-6">
+                        <Mic3DIcon class="w-8 h-8 md:w-12 md:h-12"/>
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col items-center gap-4 text-center ">
-                <div class="pt-1.5 text-4xl font-bold text-base-100-content md:whitespace-nowrap">
+            <div class="flex flex-col items-center gap-1 md:gap-4 text-center ">
+                <div class="pt-1.5 text-2xl md:text-4xl font-bold text-base-100-content md:whitespace-nowrap">
                     Highlight anything
                 </div>
                 <div class="text-xs text-accent2 whitespace-nowrap">
