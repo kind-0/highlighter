@@ -48,8 +48,6 @@
 </script>
 
 {#if !deleted}
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="
         card card-compact !rounded-none md:!rounded-2xl group {$$props.class??""}
     " on:mouseenter on:mouseleave on:click={toggleDrawer}>
@@ -59,7 +57,7 @@
                     <slot name="header" />
 
                     <div class="flex flex-row items-center gap-4">
-                        <div class="opacity-10 group-hover:opacity-100">
+                        <div class="md:opacity-10 group-hover:opacity-100">
                             <EventCardDropdown
                                 {event}
                                 on:deleted={() => deleted = true}
@@ -88,7 +86,7 @@
                         class="flex flex-row items-center gap-2 text-sm"
                     >
                         <Avatar user={event.author} size="small" />
-                        <div class="text-xs">
+                        <div class="text-xs hidden md:block">
                             {#if authorAction}
                                 <span>
                                     {authorAction}

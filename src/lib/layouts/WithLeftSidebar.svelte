@@ -11,7 +11,7 @@
     <div class="mx-auto md:pt-10 sm:px-2 xl:px-0 {$$props.containerClass}">
         <div class="drawer {!forceHideSidebar ? 'lg:drawer-open ' : ''}">
             <input id="left-drawer" type="checkbox" class="drawer-toggle" bind:checked={drawer} />
-            <div class="drawer-content">
+            <div class="drawer-content overflow-x-scroll">
                 <div class="
                     flex flex-col gap-4
                     w-full lg:pl-9 lg:pr-0

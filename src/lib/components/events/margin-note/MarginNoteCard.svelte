@@ -6,6 +6,7 @@
     import EventContent from '$lib/components/events/content.svelte';
     import { removeQuotedEvent, fetchQuotedHighlight } from './utils';
     import type NDKHighlight from "$lib/ndk-kinds/highlight";
+    import linkToArticle from "$lib/components/highlights/link-to-article";
 
     /**
      * Event to render
@@ -35,20 +36,26 @@
             {/if}
         </div>
 
-        {#if !skipHighlight}
-            <div class="text-sm">
-                <HighlightContent
-                    {highlight}
+        <a href={linkToArticle(highlight)} class="
+            h-full flex flex-col
+            overflow-auto
+            {$$props.class}
+        ">
+            {#if !skipHighlight}
+                <div class="text-sm">
+                    <HighlightContent
+                        {highlight}
+                    />
+                </div>
+            {/if}
+
+            <div class="text-base-100-content">
+                <EventContent
+                    note={removeQuotedEvent(event)}
+                    tags={event.tags}
+                    kind={event.kind}
                 />
             </div>
-        {/if}
-
-        <div class="text-base-100-content">
-            <EventContent
-                note={removeQuotedEvent(event)}
-                tags={event.tags}
-                kind={event.kind}
-            />
-        </div>
+        </a>
     </EventCard>
 {/if}

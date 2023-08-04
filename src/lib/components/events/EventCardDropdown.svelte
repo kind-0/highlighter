@@ -74,15 +74,11 @@
     }
 </script>
 
-<!-- svelte-ignore a11y-label-has-associated-control -->
 <div class="dropdown">
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <label tabindex="0" on:click|stopPropagation={prepareDropdown} class="btn btn-circle bg-base-300 btn-xs">
         <MoreOptionsIcon class="w-4 h-4" />
     </label>
 
-    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 rounded-box">
         <li>
             <a href="/e/{event.encode()}" class="flex flex-row items-center gap-3">

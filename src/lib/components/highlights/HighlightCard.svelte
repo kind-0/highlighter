@@ -78,7 +78,7 @@
         skipHeader={skipTitle}
         class={$$props.class}
     >
-        <div slot="header">
+        <div slot="header" class="w-full truncate">
             {#if !skipTitle}
                 <HighlightHeader {highlight} />
             {/if}

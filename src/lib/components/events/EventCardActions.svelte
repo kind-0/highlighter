@@ -35,22 +35,22 @@
     {/if}
 
     {#if $currentUser}
-        <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+        <div class="md:opacity-0 group-hover:opacity-100 transition duration-300">
             <BookmarkButton {event} class="btn bg-base-100 hover:bg-base-200 btn-circle btn-xs w-6 h-6 p-1" />
         </div>
 
-        <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+        <div class="md:opacity-0 group-hover:opacity-100 transition duration-300">
             <BoostButton {event} class="btn bg-base-100 hover:bg-base-200 btn-circle btn-xs w-6 h-6 p-1" />
         </div>
 
         <!-- {#if replies} -->
-            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+            <div class="md:opacity-0 group-hover:opacity-100 transition duration-300">
                 <RepliesButton {event} class="btn bg-base-100 hover:bg-base-200 btn-circle btn-xs w-6 h-6 p-1" />
             </div>
         <!-- {/if} -->
     {/if}
 
-    <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+    <div class="md:opacity-0 group-hover:opacity-100 transition duration-300">
     <div class="tooltip" data-tip="Link to this note">
             <a href={`/e/${event.encode()}`} class="btn bg-base-100 hover:bg-base-200 btn-circle btn-xs w-6 h-6 p-1">
                 <Link class="w-4 h-4" />
@@ -59,7 +59,7 @@
     </div>
 
     <div class="
-        {zappedAmount === 0 ? "opacity-0 group-hover:opacity-100 transition duration-300" : ""}
+        {zappedAmount === 0 ? "md:opacity-0 group-hover:opacity-100 transition duration-300" : ""}
     ">
         <ZapsButton bind:zappedAmount {event} class="btn bg-base-100 hover:bg-base-200 btn-circle btn-xs w-6 h-6 p-1" />
     </div>
