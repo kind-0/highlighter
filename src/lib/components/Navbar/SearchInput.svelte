@@ -111,7 +111,7 @@
         {/if}
     </div>
 
-    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-lg shadow-2xl shadow-black w-full">
+    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-box shadow-2xl shadow-black w-full">
         <div class="relative flex w-full justify-center py-4 mb-4">
             <div class="flex flex-row justify-between w-full h-full absolute left-0 px-4">
                 <div class="flex">
@@ -162,7 +162,7 @@
                     <div class="w-0 ml-10 flex flex-grow justify-end">
                         <p class="text-base-300-content text-xs truncate"> https://overcast.fm/+npr8xdWfc</p>
                     </div>
-                    <MicIcon class="w-12 h-12" />
+                    <MicIcon class="w-12 h-12 bg-base-300 text-zinc-400 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -187,7 +187,7 @@
                     <div class="w-0 ml-10 flex flex-grow justify-end">
                         <p class="text-base-300-content text-xs truncate"> naddr1qqxnzd3exqcnzvehxqungdfhqgsph3c2q9yt8uckmgelu0yf7glruudvfluesqn7cuftjpwdynm2gygrqsqqqa28mesjl6</p>
                     </div>
-                    <LongForm class="w-12 h-12" />
+                    <LongForm class="w-12 h-12 bg-base-300 text-zinc-400 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -214,7 +214,7 @@
                     <div class="w-0 ml-10 flex flex-grow justify-end">
                         <p class="text-base-300-content text-xs truncate">#bitcoin</p>
                     </div>
-                    <Hashtag class="w-12 h-12" />
+                    <Hashtag class="w-12 h-12 bg-base-300 text-zinc-400 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -240,7 +240,7 @@
                     <div class="w-0 ml-10 flex flex-grow justify-end">
                         <p class="text-base-300-content text-xs truncate"> https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9</p>
                     </div>
-                    <WebIcon class="w-12 h-12" />
+                    <WebIcon class="w-12 h-12 bg-base-300 text-zinc-400 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -248,7 +248,7 @@
         <div class="divider my-0" />
         <li>
             <a
-                class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 justify-between w-full"
+                class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 mb-2 justify-between w-full"
                 href="note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa"
                 on:click={useSuggestion}
             >
