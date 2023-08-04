@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Article, Hash, MagnifyingGlass, MediumLogo } from 'phosphor-svelte';
+    import { Hash, MagnifyingGlass } from 'phosphor-svelte';
     import { getSearchProcessingInstructions } from '$lib/utils/search/index.js';
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
@@ -10,6 +10,10 @@
     import LongForm from '$lib/icons/LongForm.svelte';
     import Hashtag from '$lib/icons/Hashtag.svelte';
     import WebIcon from '$lib/icons/WebIcon.svelte';
+    import Web3DIcon from '$lib/icons/Web3DIcon.svelte';
+    import Hashtag3DIcon from '$lib/icons/Hashtag3DIcon.svelte';
+    import Longform3DIcon from '$lib/icons/Longform3DIcon.svelte';
+    import Mic3DIcon from '$lib/icons/Mic3DIcon.svelte';
 
     let loading = false;
     export let hasFocus = false;
@@ -77,7 +81,6 @@
         transition:fade={{ duration: 100 }}></div>
 {/if}
 
-<!-- TODO responsive search input, maybe expand wide when hasFocus -->
 <div class="dropdown w-full" class:dropdown-open={hasFocus}>
     <div class="relative rounded-full shadow-sm flex-grow h-full z-50">
         <div class="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-3">
@@ -108,29 +111,37 @@
         {/if}
     </div>
 
-    <ul class="absolute dropdown-content z-50 menu p-4 my-1 bg-base-300 rounded-box shadow-2xl shadow-black w-full overflow-auto">
-        <div class="flex flex-col md:flex-row w-fit items-center gap-4 mx-auto mb-10">
-            <div class="flex md:hidden flex-row gap-2">
-                <img src="/images/search/search-right.svg" />
-                <img src="/images/search/search-left.svg" />
-            </div>
+    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-box shadow-2xl shadow-black w-full">
 
-            <div class="w-1/5 md:flex flex-col items-end hidden">
-                <img src="/images/search/search-left.svg" />
+        <div class="relative flex w-full justify-center py-4 mb-4">
+            <div class="flex flex-row justify-between w-full h-full absolute left-0 px-4">
+                <div class="flex">
+                    <div class="pl-6 pt-6">
+                        <Web3DIcon />
+                    </div>
+                    <div class="pl-6 pt-5">
+                        <Hashtag3DIcon />
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="pr-6 pt-4">
+                        <Longform3DIcon />
+                    </div>
+                    <div class="pr-8 pt-6">
+                        <Mic3DIcon />
+                    </div>
+                </div>
             </div>
-            <div class="w-full md:w-3/5 flex flex-col items-center gap-4 text-center">
-                <div class="text-4xl font-bold text-base-100-content md:whitespace-nowrap">
+            <div class="flex flex-col items-center gap-4 text-center ">
+                <div class="pt-1.5 text-4xl font-bold text-base-100-content md:whitespace-nowrap">
                     Highlight anything
                 </div>
-
-                <div class="text-accent2">
+                <div class="text-xs text-accent2 whitespace-nowrap">
                     Web articles, Podcasts, Videos, Nostr notes...
                 </div>
             </div>
-            <div class="w-1/5 md:flex flex-col items-center hidden">
-                <img src="/images/search/search-right.svg" />
-            </div>
         </div>
+        <div class="divider my-0" />
         <li>
             <a
                 class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
