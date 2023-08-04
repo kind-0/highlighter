@@ -18,7 +18,6 @@
 
         listener = () => {
             // get the selection
-            debugger
             const sel = window.getSelection();
             if (!sel) return;
             try {
@@ -31,24 +30,33 @@
                         paragraph: getParagraph(),
                         sentence: getSentence(),
                     }
+
+                    if (hasTouchInterface) {
+                        // select the first word in the document
+                        var range = document.createRange();
+                        range.selectNodeContents(document.body);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+
                     dispatch('selectionchange', d);
                 }
             } catch (e) {}
         }
 
         if (hasTouchInterface) {
-            wrapperEl.addEventListener("touchend", listener);
+            document.addEventListener("touchend", listener);
         } else {
-            wrapperEl.addEventListener("selectionchange", listener);
+            document.addEventListener("selectionchange", listener);
         }
     })
 
     onDestroy(() => {
         if (listener) {
             if (hasTouchInterface) {
-                wrapperEl.addEventListener("touchend", listener);
+                document.addEventListener("touchend", listener);
             } else {
-                wrapperEl.addEventListener("selectionchange", listener);
+                document.addEventListener("selectionchange", listener);
             }
         }
     })

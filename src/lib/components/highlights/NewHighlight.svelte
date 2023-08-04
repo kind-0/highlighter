@@ -15,6 +15,8 @@
     export let highlight: NDKHighlight;
     export let topics: string[] = [];
 
+    const autofocus = !!('ontouchstart' in window || navigator.maxTouchPoints);
+
     let saving = false;
 
     const dispatch = createEventDispatcher();
@@ -161,17 +163,32 @@
             {/if}
 
             <!-- Comment -->
-            <Textarea
-                bind:value={marginNote}
-                placeholder="Add your thoughts"
-                class="
-                    mt-4
-                    border:base-300 border-opacity-50
-                    bg-transparent
-                    min-h-[25vh]
-                    min-w-[25vw]
-                "
-            />
+            {#if autofocus}
+                <Textarea
+                    autofocus
+                    bind:value={marginNote}
+                    placeholder="Add your thoughts"
+                    class="
+                        mt-4
+                        border:base-300 border-opacity-50
+                        bg-transparent
+                        min-h-[25vh]
+                        min-w-[25vw]
+                    "
+                />
+            {:else}
+                <Textarea
+                    bind:value={marginNote}
+                    placeholder="Add your thoughts"
+                    class="
+                        mt-4
+                        border:base-300 border-opacity-50
+                        bg-transparent
+                        min-h-[25vh]
+                        min-w-[25vw]
+                    "
+                />
+            {/if}
 
             <!-- Footer -->
             <div class="
