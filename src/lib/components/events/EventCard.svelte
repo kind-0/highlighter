@@ -51,11 +51,11 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="
-        card card-compact !rounded-2xl group {$$props.class??""}
+        card card-compact !rounded-none md:!rounded-2xl group {$$props.class??""}
     " on:mouseenter on:mouseleave on:click={toggleDrawer}>
         <div class="card-body flex flex-col text-base gap-2">
             {#if !skipHeader}
-                <div class="flex flex-row justify-between gap-12">
+                <div class="flex flex-row justify-between gap-4 md:gap-12">
                     <slot name="header" />
 
                     <div class="flex flex-row items-center gap-4">

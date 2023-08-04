@@ -132,7 +132,7 @@
                 </div>
             </div>
             <div class="flex flex-col items-center gap-1 md:gap-4 text-center ">
-                <div class="pt-1.5 text-2xl md:text-4xl font-bold text-base-100-content md:whitespace-nowrap">
+                <div class="pt-1.5 text-3xl md:text-4xl font-bold text-base-100-content md:whitespace-nowrap">
                     Highlight anything
                 </div>
                 <div class="text-xs text-accent2 whitespace-nowrap">
@@ -149,18 +149,18 @@
                 on:click={useSuggestion}
             >
                 <div class="flex flex-row gap-5 w-full md:w-1/2 ">
-                    <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-fit inline-block rounded-sm" />
+                    <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-12 object-cover inline-block rounded-sm" />
 
                     <div class="w-0 mr-0 md:mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between ">
                         <p class="text-base-100-content truncate text-base w-full leading-normal font-medium"> Podcast (Overcast)</p>
 
-                        <p class="font-medium leading-[18px] text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution bla bla bla</p>
+                        <p class="font-medium leading-[18px] text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution</p>
                     </div>
                 </div>
 
                 <div class="hidden md:flex flex-row flex-grow gap-5 items-center justify-start">
                     <div class="w-0 ml-10 flex flex-grow justify-end">
-                        <p class="text-base-300-content text-xs truncate"> https://overcast.fm/+npr8xdWfc</p>
+                        <p class="text-base-300-content text-xs truncate">https://overcast.fm/+npr8xdWfc</p>
                     </div>
                     <MicIcon class="w-12 h-12 bg-base-300 text-zinc-400 rounded-lg" />
                 </div>
@@ -175,7 +175,7 @@
                 on:click={useSuggestion}
             >
                 <div class="flex flex-row gap-5 w-full md:w-1/2">
-                    <img src="https://nostr.build/i/p/nostr.build_4fb6accf6b24cdb58be127d9a509c3acd3e859bbe24b5c194b82bf30bc1e511a.jpg" class="w-12 h-fit inline-block rounded-sm" />
+                    <img src="https://nostr.build/i/p/nostr.build_4fb6accf6b24cdb58be127d9a509c3acd3e859bbe24b5c194b82bf30bc1e511a.jpg" class="w-12 h-12 object-cover inline-block rounded-sm" />
 
                     <div class="w-0 mr-0 md:mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
                         <p class="text-base-100-content truncate text-base w-full leading-normal font-medium">Nostr Long-form Article</p>
@@ -200,7 +200,7 @@
                 on:click={useSuggestion}
             >
                 <div class="flex flex-row gap-5 w-full md:w-1/2">
-                    
+
                     <Hash class="w-12 h-12 object-cover inline-block rounded-sm text-base-100-content" />
 
                     <div class="w-0 mr-0 md:mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
@@ -227,7 +227,7 @@
                 on:click={useSuggestion}
             >
                 <div class="flex flex-row gap-5 w-full md:w-1/2">
-                    <img src="https://miro.medium.com/v2/resize:fill:176:176/1*ps6SOtxwztUT8gdVXllskg@2x.jpeg"class="w-12 h-fit inline-block rounded-sm" />
+                    <img src="https://miro.medium.com/v2/resize:fill:176:176/1*ps6SOtxwztUT8gdVXllskg@2x.jpeg"class="w-12 h-12 object-cover inline-block rounded-sm" />
 
                     <div class="w-0 mr-0 md:mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
                         <p class="text-base-100-content truncate text-base w-full leading-normal font-medium"> Website </p>
@@ -253,7 +253,7 @@
                 on:click={useSuggestion}
             >
                 <div class="flex flex-row gap-5 w-full md:w-1/2">
-                    <img src="https://nostr.build/i/p/nostr.build_6b9909bccf0f4fdaf7aacd9bc01e4ce70dab86f7d90395f2ce925e6ea06ed7cd.jpeg" class="w-12 h-fit inline-block rounded-sm" />
+                    <img src="https://nostr.build/i/p/nostr.build_6b9909bccf0f4fdaf7aacd9bc01e4ce70dab86f7d90395f2ce925e6ea06ed7cd.jpeg" class="w-12 h-12 object-cover inline-block rounded-sm" />
 
                     <div class="w-0 mr-0 md:mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
                         <p class="text-base-100-content truncate text-base w-full leading-normal font-medium"> Nostr Short-note </p>

@@ -10,6 +10,7 @@
     "productName": "highlighter",
     "version": "0.1.0"
   },
+  "plugins": {},
   "tauri": {
     "bundle": {
       "active": true,
@@ -51,14 +52,14 @@
       {
         "fullscreen": false,
         "height": 600,
+        "minHeight": 720,
+        "minWidth": 1080,
         "resizable": true,
+        "theme": "Dark",
         "title": "Highlighter",
-        "width": 800,
-				"theme": "Dark",
-				"titleBarStyle": "Overlay",
+        "titleBarStyle": "Overlay",
         "transparent": false,
-				"minWidth": 1080,
-				"minHeight": 720
+        "width": 800
       }
     ]
   }

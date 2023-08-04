@@ -44,7 +44,7 @@
 
 {#await articlePromise then article}
     <div class="
-        flex flex-col overflow-x-hidden
+        flex flex-col overflow-hidden
         {$$props.class}
         {collapsedQuotes? '' : 'gap-8'}
     ">

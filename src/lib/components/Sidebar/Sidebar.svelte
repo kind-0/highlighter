@@ -37,9 +37,5 @@
         />
 
         <SidebarFolders title="SHELVES" list={sortedHighlightList} />
-
-        <li class="px-4">
-            <SidebarDropArea />
-        </li>
     </ul>
 </div>

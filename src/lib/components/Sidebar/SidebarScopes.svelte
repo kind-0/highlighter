@@ -2,7 +2,6 @@
     import { sortedUserList } from '$lib/stores/list';
     import { derived } from 'svelte/store';
     import SectionTitle from './SectionTitle.svelte';
-    import { Globe } from "phosphor-svelte";
     import Link from './Link.svelte';
 
     let displayLimit = 200;
@@ -21,9 +20,9 @@
 <ul class="flex flex-col gap-2 text-lg w-full items-end text-base-300-content">
     <Link href="/highlights/global/newest">
         Global
-        <Globe />
     </Link>
     <Link href="/highlights/network/newest">My Network</Link>
+    <Link href="/highlights/personal/newest">My Network</Link>
     <Link href="/highlights/explore">Explore</Link>
 </ul>
 

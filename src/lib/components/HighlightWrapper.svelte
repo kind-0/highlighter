@@ -18,6 +18,7 @@
 
         listener = () => {
             // get the selection
+            debugger
             const sel = window.getSelection();
             if (!sel) return;
             try {
@@ -35,7 +36,6 @@
             } catch (e) {}
         }
 
-        // when wrapperEl is selected
         if (hasTouchInterface) {
             wrapperEl.addEventListener("touchend", listener);
         } else {

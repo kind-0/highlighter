@@ -1,7 +1,13 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { SvelteKitPWA } from '@vite-pwa/sveltekit'
 
 const config = {
-	plugins: [sveltekit()],
+	plugins: [
+		sveltekit(),
+		SvelteKitPWA({
+			strategies: 'generateSW',
+		})
+	],
 	optimizeDeps: {
 	}
 };

@@ -15,7 +15,6 @@
     export let renderAsHtml = false;
 
     function markText(highlight: NDKHighlight, htmlText: string) {
-        console.trace(`mark text`, highlight.id)
         const hContent = highlight.content.trim();
 
         // Split the plain text into words
@@ -30,8 +29,6 @@
         // Create a RegExp object from the pattern
         let regex = new RegExp(pattern, 'i');
 
-        console.log(highlight.rawEvent())
-
         // Wrap the matched text in <mark> tags
         return htmlText.replace(regex, (match) => `<mark id=${highlight.id} data-highlight-id="${highlight.id}">${match}</mark>`);
     }
@@ -40,7 +37,6 @@
 
     function markContent() {
         markedHighlightCount = highlights.length;
-        console.log('marking content');
         content = unmarkedContent;
 
         if (!content) return;

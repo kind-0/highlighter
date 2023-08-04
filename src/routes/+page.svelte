@@ -4,6 +4,11 @@
     import GenericEventCard from '$lib/components/events/generic/card.svelte';
 </script>
 
+<svelte:head>
+    <title>Highlighter</title>
+    <meta name="description" content="Highlighter" />
+</svelte:head>
+
 <div class="flex flex-col h-screen overflow-x-hidden">
     <Navbar isHiddenDrawerBtn={true} isHiddenRelayBtn={true} />
     <div class="hero flex flex-column justify-center">

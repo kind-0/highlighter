@@ -125,6 +125,7 @@
     }
 
     function onSelectionChange(e: Event) {
+        console.log('here')
         let {selection, sentence, paragraph } = e.detail;
         let context: string | undefined;
 

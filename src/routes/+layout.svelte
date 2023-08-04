@@ -9,6 +9,9 @@
     import '../app.postcss';
     import { Modals, closeModal } from 'svelte-modals'
     import { fade } from 'svelte/transition'
+    import { pwaInfo } from 'virtual:pwa-info';
+
+    $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
     let prevCurrentUser: string | undefined = undefined;
 
@@ -40,6 +43,10 @@
         fetchFollowers();
     }
 </script>
+
+<svelte:head>
+    {@html webManifestLink}
+</svelte:head>
 
 <slot />
 
