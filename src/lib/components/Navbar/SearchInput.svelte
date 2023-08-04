@@ -162,24 +162,7 @@
                         <p class="text-base-300-content text-xs truncate"> https://overcast.fm/+npr8xdWfc</p>
                     </div>
                     <MicIcon class="w-12 h-12" />
-                </span>
             </a>
-
-            <!-- <a
-                class="flex flex-col w-full bg-gray-700"
-                data-href="https://overcast.fm/+npr8xdWfc"
-                on:click={useSuggestion}
-            >
-                <div class="flex flex-row w-full">
-                    <div class="flex flex-row w-1/2 bg-blue-700">
-                        <img src="https://public.overcast-cdn.com/art/2598591?v15" class="w-12 h-fit mr-1 inline-block rounded-sm" />
-                        <div class="w-0 flex flex-col flex-grow flex-col bg-green-200">
-                            <p class="block text-base-100-content truncate text-lg"> Podcast (Overcast) asdlfk 1234567890sdf  asdfa sf a s12345678901234567890</p>
-                            <p class="text-xs truncate opacity-100 w-full">CD100: The Disturbing Chainalysis Led Prosecution alksdfio sikidkai asfas df </p>
-                        </div>
-                    </div>
-                </div>
-            </a> -->
         </li>
         <div class="divider my-0" />
         <li>
