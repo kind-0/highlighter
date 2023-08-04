@@ -111,7 +111,7 @@
         {/if}
     </div>
 
-    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-box shadow-2xl shadow-black w-full">
+    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-lg shadow-2xl shadow-black w-full">
         <div class="relative flex w-full justify-center py-4 mb-4">
             <div class="flex flex-row justify-between w-full h-full absolute left-0 px-4">
                 <div class="flex">
@@ -140,11 +140,12 @@
                 </div>
             </div>
         </div>
+
         <div class="divider my-0" />
         <li>
             <a
                 class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 justify-between w-full"
-                data-href="https://overcast.fm/+npr8xdWfc"
+                href="https://overcast.fm/+npr8xdWfc"
                 on:click={useSuggestion}
             >
                 <div class="flex flex-row gap-5 w-full md:w-1/2">
@@ -162,115 +163,111 @@
                         <p class="text-base-300-content text-xs truncate"> https://overcast.fm/+npr8xdWfc</p>
                     </div>
                     <MicIcon class="w-12 h-12" />
+                </div>
             </a>
         </li>
+
         <div class="divider my-0" />
         <li>
             <a
-                class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
+                class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 justify-between w-full"
                 href="naddr1qqxnzd3exqcnzvehxqungdfhqgsph3c2q9yt8uckmgelu0yf7glruudvfluesqn7cuftjpwdynm2gygrqsqqqa28mesjl6"
                 on:click={useSuggestion}
             >
-                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
-                    <!-- svelte-ignore a11y-missing-attribute -->
-                    <img
-                        src="https://nostr.build/i/p/nostr.build_4fb6accf6b24cdb58be127d9a509c3acd3e859bbe24b5c194b82bf30bc1e511a.jpg"
-                        class="w-12 h-12 object-cover mr-1 inline-block rounded-sm"
-                    />
+                <div class="flex flex-row gap-5 w-full md:w-1/2">
+                    <img src="https://nostr.build/i/p/nostr.build_4fb6accf6b24cdb58be127d9a509c3acd3e859bbe24b5c194b82bf30bc1e511a.jpg" class="w-12 h-fit inline-block rounded-sm" />
 
-                    <span class="flex flex-col gap-0.5 items-start truncate">
-                        <span class="text-base-100-content truncate text-lg"> Nostr Long-form Article </span>
+                    <div class="w-0 mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
+                        <p class="text-base-100-content truncate text-base w-full leading-normal font-medium">Nostr Long-form Article</p>
 
-                        <span class="text-xs truncate opacity-50 w-full">Imagined vs actual startup journey</span>
-                    </span>
-                </span>
-
-                <span class="md:flex flex-row gap-2 items-center hidden">
-                    <span class="text-base-300-content flex flex-col items-end"> naddr1qqxnzd3exqcnzvehxqung... </span>
+                        <p class="font-medium leading-[18px] text-xs truncate opacity-100 w-full">Imagined vs actual startup journey</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex flex-row flex-grow gap-5 items-center justify-start">
+                    <div class="w-0 ml-10 flex flex-grow justify-end">
+                        <p class="text-base-300-content text-xs truncate"> naddr1qqxnzd3exqcnzvehxqungdfhqgsph3c2q9yt8uckmgelu0yf7glruudvfluesqn7cuftjpwdynm2gygrqsqqqa28mesjl6</p>
+                    </div>
                     <LongForm class="w-12 h-12" />
-                </span>
+                </div>
             </a>
         </li>
 
         <div class="divider my-0" />
         <li>
             <a
-                class="flex flex-col md:flex-row items-start md:items-center justify-between whitespace-nowrap w-full"
-                href="#bitcoin" on:click={useSuggestion}
+                class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 justify-between w-full"
+                href="#bitcoin"
+                on:click={useSuggestion}
             >
-                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
-                    <!-- svelte-ignore a11y-missing-attribute -->
-                    <Hash class="w-12 h-12 object-cover mr-1 inline-block rounded-sm text-base-100-content" />
+                <div class="flex flex-row gap-5 w-full md:w-1/2">
+                    
+                    <Hash class="w-12 h-12 object-cover inline-block rounded-sm text-base-100-content" />
 
-                    <span class="flex flex-col gap-0.5 items-start truncate">
-                        <span class="text-base-100-content truncate text-lg"> Nostr Hashtag </span>
+                    <div class="w-0 mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
+                        <p class="text-base-100-content truncate text-base w-full leading-normal font-medium">Nostr Hashtag</p>
 
-                        <span class="text-xs truncate opacity-50 w-full">Bitcoin highlights</span>
-                    </span>
-                </span>
+                        <p class="font-medium leading-[18px] text-xs truncate opacity-100 w-full">Bitcoin highlights</p>
+                    </div>
+                </div>
 
-                <span class="md:flex flex-row gap-2 items-center hidden">
-                    <span class="text-base-300-content flex flex-col items-end"> #bitcoin </span>
+                <div class="hidden md:flex flex-row flex-grow gap-5 items-center justify-start">
+                    <div class="w-0 ml-10 flex flex-grow justify-end">
+                        <p class="text-base-300-content text-xs truncate">#bitcoin</p>
+                    </div>
                     <Hashtag class="w-12 h-12" />
-                </span>
+                </div>
             </a>
         </li>
 
         <div class="divider my-0" />
         <li>
             <a
-                class="flex flex-row items-center justify-between whitespace-nowrap w-full"
+                class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 justify-between w-full"
                 href="https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9"
                 on:click={useSuggestion}
             >
-                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
-                    <!-- svelte-ignore a11y-missing-attribute -->
-                    <img
-                        src="https://miro.medium.com/v2/resize:fill:176:176/1*ps6SOtxwztUT8gdVXllskg@2x.jpeg"
-                        class="w-12 h-12 object-cover mr-1 inline-block rounded-sm"
-                    />
+                <div class="flex flex-row gap-5 w-full md:w-1/2">
+                    <img src="https://miro.medium.com/v2/resize:fill:176:176/1*ps6SOtxwztUT8gdVXllskg@2x.jpeg"class="w-12 h-fit inline-block rounded-sm" />
 
-                    <span class="flex flex-col gap-0.5 items-start truncate">
-                        <span class="text-base-100-content truncate text-lg"> Website </span>
+                    <div class="w-0 mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
+                        <p class="text-base-100-content truncate text-base w-full leading-normal font-medium"> Website </p>
 
-                        <span class="text-xs truncate opacity-50 w-full">Imagined vs actual startup journey</span>
-                    </span>
-                </span>
+                        <p class="font-medium leading-[18px] text-xs truncate opacity-100 w-full">Imagined vs actual startup journey</p>
+                    </div>
+                </div>
 
-                <span class="md:flex flex-row gap-2 items-center hidden">
-                    <span class="text-xs text-base-300-content flex flex-col items-end">
-                        <span class="text-base-300-content text-sm">https://medium.com/btc24/nost...</span>
-                    </span>
+                <div class="hidden md:flex flex-row flex-grow gap-5 items-center justify-start">
+                    <div class="w-0 ml-10 flex flex-grow justify-end">
+                        <p class="text-base-300-content text-xs truncate"> https://medium.com/btc24/nostr-a-decentralised-social-platform-2651930378b9</p>
+                    </div>
                     <WebIcon class="w-12 h-12" />
-                </span>
+                </div>
             </a>
         </li>
 
         <div class="divider my-0" />
-        <li on:click={() => {console.log('here')}}>
+        <li>
             <a
-                class="flex flex-row items-center justify-between whitespace-nowrap w-full"
+                class="flex flex-col md:flex-row items-start md:items-center gap-0 px-5 justify-between w-full"
                 href="note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa"
                 on:click={useSuggestion}
             >
-                <span class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
-                    <!-- svelte-ignore a11y-missing-attribute -->
-                    <img
-                        src="https://nostr.build/i/p/nostr.build_6b9909bccf0f4fdaf7aacd9bc01e4ce70dab86f7d90395f2ce925e6ea06ed7cd.jpeg"
-                        class="w-12 h-12 object-cover mr-1 inline-block rounded-sm"
-                    />
+                <div class="flex flex-row gap-5 w-full md:w-1/2">
+                    <img src="https://nostr.build/i/p/nostr.build_6b9909bccf0f4fdaf7aacd9bc01e4ce70dab86f7d90395f2ce925e6ea06ed7cd.jpeg" class="w-12 h-fit inline-block rounded-sm" />
 
-                    <span class="flex flex-col gap-0.5 items-start truncate">
-                        <span class="text-base-100-content truncate text-lg"> Nostr Short-note </span>
+                    <div class="w-0 mr-10 flex flex-col flex-grow gap-0.5 items-start justify-between">
+                        <p class="text-base-100-content truncate text-base w-full leading-normal font-medium"> Nostr Short-note </p>
 
-                        <span class="text-xs truncate opacity-50 w-full block">nostr has its issues. but for those who figure it out</span>
-                    </span>
-                </span>
+                        <p class="font-medium leading-[18px] text-xs truncate opacity-100 w-full">nostr has its issues. but for those who figure it out</p>
+                    </div>
+                </div>
 
-                <span class="md:flex flex-row gap-2 items-center hidden">
-                    <span class="text-base-300-content flex flex-col items-end"> note194n247lecqgcskk5rmmfgr... </span>
-                    <NostrIcon class="w-12 h-12 mr-1 inline-block rounded-lg bg-base-300 p-2 text-zinc-400" />
-                </span>
+                <div class="hidden md:flex flex-row flex-grow gap-5 items-center justify-start">
+                    <div class="w-0 ml-10 flex flex-grow justify-end">
+                        <p class="text-base-300-content text-xs truncate"> note194n247lecqgcskk5rmmfgrapt4jx7ppq64xec0eca3s4ta3hwkrsex7pxa</p>
+                    </div>
+                    <NostrIcon class="w-12 h-12 inline-block rounded-lg bg-base-300 p-2 text-zinc-400" />
+                </div>
             </a>
         </li>
     </ul>
