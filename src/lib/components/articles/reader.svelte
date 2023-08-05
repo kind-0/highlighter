@@ -107,7 +107,7 @@
      * Choose the context for the highlight
      */
     function chooseContext(selection: string, sentence: string, paragraph: string): string {
-        let context = paragraph;
+        let context = sentence;
 
         // If the selection is 3x shorter than the paragraph, use the sentence
         if (
