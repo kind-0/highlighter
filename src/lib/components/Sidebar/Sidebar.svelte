@@ -1,6 +1,5 @@
 <script>
     import SidebarFolders from "./SidebarFolders.svelte";
-    import SidebarDropArea from "./SidebarDropArea.svelte";
     import MenuItem from './MenuItem.svelte';
     import SidebarMode from "./SidebarMode.svelte";
     import { sortedHighlightList, sortedUserList } from "$lib/stores/list";

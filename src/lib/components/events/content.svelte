@@ -155,15 +155,3 @@
         {/if}
     </div>
 </div>
-
-
-<style>
-    /* div {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 300;
-    } */
-
-    /* :global(.card-content p:not(:last-child)) {
-        margin-bottom: 1rem;
-    } */
-</style>

@@ -53,6 +53,14 @@
             console.error(`layout error`, e);
         }
     }
+
+    function shouldRenderAsHtml()  {
+        if (article?.kind === 1) {
+            return false;
+        }
+
+        return true;
+    }
 </script>
 
 <Navbar />
@@ -93,7 +101,7 @@
             {article}
             {content}
             {unmarkedContent}
-            renderAsHtml={true}
+            renderAsHtml={shouldRenderAsHtml()}
         />
     {/if}
 {:catch}

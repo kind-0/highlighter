@@ -11,7 +11,6 @@
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
     import type NDKLongForm from '$lib/ndk-kinds/long-form';
-    import NewUserInstruction from '../NewUserInstruction.svelte';
     import { onDestroy } from 'svelte';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
     import MarkedContent from './MarkedContent.svelte';
@@ -207,7 +206,7 @@
                             nameClass="text-xl font-semibold"
                         />
                     {:else if url}
-                        <div class="text-slate-600 text-xs whitespace-normal">
+                        <div class="text-xs whitespace-normal">
                             {url}
                         </div>
                     {:else}
@@ -248,8 +247,6 @@
         <!-- Sidebar -->
         <div class="relative flex-grow" id="sidebarContainer">
             <div class="px-4 md:h-screen h-screen">
-                <!-- <NewUserInstruction /> -->
-
                 {#if newHighlightItem}
                     <div class="z-50 fixed top-20" transition:fade>
                         <NewHighlight
