@@ -105,7 +105,7 @@
             <li>
                 <button class="flex flex-row items-center gap-3" on:click={deleteEvent}>
                     <Trash class="w-4 h-4" />
-                    <span class="whitespace-nowrap">Delete</span>
+                    <span class="whitespace-nowrap">Request Deletion</span>
                 </button>
             </li>
         {/if}

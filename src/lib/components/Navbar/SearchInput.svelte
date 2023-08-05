@@ -20,6 +20,7 @@
 
     function process() {
         loading = true;
+        hasFocus = false;
         getSearchProcessingInstructions($searchQuery).then((p) => {
             $processingInstructions = p;
             loading = false;
@@ -44,11 +45,7 @@
     }
 
     function gotoWeb() {
-        const currentPage = $page.url.pathname;
-
-        if (currentPage !== '/web') {
-            goto('/web');
-        }
+        goto('/web');
     }
 
     function useSuggestion(e: MouseEvent) {
@@ -111,7 +108,7 @@
         {/if}
     </div>
 
-    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-box shadow-2xl shadow-black w-full">
+    <ul tabindex="0" class="absolute dropdown-content z-50 menu p-0 my-2 bg-base-300 rounded-box w-full">
         <div class="relative flex w-full justify-center py-4 mb-0 md:mb-4">
             <div class="flex flex-row justify-between w-full h-full absolute left-0 px-1 md:px-4">
                 <div class="flex">

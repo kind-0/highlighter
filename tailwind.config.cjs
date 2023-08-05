@@ -9,17 +9,18 @@ module.exports = {
     extend: {
       sans: ['Inter var'],
       colors: {
-        'gray-950': '#0b0f18',
-        'gray-1000': '#0a0a0a',
-        'gray-1100': '#080808',
-        'beige-150': '#F5F1EF',
-        'beige-200': '#F7F6F4',
-        'beige-300': '#F0EDEA',
         "gradient1": "#FF5E63",
         "gradient2": "#FF7E34",
         "gradient3": "#916EFF",
         "gradient4": "#5CA2FF",
         "accent2": "#817EFF",
+      },
+      width: {
+        'sidebar': '244px',
+        'main': '700px',
+      },
+      spacing: {
+        '32': '32px'
       }
     },
   },

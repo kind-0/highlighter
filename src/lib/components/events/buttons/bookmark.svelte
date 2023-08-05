@@ -14,8 +14,8 @@
 
 <div class="tooltip" data-tip={tooltip}>
     <button
-        class="w-4 h-4 {$$props.class}"
+        class="{$$props.class}"
         class:cursor-not-allowed={!$currentUser}
         on:click={() => { openModal(BookmarkModal, { event }) }}
-    ><BookmarkIcon /></button>
+    ><BookmarkIcon class="w-4 h-4" /></button>
 </div>

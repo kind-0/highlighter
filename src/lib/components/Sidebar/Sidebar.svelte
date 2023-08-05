@@ -11,7 +11,7 @@
 </script>
 
 <div class="flex flex-col items-center gap-8">
-    <SidebarMode />
+    <!-- <SidebarMode /> -->
 
     <ul class="menu bg-base-200 w-full rounded-box">
         <RelaySetButton />

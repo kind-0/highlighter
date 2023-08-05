@@ -1,12 +1,14 @@
 <script lang="ts">
 </script>
 
-<div class="flex flex-col-reverse lg:flex-row gap-9">
-    <main class="flex-grow">
+<div class="
+    flex flex-col md:flex-row space-y-32 md:space-y-0 md:space-x-32
+">
+    <main class="w-full md:w-1/2 lg:w-main">
         <slot />
     </main>
 
-    <aside class="sticky top-8 hidden shrink-0 md:block w-72">
+    <aside class="sticky top-8 hidden shrink-0 md:block w-sidebar">
         <slot name="right-sidebar" />
     </aside>
 </div>

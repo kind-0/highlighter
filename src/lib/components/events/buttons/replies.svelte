@@ -33,6 +33,6 @@
 
 <div class="tooltip" data-tip={tooltip}>
     <button class="w-4 h-4 {$$props.class}" on:click={open}>
-        <CommentIcon />
+        <CommentIcon class="w4 h-4" />
     </button>
 </div>

@@ -50,7 +50,7 @@
 </div>
 
 <div class="w-full flex flex-col gap-8">
-    <ul tabindex="0" class="menu p-4 my-1 bg-base-300 rounded-box shadow-2xl shadow-black w-full overflow-auto">
+    <ul tabindex="0" class="menu p-4 my-1 bg-base-300 rounded-box card w-full overflow-auto">
 
         <li>
             <a
@@ -83,7 +83,6 @@
                 on:click={useSuggestion}
             >
                 <div class="flex flex-row gap-2 items-center w-2/3 overflow-clip">
-                    <!-- svelte-ignore a11y-missing-attribute -->
                     <img
                         src="https://nostr.build/i/p/nostr.build_4fb6accf6b24cdb58be127d9a509c3acd3e859bbe24b5c194b82bf30bc1e511a.jpg"
                         class="w-12 h-12 object-cover mr-1 inline-block rounded-sm"

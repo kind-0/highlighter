@@ -14,7 +14,7 @@
             <div class="drawer-content overflow-x-scroll">
                 <div class="
                     flex flex-col gap-4
-                    w-full lg:pl-9 lg:pr-0
+                    w-full lg:pl-32 lg:pr-0
                     {!forceHideSidebar ? 'lg:w-full' : ''}
                     {$$props.insideContainerClass}
                 ">
@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div class="drawer-side fixed lg:w-72 z-50 lg:z-0 {$$props.sidebarClass}">
+            <div id="left-sidebar" class="drawer-side fixed lg:!w-sidebar z-50 lg:z-0 {$$props.sidebarClass}">
                 <label for="left-drawer" class="drawer-overlay"></label>
                 <div class="
                     flex flex-col items-stretch w-full overflow-y-auto

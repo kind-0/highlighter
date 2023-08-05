@@ -74,7 +74,7 @@
     let processBid = 1000;
 </script>
 
-        <div class="flex flex-row gap-6">
+        <div class="flex flex-row gap-4">
             {#if image}
                 <img src={image} class="w-20 h-20 rounded-xl object-cover" />
             {:else}
@@ -83,14 +83,14 @@
                 </span>
             {/if}
 
-            <div class="flex flex-col gap-2 truncate">
+            <div class="flex flex-col gap-2">
                 <h5 class="card-title text-base-100-content">
                     Transcribe {friendly(type)}?
                 </h5>
 
                 {#if title}
-                    <h1 class="lg:text-lg whitespace-nowrap truncate mb-2">
-                        <span class="truncate text-accent2">{title}</span>
+                    <h1 class="lg:text-lg mb-2">
+                        <span class="text-accent2">{title}</span>
                     </h1>
                 {/if}
             </div>
@@ -107,10 +107,10 @@
         {/if}
 
         <TranscriptionTimeRange {type} {url} bind:startTime bind:endTime />
+        <p class="mb-4">Choose how much you are willing to pay for this transcription</p>
 
         <div class="flex flex-row gap-4 w-full">
             <div class="flex-grow">
-                <p class="mb-4">Choose how much you are willing to pay for this transcription</p>
                 <input bind:value={processBid} type="range" min="100" max="10000" class="range range-neutral range-sm" />
                 <p>{processBid} sats</p>
             </div>
