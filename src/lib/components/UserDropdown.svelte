@@ -20,7 +20,7 @@
         </div>
 
         <ul slot="dropdown-content" class="divide-y divide-neutral-800 menu p-0 rounded-box">
-            <li>
+            <div>
                 <div class="flex justify-between items-center menu-title px-[22px] py-[19px] gap-2">
                     <div class="w-0 flex flex-grow flex-row items-center gap-4">
                         <Avatar
@@ -34,7 +34,7 @@
                     </div>
                     <GearIcon />
                 </div>
-            </li>
+            </div>
             <div class="p-4">
             </div>
             <div class="p-[22px]">

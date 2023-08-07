@@ -15,11 +15,11 @@
         </div>
 
         <ul slot="dropdown-content" class="divide-y divide-neutral-800 menu p-0 rounded-box">
-            <li>
+            <div>
                 <div class="flex justify-center menu-title">
                     <div class="p-1 text-center text-base font-medium">Log In</div>
                 </div>
-            </li>
+            </div>
             <div class="p-4">
                 <div class="flex flex-col items-start px-4">
                     <div class="text-xs text-base">
