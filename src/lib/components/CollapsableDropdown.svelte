@@ -19,7 +19,7 @@
 
 <div class="dropdown {hasFocus ? 'dropdown-open': ''} dropdown-end">
     <label  tabindex="0" on:click={toggleDropdown} >
-        <div class="{hasFocus ? 'hidden' : 'transition duration-500 ease-out'} transition">
+        <div class="{hasFocus ? 'hidden' : 'transition duration-500 ease-out flex items-center'} transition">
             <slot name="dropdown-button" />
         </div>
         <div class="{!hasFocus ? 'hidden' : ''} btn-circle border border-accent2 bg-base-200 text-zinc-500 grid place-items-center hover:text-zinc-300">
