@@ -6,6 +6,7 @@
 
     import { logout } from '$lib/currentUser';
     import LoginDropdown from '$lib/ndk-svelte-components/LoginDropdown.svelte';
+    import UserDropdown from './UserDropdown.svelte';
 </script>
 
 {#if $currentUser}
@@ -23,6 +24,7 @@
             <li><a href="#" on:click={logout}>Logout</a></li>
         </ul>
     </div>
+    <UserDropdown />
 {:else}
     <LoginDropdown />
 {/if}
