@@ -9,7 +9,7 @@
 {#if !$ndk.signer}
     <CollapsableDropdown>
         <div slot="dropdown-button" class="btn btn-outline btn-rounded-full rounded-full border-accent2 hover:border-accent2 bg-base-200 hover:bg-accent2 text-base-100-content hover:text-base-200 text-sm md:text-base">
-            <span class="px-4 md:px-9">
+            <span class="px-0 md:px-4 lg:px-9">
                 Log In
             </span>
         </div>
