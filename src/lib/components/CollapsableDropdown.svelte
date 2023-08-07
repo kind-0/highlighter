@@ -28,7 +28,7 @@
             </div>
         </div>
     </label>
-    <div tabindex="0" class="dropdown-content z-[1] w-60 mt-2">
+    <div tabindex="0" class="dropdown-content z-[1] mt-2">
         <slot name="dropdown-content" />
     </div>
 </div>
