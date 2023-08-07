@@ -4,6 +4,7 @@
     import { currentUser } from '$lib/store';
     import ndk from '$lib/stores/ndk';
     import GearIcon from '$lib/icons/Gear.svelte';
+    import { logout } from '$lib/currentUser';
 </script>   
    
    
@@ -36,9 +37,10 @@
             </li>
             <div class="p-4">
             </div>
-            <div class="p-4">
-            </div>
-            <div class="p-4">
+            <div class="p-[22px]">
+                <div on:click={logout} class="btn btn-rounded-full rounded-full w-full h-11 bg-base-300">
+                    <div class="text-center text-xs text-base-100-content font-medium normal-case">Log Out</div>
+                </div>
             </div>
         </ul>
         

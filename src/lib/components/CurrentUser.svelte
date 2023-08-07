@@ -1,29 +1,10 @@
 <script lang="ts">
     import { currentUser } from '$lib/store';
-    import ndk from '$lib/stores/ndk';
-
-    import { Avatar } from '@nostr-dev-kit/ndk-svelte-components';
-
-    import { logout } from '$lib/currentUser';
     import LoginDropdown from '$lib/ndk-svelte-components/LoginDropdown.svelte';
     import UserDropdown from './UserDropdown.svelte';
 </script>
 
 {#if $currentUser}
-    <div class="dropdown">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-            <Avatar
-                ndk={$ndk}
-                user={$currentUser}
-                class="
-                    w-10 h-10 border-2 border-base-300 rounded-full
-                "
-            />
-        </label>
-        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-            <li><a href="#" on:click={logout}>Logout</a></li>
-        </ul>
-    </div>
     <UserDropdown />
 {:else}
     <LoginDropdown />
