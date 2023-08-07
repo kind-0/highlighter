@@ -71,7 +71,7 @@ module.exports = {
           ".grad-blue": {
             "background-image": "radial-gradient(farthest-corner at 100% 0px, #5CA2FF 0%, #916EFF 100%)"
           },
-          ".btn-close": {
+          ".btn-close-inner": {
             "background-color": "#f2f2f2"
           }
         }
@@ -104,7 +104,7 @@ module.exports = {
           ".btn-circle": {
             "border-radius": "9999px !important",
           },
-          ".btn-close": {
+          ".btn-close-inner": {
             "background-color": "#232323"
           },
           ".card": {

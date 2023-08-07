@@ -3,7 +3,7 @@
 
     let hasFocus: boolean = false;
 
-    async function toggleLogin() {
+    async function toggleDropdown() {
         if (hasFocus) {
             // Close dropdown
             if (document.activeElement instanceof HTMLElement) {
@@ -13,25 +13,22 @@
             return
         }
         hasFocus = true;
-        console.log("hasFocus:", hasFocus)
     }
 
 </script>
 
 <div class="dropdown {hasFocus ? 'dropdown-open': ''} dropdown-end">
-    <label  tabindex="0" on:click={toggleLogin} on:blur={toggleLogin}>
+    <label  tabindex="0" on:click={toggleDropdown} >
         <div class="{hasFocus ? 'hidden' : 'transition duration-500 ease-out'} transition">
             <slot name="dropdown-button" />
         </div>
-        <div class="{!hasFocus ? 'hidden' : ''} btn btn-rounded-full p-1 rounded-full border border-accent2 bg-base-200 {!hasFocus ? 'hover:bg-accent2' : 'hover:bg-base-200 hover:border-accent2 text-zinc-500 hover:text-zinc-300'} text-base-100-content hover:text-base-200 transition">
-            <div class="px-2">
-                <div class="btn-close w-6 h-6 rounded-full transition duration-300">
-                    <CloseIcon />
-                </div>
+        <div class="{!hasFocus ? 'hidden' : ''} btn-circle border border-accent2 bg-base-200 text-zinc-500 grid place-items-center hover:text-zinc-300">
+            <div class="btn-close-inner w-6 h-6 p-1 rounded-full">
+                <CloseIcon />
             </div>
         </div>
     </label>
-    <div tabindex="0" class="dropdown-content z-[1]">
+    <div tabindex="0" class="dropdown-content z-[1] w-60 mt-2">
         <slot name="dropdown-content" />
     </div>
 </div>
