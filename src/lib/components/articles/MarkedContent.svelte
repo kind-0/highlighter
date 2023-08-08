@@ -1,4 +1,4 @@
-<script lang="ts">
+    <script lang="ts">
     import CardContent from '$lib/components/events/content.svelte';
     import type NDKHighlight from "$lib/ndk-kinds/highlight";
     import type { NDKTag } from '@nostr-dev-kit/ndk';
@@ -18,10 +18,11 @@
         const hContent = highlight.content.trim();
 
         // Split the plain text into words
-        let words = hContent.split(' ');
+        let words = hContent.split(/ /);
+
 
         // remove from words non alphanumeric characters
-        words = words.map(w => w.replace(/[^a-zA-Z0-9]/g, ''));
+        words = words.map(w => w.replace(/[^a-zA-Z0-9]/g, '.*'));
 
         // Create a regex pattern that matches the words with any characters in between
         let pattern = words.join('.*');
@@ -40,6 +41,10 @@
         content = unmarkedContent;
 
         if (!content) return;
+
+        // remove from content breaklines and other control characters
+        content = content.replace(/[\n\r\t]/g, ' ');
+
 
         for (const highlight of highlights) {
             if (!highlight.content) continue; // ignore highlights without content
