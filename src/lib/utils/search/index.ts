@@ -33,19 +33,20 @@ export async function getSearchProcessingInstructions(query: string, authorPubke
     }
 
     switch (result.type) {
-        case 'overcast': {
-            const res = await fetch(`/api/cors?url=${encodeURIComponent(query)}`, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-            const data = await res.json();
+    case 'overcast', 'youtube': {
+        const res = await fetch(`/api/cors?url=${encodeURIComponent(query)}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await res.json();
 
-            if (data) {
-                if (data.embed) { result.embed = data.embed; }
-                if (data.title) { result.title = data.title; }
-                if (data.image) { result.image = data.image; }
-                if (data.audio) { result.url = data.audio; }
-            }
+        if (data) {
+            if (data.embed) { result.embed = data.embed; }
+            if (data.title) { result.title = data.title; }
+            if (data.image) { result.image = data.image; }
+            if (data.audio) { result.url = data.audio; }
         }
+        break;
+    }
     }
 
     if (!result.type) {

@@ -1,7 +1,4 @@
 <script lang="ts">
-	import type { NDKEventStore } from '$lib/stores/ndk';
-    import EventCard from '$lib/components/events/card.svelte';
-
     import NewIcon from '$lib/icons/New.svelte';
 
     import type { NDKEvent } from '@nostr-dev-kit/ndk';

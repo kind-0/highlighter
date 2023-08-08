@@ -4,7 +4,7 @@
 <div class="
     flex flex-col md:flex-row space-y-32 md:space-y-0 md:space-x-32
 ">
-    <main class="w-full md:w-1/2 lg:w-main">
+    <main class="w-full md:w-1/2 lg:w-main overflow-x-auto">
         <slot />
     </main>
 

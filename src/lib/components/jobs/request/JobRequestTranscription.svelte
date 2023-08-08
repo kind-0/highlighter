@@ -11,7 +11,6 @@
 
     export let type: ProcessableTypes;
     export let url: string;
-    export let embedUrl: string | undefined = undefined;
     export let jobRequest: NDKTranscriptionDVM | undefined = undefined;
     export let title: string | undefined = undefined;
     export let image: string | undefined = undefined;
@@ -74,7 +73,7 @@
     let processBid = 1000;
 </script>
 
-        <div class="flex flex-row gap-4">
+        <div class="flex flex-row gap-4 w-full">
             {#if image}
                 <img src={image} class="w-20 h-20 rounded-xl object-cover" />
             {:else}

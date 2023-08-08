@@ -1,13 +1,14 @@
 <script lang="ts">
+	import { NDKDVMJobResult, NDKKind } from '@nostr-dev-kit/ndk';
     import Reader from '$lib/components/articles/reader.svelte';
 
     import { page } from '$app/stores';
-    import { NDKKind } from "$lib/ndk-kinds";
     import MarkdownIt from 'markdown-it';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import ndk from '$lib/stores/ndk';
     import {NDKArticle} from "@nostr-dev-kit/ndk";
     import { Card, Skeleton, TestimonialPlaceholder } from 'flowbite-svelte';
+    import ReaderDVMTranscriptionHeader from '$lib/components/articles/dvm/ReaderDVMTranscriptionHeader.svelte';
 
     import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
     import EventCard from '$lib/components/events/generic/card.svelte';
@@ -30,7 +31,7 @@
                 const e = await $ndk.fetchEvent(naddr);
                 if (!e) return reject("Unable to fetch event");
 
-                if (e.kind === NDKKind.LongForm) {
+                if (e.kind === NDKKind.Article) {
                     article = NDKArticle.from(e);
                     const md = new MarkdownIt({
                         html: true,
@@ -88,13 +89,25 @@
         </div>
     </div>
 {:then article}
-
-    {#if article.kind === 9735}
-        <Reader {article}>
+    {#if !article}
+        No article found
+    {:else if article.kind === 9735}
+        <Reader {article} {unmarkedContent}>
             <ZapEventCard draggable={false} event={article} skipFooter={false}  />
         </Reader>
     {:else if article.kind === 31337}
         <EventCard draggable={false} event={article} skipFooter={false}  />
+    {:else if article.kind === NDKKind.DVMJobResult}
+        <Reader
+            {article}
+            {content}
+            {unmarkedContent}
+            renderAsHtml={shouldRenderAsHtml()}
+        >
+            <div slot="preArticle">
+                <ReaderDVMTranscriptionHeader jobResult={NDKDVMJobResult.from(article)} />
+            </div>
+        </Reader>
     {:else}
         <Reader
             {article}

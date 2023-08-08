@@ -47,7 +47,7 @@
             url={url}
         />
     {:else if contentType === 'embed/overcast'}
-        here
+        overcast
     {:else}
         {#await fetchArticle(text, url, contentType)}
             <div class="card">

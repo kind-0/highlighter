@@ -19,7 +19,7 @@ export async function fetchFollowers(): Promise<void> {
     const uniqueHexpubkeys = Array.from(new Set(hexpubkeys));
 
     currentUserFollowPubkeysStore.set(uniqueHexpubkeys);
-    localStorage.setItem("currentUserFollowPubkeysStore", JSON.stringify(uniqueHexpubkeys))
+    localStorage.setItem("currentUserFollowPubkeysStore", JSON.stringify(uniqueHexpubkeys));
 }
 
 export function logout(): void {

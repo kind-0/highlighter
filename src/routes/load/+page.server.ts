@@ -9,9 +9,9 @@ export async function load({ fetch, url }) {
 
     if (loadUrl.startsWith('https://overcast.fm/+')) {
         contentType = 'embed/overcast';
+    } else if (loadUrl.startsWith('https://youtube.com/watch')) {
+        contentType = 'embed/youtube';
     }
-
-    console.log({contentType})
 
     return {
         text,

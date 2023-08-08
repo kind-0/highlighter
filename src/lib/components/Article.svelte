@@ -71,6 +71,10 @@
         margin: 1rem auto;
     }
 
+    :global(article pre) {
+        @apply whitespace-normal;
+    }
+
     :global(article mark) {
         color: black;
         padding: 1px;

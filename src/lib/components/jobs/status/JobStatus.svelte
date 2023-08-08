@@ -1,22 +1,21 @@
 <script lang="ts">
-    import { zapInvoiceFromEvent, type NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
+    import { zapInvoiceFromEvent, type NDKEvent, NDKKind, NDKDVMJobResult } from "@nostr-dev-kit/ndk";
     import AcceptResultButtons from "./AcceptResultButtons.svelte";
     import { currentUser } from "$lib/store";
     import { onDestroy } from "svelte";
     import ndk, { type NDKEventStore } from '$lib/stores/ndk';
     import AvatarWithName from "$lib/components/AvatarWithName.svelte";
-    import type { NDKJobResult } from "$lib/ndk-kinds/jobs/NDKJobResult";
     import PaymentRequestButton from "./PaymentRequestButton.svelte";
     import rejectEvent from './reject.js';
     import CheckIcon from "$lib/icons/Check.svelte";
-    import Avatar from "$lib/components/Avatar.svelte";
+    import EventContent from "$lib/components/events/content.svelte";
 
     export let events: NDKEvent[];
     export let pubkey: string;
     export let onlyJobsWithResults = false;
 
     let eventCount: number;
-    let resultEvent: NDKJobResult;
+    let resultEvent: NDKDVMJobResult;
     let zappedByUserAmount: number;
     let zaps: NDKEventStore<NDKEvent>;
 
@@ -31,7 +30,8 @@
     $: if (eventCount !== events.length) {
         eventCount = events.length;
 
-        resultEvent = events.find(event => event.kind === NDKKind.DVMJobResult) as NDKJobResult;
+        const r = events.find(event => event.kind === NDKKind.DVMJobResult);
+        if (r) resultEvent = NDKDVMJobResult.from(r);
         paymentRequestEvent = chooseEventWithAmount(events);
         subscribeToZapEvents();
 
@@ -118,6 +118,9 @@
     // Calculate how much the user owes to this event
     $: pendingAmount = Math.max(0, totalAmountRequested - zappedByUserAmount);
 
+    const user = $ndk.getUser({hexpubkey: pubkey});
+    const fetchProfilePromise = user.fetchProfile();
+
     onDestroy(() => {
         zaps.unsubscribe();
     })
@@ -143,11 +146,15 @@
 </script>
 
 {#if !onlyJobsWithResults || resultEvent}
+{#await fetchProfilePromise}
+    Loading
+{:then}
+here
     <div class="card group card-bordered">
         <div class="card-body">
             <div class="flex flex-row items-start justify-stretch w-full">
                 <div class="title flex flex-row items-center gap-4 flex-1 text-accent">
-                    <AvatarWithName {pubkey} avatarClass="w-14 h-14" nameClass="text-lg">
+                    <AvatarWithName {user} avatarClass="w-14 h-14" nameClass="text-lg">
                         <div slot="bio">
                             <div class="tooltip" data-tip="Not yet ready">
                                 <div class="rating rating-sm">
@@ -216,14 +223,22 @@
             </div>
 
             {#if resultEvent?.content}
-                <div class="max-h-32 overflow-auto">
+                <div class="max-h-48 overflow-auto">
                     <div class="text-sm">
-                        {resultEvent.content}
+                        <EventContent
+                            note={resultEvent.content}
+                            tags={resultEvent.tags}
+                        />
                     </div>
                 </div>
+            {:else}
+                {user?.profile?.about}
             {/if}
 
 
         </div>
     </div>
+{:catch e}
+    {e}
+{/await}
 {/if}

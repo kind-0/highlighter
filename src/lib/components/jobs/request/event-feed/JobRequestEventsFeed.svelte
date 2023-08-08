@@ -1,11 +1,10 @@
 <script lang="ts">
-    import type { NDKJobRequest } from "$lib/ndk-kinds/jobs/NDKJobRequest";
     import ndk, { type NDKEventStore } from "$lib/stores/ndk";
     import JobStatus from '$lib/components/jobs/status/JobStatus.svelte';
     import { onDestroy } from "svelte";
-    import type { NDKEvent } from "@nostr-dev-kit/ndk";
+    import type { NDKEvent, NDKDVMRequest } from "@nostr-dev-kit/ndk";
 
-    export let jobRequest: NDKJobRequest;
+    export let jobRequest: NDKDVMRequest;
     export let onlyJobsWithResults = false;
     let subscribedToJobId: string | undefined;
 
@@ -51,7 +50,7 @@
 </script>
 
 {#if pubkeyGroupedJobEvents}
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 w-main">
         {#each Object.keys(pubkeyGroupedJobEvents) as pubkey}
             <JobStatus {pubkey} {onlyJobsWithResults} events={pubkeyGroupedJobEvents[pubkey]} />
         {/each}

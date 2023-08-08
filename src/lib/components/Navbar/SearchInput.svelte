@@ -18,7 +18,7 @@
     let loading = false;
     export let hasFocus = false;
 
-    function process() {
+    export function process() {
         loading = true;
         hasFocus = false;
         getSearchProcessingInstructions($searchQuery).then((p) => {

@@ -6,7 +6,6 @@
     import WebIcon from "$lib/icons/WebIcon.svelte";
     import { searchQuery } from "$lib/stores/search";
     import { Hash } from "phosphor-svelte";
-    import PageTitle from "../PageTitle.svelte";
 
     export let url: string;
 
@@ -21,7 +20,7 @@
             $searchQuery = href;
 
             // send an enter to trigger the search
-            process();
+            // process();
         }
     }
 </script>
@@ -71,7 +70,7 @@
 
                 <div class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content text-xs md:text-base flex flex-col items-end"> https://overcast.fm/+npr8xdWfc </span>
-                    <MicIcon class="w-12 h-12" />
+                    <MicIcon class="w-12 h-12 bg-base-300 p-2 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -97,7 +96,7 @@
 
                 <div class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> naddr1qqxnzd3exqcnzvehxqung... </span>
-                    <LongForm class="w-12 h-12" />
+                    <LongForm class="w-12 h-12 bg-base-300 p-2 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -121,7 +120,7 @@
 
                 <div class="md:flex flex-row gap-2 items-center hidden">
                     <span class="text-base-300-content flex flex-col items-end"> #bitcoin </span>
-                    <Hashtag class="w-12 h-12" />
+                    <Hashtag class="w-12 h-12 bg-base-300 p-2 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -151,7 +150,7 @@
                     <span class="text-xs text-base-300-content flex flex-col items-end">
                         <div class="text-base-300-content text-sm">https://medium.com/btc24/nost...</div>
                     </span>
-                    <WebIcon class="w-12 h-12" />
+                    <WebIcon class="w-12 h-12 bg-base-300 p-2 rounded-lg" />
                 </div>
             </a>
         </li>
@@ -171,15 +170,15 @@
                     />
 
                     <div class="flex flex-col gap-0.5 items-start truncate">
-                        <span class="text-base-100-content truncate text-lg"> Nostr Short-note </span>
+                        <span class="text-base-100-content truncate text-lg">Nostr Short-note</span>
 
                         <div class="text-xs truncate opacity-50 w-full">nostr has its issues. but for those who figure it out</div>
                     </div>
                 </div>
 
                 <div class="md:flex flex-row gap-2 items-center hidden">
-                    <span class="text-base-300-content flex flex-col items-end"> note194n247lecqgcskk5rmmfgr... </span>
-                    <NostrIcon class="w-12 h-12 mr-1 inline-block rounded-lg bg-base-300 p-2 text-zinc-400" />
+                    <span class="text-base-300-content flex flex-col items-end">note194n247lecqgcskk5rmmfgr...</span>
+                    <NostrIcon class="w-12 h-12 mr-1 inline-block rounded-lg bg-base-300 p-2" />
                 </div>
             </a>
         </li>

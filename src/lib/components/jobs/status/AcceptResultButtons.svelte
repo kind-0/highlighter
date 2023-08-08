@@ -1,12 +1,11 @@
 <script lang="ts">
-    import type { NDKEvent } from "@nostr-dev-kit/ndk";
     import acceptResult from "./accept-result.js";
     import rejectEvent from "./reject.js";
-    import type { NDKJobResult } from "$lib/ndk-kinds/jobs/NDKJobResult.js";
     import ButtonWithBorderGradient2 from "$lib/components/buttons/ButtonWithBorderGradient2.svelte";
     import { CaretDown } from "phosphor-svelte";
+    import type { NDKDVMJobResult } from "@nostr-dev-kit/ndk";
 
-    export let event: NDKJobResult;
+    export let event: NDKDVMJobResult;
     export let pendingAmount: number;
 
     function chooseResult() {

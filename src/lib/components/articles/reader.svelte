@@ -214,6 +214,9 @@
                     {/if}
                 </div>
 
+                {#if $$slots.preArticle}
+                    <slot name="preArticle" />
+                {/if}
 
                 {#if article?.image}
                     <div class="flex flex-row justify-center">
