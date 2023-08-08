@@ -1,7 +1,7 @@
 import { Readability, isProbablyReaderable } from '@mozilla/readability';
-import type NDKLongForm from './ndk-kinds/long-form';
+import type { NDKArticle } from "@nostr-dev-kit/ndk";
 
-export async function fetchArticle(html: string, url: string, contentType: string): Promise<NDKLongForm | null> {
+export async function fetchArticle(html: string, url: string, contentType: string): Promise<NDKArticle | null> {
     // Fetch the HTML content of the URL and parse it with JSDOM
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, contentType as DOMParserSupportedType);
@@ -13,7 +13,7 @@ export async function fetchArticle(html: string, url: string, contentType: strin
 
     // Extract the main content using Readability
     const reader = new Readability(doc);
-    const article: NDKLongForm | null = reader.parse() as NDKLongForm | null;
+    const article: NDKArticle | null = reader.parse() as NDKArticle | null;
 
     if (!article) return null;
 

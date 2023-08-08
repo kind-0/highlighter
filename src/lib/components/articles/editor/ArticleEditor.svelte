@@ -1,23 +1,17 @@
 <script lang="ts">
-    import type NDKLongForm from "$lib/ndk-kinds/long-form";
-
     import ArticleTitle from "./ArticleTitle.svelte";
     import ArticlePreview from "./ArticlePreview.svelte";
     import { goto } from "$app/navigation";
+    import type { NDKArticle } from "@nostr-dev-kit/ndk";
     import { onDestroy, onMount } from "svelte";
     import { currentUser } from "$lib/store";
     import ndk from "$lib/stores/ndk";
     import Textarea from '$lib/components/Textarea.svelte';
     import { addLongForm, removeLongForm, isSaved as isLongFormSaved } from "$lib/stores/long-form";
-    import ButtonWithBorderGradient2 from "$lib/components/buttons/ButtonWithBorderGradient2.svelte";
-    import ListSelectionDropdown from "$lib/components/lists/ListSelectionDropdown.svelte";
-    import { CaretDown, Folder } from "phosphor-svelte";
-    import { NDKKind } from "$lib/ndk-kinds";
     import type { NDKList } from "@nostr-dev-kit/ndk";
-    import List from "../../../../routes/lists/[naddr]/list.svelte";
     import Toolbar from "./Toolbar.svelte";
 
-    export let event: NDKLongForm;
+    export let event: NDKArticle;
 
     let title: string = event?.title ?? "Untitled";
 
@@ -45,6 +39,7 @@
     async function save() {
         event.title = title;
         event.content = body;
+        event.published_at = undefined;
 
         event.created_at = Math.floor(Date.now() / 1000);
 

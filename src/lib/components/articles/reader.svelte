@@ -10,14 +10,14 @@
 
     import HighlightWrapper from '../HighlightWrapper.svelte';
     import Article from '../Article.svelte';
-    import type NDKLongForm from '$lib/ndk-kinds/long-form';
+    import type { NDKArticle } from "@nostr-dev-kit/ndk";
     import { onDestroy } from 'svelte';
     import NDKHighlight from '$lib/ndk-kinds/highlight';
     import MarkedContent from './MarkedContent.svelte';
     import AvatarWithName from '../AvatarWithName.svelte';
     import RightDrawerLayout from '$lib/layouts/RightDrawerLayout.svelte';
 
-    export let article: NDKEvent | NDKLongForm | string;
+    export let article: NDKEvent | NDKArticle | string;
     export let content: string | undefined = undefined;
     export let unmarkedContent: string;
     export let url: string | undefined = undefined;

@@ -1,7 +1,7 @@
 import NDK, { NDKEvent, type NDKTag, type NostrEvent } from '@nostr-dev-kit/ndk';
 import { NDKKind } from './index.js';
 import { nip19 } from 'nostr-tools';
-import NDKLongForm from './long-form.js';
+import NDKArticle from "@nostr-dev-kit/ndk";
 
 /**
  * Highlight as defined by NIP-84 (kind:9802).
@@ -55,7 +55,7 @@ class NDKHighlight extends NDKEvent {
         return this.getMatchingTags('a')[0] || this.getMatchingTags('e')[0] || this.getMatchingTags('r')[0];
     }
 
-    async getArticle(): Promise<NDKLongForm | NDKEvent | string | undefined> {
+    async getArticle(): Promise<NDKArticle | NDKEvent | string | undefined> {
         if (this._article !== undefined) return this._article;
 
         // check for 'a' tag
@@ -81,7 +81,7 @@ class NDKHighlight extends NDKEvent {
             let a = await this.ndk?.fetchEvent(taggedBech32);
             if (a) {
                 if (a.kind === NDKKind.LongForm) {
-                    a = new NDKLongForm(this.ndk, a.rawEvent());
+                    a = new NDKArticle(this.ndk, a.rawEvent());
                 }
 
                 this._article = a;

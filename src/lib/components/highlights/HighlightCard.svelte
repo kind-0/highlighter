@@ -6,7 +6,7 @@
 
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import type NDKHighlight from '$lib/ndk-kinds/highlight';
-    import type NDKLongForm from '$lib/ndk-kinds/long-form';
+    import type { NDKArticle } from "@nostr-dev-kit/ndk";
     import { onDestroy, onMount } from 'svelte';
     import type { NDKEventStore } from '$lib/stores/ndk';
     import linkToArticle from './link-to-article';
@@ -14,13 +14,13 @@
     import HighlightHeader from "./HighlightHeader.svelte";
 
     export let highlight: NDKHighlight;
-    export let article: NDKLongForm | NDKEvent | undefined = undefined;
+    export let article: NDKArticle | NDKEvent | undefined = undefined;
     export let disableClick: boolean = false;
     export let expandedContext: boolean = false;
     export let skipTitle: boolean = false;
     export let skipReplies = false;
 
-    let articlePromise: Promise<NDKLongForm | NDKEvent | string | undefined>;
+    let articlePromise: Promise<NDKArticle | NDKEvent | string | undefined>;
 
     if (article) {
         articlePromise = Promise.resolve(article);

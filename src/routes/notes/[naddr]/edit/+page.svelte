@@ -1,12 +1,12 @@
 <script lang="ts">
     import ArticleEditor from "$lib/components/articles/editor/ArticleEditor.svelte";
-    import type NDKLongForm from "$lib/ndk-kinds/long-form";
+    import type NDKArticle from "@nostr-dev-kit/ndk";
     import { page } from '$app/stores';
     import { longFormStore } from "$lib/stores/long-form";
 
     const { naddr } = $page.params;
 
-    let event: NDKLongForm | undefined;
+    let event: NDKArticle | undefined;
 
     $: if (!event) event = $longFormStore.get(naddr);
 </script>

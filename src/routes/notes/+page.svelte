@@ -7,7 +7,7 @@
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import { currentUser } from '$lib/store';
     import ndk from "$lib/stores/ndk";
-    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import NDKArticle from "@nostr-dev-kit/ndk";
 
     import { onMount } from 'svelte';
     import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
@@ -37,7 +37,7 @@
     //     encryptedLongForms = $ndk.storeSubscribe({
     //         authors: [$currentUser.hexpubkey()],
     //         kinds: [31023 as number],
-    //     }, { closeOnEose: false }, NDKLongForm)
+    //     }, { closeOnEose: false }, NDKArticle)
     // }
 
     // Decrypt notes

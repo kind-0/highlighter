@@ -2,12 +2,12 @@
     // This component displays a card for an article in a style
     // that would work within a list of articles.
 
-	import type NDKLongForm from '$lib/ndk-kinds/long-form';
+	import type { NDKArticle } from "@nostr-dev-kit/ndk";
 
     import ArticlePreview from '../editor/ArticlePreview.svelte';
     import { createDraggableEvent } from '$lib/utils/draggable';
 
-    export let article: NDKLongForm;
+    export let article: NDKArticle;
     export let href: string | undefined = undefined;
 
     function articleLink() {

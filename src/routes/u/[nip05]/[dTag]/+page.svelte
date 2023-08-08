@@ -5,7 +5,7 @@
     import MarkdownIt from 'markdown-it';
     import { NDKUser, type NDKEvent } from '@nostr-dev-kit/ndk';
     import ndk from '$lib/stores/ndk';
-    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import NDKArticle from "@nostr-dev-kit/ndk";
     import { Card, Skeleton, TestimonialPlaceholder } from 'flowbite-svelte';
 
     import Navbar from '$lib/components/Navbar/Navbar.svelte';
@@ -17,7 +17,7 @@
 
     const user = new NDKUser({npub});
 
-    let article: NDKLongForm;
+    let article: NDKArticle;
 
     let articlePromise;
 
@@ -34,7 +34,7 @@
                     return;
                 }
 
-                article = NDKLongForm.from(e);
+                article = NDKArticle.from(e);
                 const md = new MarkdownIt();
                 md.linkify?.set();
                 unmarkedContent = md.render(article.content);

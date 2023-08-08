@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type NDKLongForm from "$lib/ndk-kinds/long-form";
+    import type NDKArticle from "@nostr-dev-kit/ndk";
 
     import { page } from '$app/stores';
     import ArticlePreview from "$lib/components/articles/editor/ArticlePreview.svelte";
@@ -8,7 +8,7 @@
 
     const { naddr } = $page.params;
 
-    let event: NDKLongForm | undefined;
+    let event: NDKArticle | undefined;
 
     $: if (!event) event = $longFormStore.get(naddr);
 </script>

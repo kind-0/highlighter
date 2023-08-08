@@ -6,18 +6,17 @@
     import MarkdownIt from 'markdown-it';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import ndk from '$lib/stores/ndk';
-    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import {NDKArticle} from "@nostr-dev-kit/ndk";
     import { Card, Skeleton, TestimonialPlaceholder } from 'flowbite-svelte';
 
     import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
     import EventCard from '$lib/components/events/generic/card.svelte';
-    import WithLeftSidebar from '$lib/layouts/WithLeftSidebar.svelte';
     import Navbar from '$lib/components/Navbar/Navbar.svelte';
     import SidebarMode from '$lib/components/Sidebar/SidebarMode.svelte';
 
     const { naddr } = $page.params;
-    let article: NDKEvent | NDKLongForm;
-    let articlePromise: Promise<NDKEvent | NDKLongForm | null> | undefined;
+    let article: NDKEvent | NDKArticle;
+    let articlePromise: Promise<NDKEvent | NDKArticle | null> | undefined;
 
     let loadedId: string;
 
@@ -32,7 +31,7 @@
                 if (!e) return reject("Unable to fetch event");
 
                 if (e.kind === NDKKind.LongForm) {
-                    article = new NDKLongForm($ndk, e.rawEvent());
+                    article = NDKArticle.from(e);
                     const md = new MarkdownIt({
                         html: true,
                         linkify: true,

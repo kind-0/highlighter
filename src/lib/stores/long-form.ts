@@ -1,13 +1,12 @@
 import { writable, derived, get as getStore } from 'svelte/store';
-import NDKLongForm from '../ndk-kinds/long-form';
 import ndk from './ndk';
-import NDK, { NDKSubscriptionCacheUsage, type NDKSubscription, type NDKUser, NDKEvent } from '@nostr-dev-kit/ndk';
+import NDK, { NDKSubscriptionCacheUsage, type NDKSubscription, type NDKUser, NDKEvent, NDKArticle } from '@nostr-dev-kit/ndk';
 import {NDKKind} from '../ndk-kinds/index.js';
 import debug from 'debug';
 
 const d = debug('highlighter:long-form');
 
-type DirtiableLongForm = NDKLongForm & { dirty?: boolean };
+type DirtiableLongForm = NDKArticle & { dirty?: boolean };
 
 type LongFormEvents = Map<string, DirtiableLongForm>;
 
@@ -32,7 +31,7 @@ export const unsavedLongFormStore = derived(longFormStore, ($longFormStore) => {
 /**
  * Adds a new long form to the store.
  */
-export function addLongForm(longForm: NDKLongForm, dirty = false): void {
+export function addLongForm(longForm: NDKArticle, dirty = false): void {
     console.log(`add`)
     d(`calling addLongForm with dirty=${dirty}`)
     // Update the store by adding the new form under the generated key
@@ -48,7 +47,7 @@ export function addLongForm(longForm: NDKLongForm, dirty = false): void {
 /**
  * Removes a long form from the store.
  */
-export function removeLongForm(longForm: NDKLongForm): void {
+export function removeLongForm(longForm: NDKArticle): void {
     longFormStore.update(storeState => {
         storeState.delete(longForm.encode());
         return storeState;
@@ -71,7 +70,7 @@ export function getLongForms(user: NDKUser): NDKSubscription {
 
     sub.on('event', (event: NDKEvent) => {
         event.ndk = $ndk;
-        const longForm = NDKLongForm.from(event);
+        const longForm = NDKArticle.from(event);
 
         if (isEncrypted(longForm)) {
             decryptLongForm(longForm, $ndk).then((decryptedLongForm) => {
@@ -90,7 +89,7 @@ export function getLongForms(user: NDKUser): NDKSubscription {
 /**
  * Decrypts a long form and returns the decrypted version.
  */
-async function decryptLongForm(longForm: NDKLongForm, ndk: NDK): Promise<NDKLongForm> {
+async function decryptLongForm(longForm: NDKArticle, ndk: NDK): Promise<NDKArticle> {
     const encryptedTitle = longForm.title;
     const author = longForm.author;
 
@@ -109,6 +108,6 @@ export function isSaved(longForm: DirtiableLongForm): boolean {
     return !longForm.dirty && !!longForm.id;
 }
 
-function isEncrypted(longForm: NDKLongForm): boolean {
+function isEncrypted(longForm: NDKArticle): boolean {
     return longForm.kind === 31023;
 }

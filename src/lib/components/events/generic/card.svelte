@@ -15,7 +15,7 @@
     import ZapEventCard from '$lib/components/zaps/ZapEventCard.svelte';
     import ListCard from '$lib/components/lists/ListCard.svelte';
     import ArticleIntroCard from '$lib/components/articles/cards/ArticleIntroCard.svelte';
-    import NDKLongForm from '$lib/ndk-kinds/long-form';
+    import NDKArticle from "@nostr-dev-kit/ndk";
     import { createDraggableEvent } from '$lib/utils/draggable';
     import MarginNoteCard from '../margin-note/MarginNoteCard.svelte';
     import { isMarginNote } from './types';
@@ -122,7 +122,7 @@
                     <ZapEventCard event={e} />
                 {:else if e.kind === 30023 || e.kind === 31023}
                     <ArticleIntroCard
-                        article={NDKLongForm.from(e)}
+                        article={NDKArticle.from(e)}
                         href={`/a/${e.encode()}`}
                     />
                 {:else if e.kind >= 30000 && e.kind < 30022}

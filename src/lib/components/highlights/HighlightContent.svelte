@@ -1,11 +1,11 @@
 <script lang="ts">
     import type NDKHighlight from "$lib/ndk-kinds/highlight";
-    import type NDKLongForm from "$lib/ndk-kinds/long-form";
+    import type NDKArticle from "@nostr-dev-kit/ndk";
     import type { NDKEvent } from "@nostr-dev-kit/ndk";
     import NoteContent from '$lib/components/events/content.svelte';
 
     export let highlight: NDKHighlight;
-    export let article: NDKLongForm | NDKEvent | string | undefined = undefined;
+    export let article: NDKArticle | NDKEvent | string | undefined = undefined;
     export let expandedContext: boolean = true;
 
     let highlightedId: string;

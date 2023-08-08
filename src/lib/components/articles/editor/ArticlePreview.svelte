@@ -3,7 +3,7 @@
     import Button from '$lib/components/buttons/Button.svelte';
     import CardContent from '$lib/components/events/content.svelte';
     import LockIcon from '$lib/icons/LockIcon.svelte';
-    import type NDKLongForm from '$lib/ndk-kinds/long-form';
+    import type { NDKArticle } from "@nostr-dev-kit/ndk";
     import type { NDKTag } from "@nostr-dev-kit/ndk";
     import MarkdownIt from 'markdown-it';
     import MarkdownItTaskLists from 'markdown-it-task-list-plus';
@@ -14,7 +14,7 @@
     export let href: string | undefined = undefined;
     export let image: string | undefined = undefined;
     export let skipEditButton = false;
-    export let article: NDKLongForm;
+    export let article: NDKArticle;
 
     const md = new MarkdownIt();
     md.linkify?.set();

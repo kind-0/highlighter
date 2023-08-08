@@ -1,11 +1,10 @@
 <script lang="ts">
     import type NDKHighlight from "$lib/ndk-kinds/highlight";
-    import NDKLongForm from "$lib/ndk-kinds/long-form";
     import AvatarWithName from "../AvatarWithName.svelte";
     import Favicon from "../Favicon.svelte";
     import linkToArticle from './link-to-article';
     import Avatar from "../Avatar.svelte";
-    import { NDKEvent, type NDKUser } from "@nostr-dev-kit/ndk";
+    import { NDKEvent, type NDKUser, NDKArticle } from "@nostr-dev-kit/ndk";
 
     export let highlight: NDKHighlight;
 
@@ -24,7 +23,7 @@
 
 {#await getArticle then article}
     <div class="text-lg font-regular truncate text-base-100-content">
-        {#if article instanceof NDKLongForm && article.title}
+        {#if article instanceof NDKArticle && article.title}
             <div class="flex flex-row items-center gap-2">
                 <Avatar user={author} size="small" type="square" />
                 <a href={linkToArticle(highlight)}>{article.title}</a>
