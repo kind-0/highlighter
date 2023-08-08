@@ -6,10 +6,10 @@
     import GearIcon from '$lib/icons/Gear.svelte';
     import { logout } from '$lib/currentUser';
     import Notification from './Notification.svelte';
-</script>   
-   
-   
-   <CollapsableDropdown>
+    import { Name } from '@nostr-dev-kit/ndk-svelte-components';
+</script>
+
+<CollapsableDropdown>
         <div slot="dropdown-button" class="btn btn-ghost btn-circle avatar">
             <Avatar
                 ndk={$ndk}
@@ -31,12 +31,19 @@
                                 w-8 h-8 border-2 border-base-300 rounded-full
                             "
                         />
-                        <div class="text-center text-base text-base-100-content font-medium truncate">{$currentUser?.npub}</div>
+                        <div class="text-center text-base text-base-100-content font-medium truncate">
+                            <Name
+                                ndk={$ndk}
+                                user={$currentUser}
+                                class="
+                                "
+                            />
+                        </div>
                     </div>
                     <GearIcon />
                 </div>
             </div>
-            <div class="py-4 px-5">
+            <div class="py-4 px-5 hidden">
                 <span class="text-[10px] font-semibold tracking-widest">
                     NOTIFICATIONS
                 </span>
@@ -54,5 +61,5 @@
                 </div>
             </div>
         </ul>
-        
+
     </CollapsableDropdown>
