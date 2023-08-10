@@ -1,7 +1,7 @@
 <script lang="ts">
     import CloseIcon from '$lib/icons/Close.svelte';
 
-    export let borderColor: string = "border-accent2";
+    export let borderColor: string = "accent2";
     let hasFocus: boolean = false;
 
     async function toggleDropdown() {
@@ -23,7 +23,7 @@
         <div class="{hasFocus ? 'hidden' : 'transition duration-500 ease-out flex items-center'} transition">
             <slot name="dropdown-button" />
         </div>
-        <div class="{!hasFocus ? 'hidden' : ''} btn-circle border {borderColor} bg-base-200 text-zinc-500 grid place-items-center hover:text-zinc-300">
+        <div class={`${!hasFocus ? 'hidden' : ''} btn-close-outter btn-circle border border-${borderColor} grid place-items-center`}>
             <div class="btn-close-inner w-6 h-6 p-1 rounded-full">
                 <CloseIcon />
             </div>

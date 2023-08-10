@@ -71,8 +71,12 @@ module.exports = {
           ".grad-blue": {
             "background-image": "radial-gradient(farthest-corner at 100% 0px, #5CA2FF 0%, #916EFF 100%)"
           },
+          ".btn-close-outter": {
+            "background-color": "#ffffff",
+          },
           ".btn-close-inner": {
-            "background-color": "#f2f2f2"
+            "background-color": "#f2f2f2",
+            "color": "#232323"
           }
         }
       },
@@ -104,8 +108,12 @@ module.exports = {
           ".btn-circle": {
             "border-radius": "9999px !important",
           },
+          ".btn-close-outter": {
+            "background-color": "#000000",
+          },
           ".btn-close-inner": {
-            "background-color": "#232323"
+            "background-color": "#232323",
+            "color": "#B3B3B3"
           },
           ".card": {
             "background": "#111111"

@@ -8,7 +8,8 @@
 
 {#if !$ndk.signer}
     <CollapsableDropdown>
-        <div slot="dropdown-button" class="btn btn-outline btn-rounded-full rounded-full border-accent2 hover:border-accent2 bg-base-200 hover:bg-accent2 text-base-100-content hover:text-base-200 text-sm md:text-base">
+        <!-- dropdown-button can not be <button> element. Issue with daisyUI dropdown -->
+        <div slot="dropdown-button" class="btn btn-outline btn-rounded-full rounded-full border-accent2 bg-transparent text-base-100-content text-sm md:text-base normal-case hover:border-accent2 hover:bg-accent2 hover:bg-opacity-20 hover:text-base-100-content"> 
             <span class="px-0 md:px-4 lg:px-9">
                 Log In
             </span>
@@ -17,7 +18,7 @@
         <ul slot="dropdown-content" class="divide-y divide-neutral-800 menu p-0 w-60 rounded-box">
             <div>
                 <div class="flex justify-center menu-title">
-                    <div class="p-1 text-center text-base font-medium">Log In</div>
+                    <div class="p-1 text-center text-base font-medium text-base-100-content">Log In</div>
                 </div>
             </div>
             <div class="p-4">

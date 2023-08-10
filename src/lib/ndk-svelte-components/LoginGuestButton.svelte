@@ -4,6 +4,7 @@
     import { currentUser } from '$lib/store';
     import { setupPlaceholderProfile } from './LoginModal/placeholder-profile';
     import KeyIcon from '$lib/icons/Key.svelte';
+    import AttentionButton from '$lib/components/buttons/AttentionButton.svelte';
 
     async function loginAsGuest() {
         const pk = NDKPrivateKeySigner.generate();
@@ -18,15 +19,9 @@
     }
 </script>
 
-<div on:click={loginAsGuest} class="btn w-full h-11 bg-base-100 rounded-full border-2 border-accent2 btn-rounded-full">
-    <div class="flex items-center gap-2">
+<AttentionButton handleClick={loginAsGuest}>
+    <div slot="btn-content" class="flex items-center gap-2">
         <KeyIcon />
-        <div class="text-center text-base-100-content text-xs font-medium normal-case">Continue as Guest</div>
+        <span >Continue as Guest</span>
     </div>
-</div>
-
-<style>
-    .btn {
-        box-shadow: 0px 0px 5px 1px #817eff;
-    }
-</style>
+</AttentionButton>
