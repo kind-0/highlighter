@@ -2,6 +2,7 @@
     import ndk from '$lib/stores/ndk';
     import { login } from '$lib/utils/login';
     import { currentUser } from '$lib/store';
+    import SubtleButton from '$lib/components/buttons/SubtleButton.svelte';
 
     let noNip07extenion: boolean;
 
@@ -36,7 +37,7 @@
         </div>
     </div>
 {:else}
-    <div on:click={loginNip07} class="btn btn-rounded-full rounded-full w-full h-11 bg-base-300">
-        <div class="text-center text-xs font-medium normal-case">Use Browser Extension</div>
-    </div>
+    <SubtleButton handleClick={loginNip07}>
+        <span slot="btn-content">Use Browser Extension</span>
+    </SubtleButton>
 {/if}

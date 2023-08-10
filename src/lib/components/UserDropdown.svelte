@@ -7,17 +7,12 @@
     import { logout } from '$lib/currentUser';
     import Notification from './Notification.svelte';
     import { Name } from '@nostr-dev-kit/ndk-svelte-components';
+    import SubtleButton from './buttons/SubtleButton.svelte';
 </script>
 
 <CollapsableDropdown>
-        <div slot="dropdown-button" class="btn btn-ghost btn-circle avatar">
-            <Avatar
-                ndk={$ndk}
-                user={$currentUser}
-                class="
-                    border-2 border-base-300 rounded-full
-                "
-            />
+        <div slot="dropdown-button" class="btn-circle avatar hover:border hover:border-accent2">
+            <Avatar ndk={$ndk} user={$currentUser}/>
         </div>
 
         <ul slot="dropdown-content" class="divide-y divide-neutral-800 menu p-0 w-[245px] rounded-box">
@@ -56,9 +51,9 @@
                 </div>
             </div>
             <div class="p-[22px]">
-                <div on:click={logout} class="btn btn-rounded-full rounded-full w-full h-11 bg-base-300">
-                    <div class="text-center text-xs text-base-100-content font-medium normal-case">Log Out</div>
-                </div>
+                <SubtleButton handleClick={logout}>
+                    <span slot="btn-content">Log Out</span>
+                </SubtleButton>
             </div>
         </ul>
 
