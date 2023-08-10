@@ -23,6 +23,9 @@ module.exports = {
         '32': '32px'
       }
     },
+    fontFamily: {
+      serif: ["Lora"]
+    }
   },
   plugins: [
     require('@tailwindcss/forms'),

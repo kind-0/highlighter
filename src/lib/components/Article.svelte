@@ -1,3 +1,7 @@
+<script lang="ts">
+    import "@fontsource/lora";
+</script>
+
 <div class="
     text-xl text-justify leading-loose
     overflow-auto w-full
@@ -8,6 +12,10 @@
 </div>
 
 <style>
+    :global(article) {
+        @apply font-serif;
+    }
+
     :global(article h2) {
         @apply text-base-100-content;
     }
@@ -16,7 +24,6 @@
         font-weight: 600;
         font-size: 2rem;
         font-family: 'Montserrat', sans-serif;
-        font-family: 'Outfit', sans-serif;
         margin-top: 1.5rem;
     }
 
@@ -24,7 +31,6 @@
         font-weight: 800;
         font-size: 1.75rem;
         font-family: 'Montserrat', sans-serif;
-        font-family: 'Outfit', sans-serif;
         margin-top: 1.5rem;
         @apply text-zinc-700;
     }
@@ -33,7 +39,6 @@
         font-weight: 600;
         font-size: 1.5rem;
         font-family: 'Montserrat', sans-serif;
-        font-family: 'Outfit', sans-serif;
         margin-top: 1.5rem;
     }
 

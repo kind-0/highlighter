@@ -30,7 +30,8 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 }
 
                 const ndkEvent = new NDKEvent(undefined, rawEvent);
-                subscription.eventReceived(ndkEvent, undefined, true);
+                const relay = event.relay ? new NDKRelay(event.relay) : undefined;
+                subscription.eventReceived(ndkEvent, relay, true);
             }
 
             return true;
@@ -60,7 +61,8 @@ export default class DexieAdapter implements NDKCacheAdapter {
                 }
 
                 const ndkEvent = new NDKEvent(undefined, rawEvent);
-                subscription.eventReceived(ndkEvent, undefined, true);
+                const relay = event.relay ? new NDKRelay(event.relay) : undefined;
+                subscription.eventReceived(ndkEvent, relay, true);
             }
 
             return true;
@@ -133,7 +135,8 @@ export default class DexieAdapter implements NDKCacheAdapter {
                     }
 
                     const ndkEvent = new NDKEvent(undefined, rawEvent);
-                    subscription.eventReceived(ndkEvent, undefined, true);
+                    const relay = event.relay ? new NDKRelay(event.relay) : undefined;
+                    subscription.eventReceived(ndkEvent, relay, true);
                     foundEvents = true;
                 }
             }
@@ -193,6 +196,8 @@ export default class DexieAdapter implements NDKCacheAdapter {
                     }
 
                     const ndkEvent = new NDKEvent(undefined, rawEvent);
+                    const relay = event.relay ? new NDKRelay(event.relay) : undefined;
+                    ndkEvent.relay = relay;
                     retEvents.push(ndkEvent);
                 }
             }

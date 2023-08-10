@@ -95,7 +95,7 @@ _ndk.storeSubscribeWithReposts = <T>(
         }
         e.ndk = _ndk;
 
-        const id = event.encode();
+        const id = event.tagId();
         if (eventIds.has(id)) return;
         eventIds.add(id);
         events.push(e as unknown as T);
@@ -157,7 +157,7 @@ function addEvent<T>(
         }
         e.ndk = _ndk;
 
-        const id = event.encode();
+        const id = event.tagId();
         if (eventIds.has(id)) return;
         eventIds.add(id);
         events.push(e as unknown as T);
