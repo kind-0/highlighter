@@ -7,11 +7,37 @@
     import { closeModal } from 'svelte-modals';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import ZapUserSplit from '$lib/components/ZapUserSplit.svelte';
+    import CircularIconButton from '$lib/components/buttons/CircularIconButton.svelte';
+    import Heart from '$lib/icons/Heart.svelte';
+    import Like from '$lib/icons/Like.svelte';
+    import Fire from '$lib/icons/Fire.svelte';
+    import Rocket from '$lib/icons/Rocket.svelte';
 
     export let event: NDKEvent;
 
     let amount = '1000';
     let comment = '';
+    let zapButtonLabel: string;
+
+    $: {
+        switch (amount) {
+            case "1000":
+                zapButtonLabel = "Zap 1K"
+                break;
+            case "10000":
+                zapButtonLabel = "Zap 10K"
+                break;
+            case "50000":
+                zapButtonLabel = "Zap 50K"
+                break;
+            case "100000":
+                zapButtonLabel = "Zap 100K"
+                break;
+            default:
+                zapButtonLabel = `Zap ${amount} sats`
+                break;
+        }
+    }
 
     async function zap() {
         event.ndk = $ndk;
@@ -49,15 +75,42 @@
 
         <div class="flex flex-row gap-4">
             <div class="flex flex-row gap-3">
-                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
-                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
-                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
-                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
+                <CircularIconButton title={"1K"} bind:group={amount} value={"1000"}>
+                    <Like />
+                </CircularIconButton>
+                <CircularIconButton title={"10K"} bind:group={amount} value={"10000"}>
+                    <Heart />
+                </CircularIconButton>
+                <CircularIconButton title={"50K"} bind:group={amount} value={"50000"}>
+                    <Fire />
+                </CircularIconButton>
+                <CircularIconButton title={"100K"} bind:group={amount} value={"100000"}>
+                    <Rocket />
+                </CircularIconButton>
                 <!-- <PillButton bind:group={amount} value="1000">
                     👍 1k
                 </PillButton> -->
             </div>
-            <div class="w-full h-11 rounded-[22px] border border-neutral-800"></div>
+            <div class="w-full h-11 rounded-[22px] ">
+                <!-- <Input
+                    type="text"
+                    maxlength="50"
+                    class="
+                        input-ghost w-full rounded-full
+                        bg-base-200
+                        text-base-100-content
+                    "
+                    placeholder="Add a comment..."
+                    bind:value={amount} /> -->
+                <Input
+                    type="text"
+                    maxlength="50"
+                    class="
+                        input !bg-transparent w-full rounded-full
+                        border border-neutral-800 focus:border-red-400
+                    "
+                    bind:value={amount} />
+            </div>
         </div>
     </div>
 
@@ -76,6 +129,6 @@
         </div>
 
     </div>
-    <button class="w-[330px] h-11 rounded-[22px] border border-red-400">Zap</button>
+    <button class="w-[330px] h-11 rounded-[22px] border border-red-400">{zapButtonLabel}</button>
 
 </ModalWrapper>

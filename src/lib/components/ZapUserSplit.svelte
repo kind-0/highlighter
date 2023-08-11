@@ -9,7 +9,7 @@
 
 <div class="flex flex-row gap-2 justify-between items-center">
     <div class="flex flex-row justiry-start items-center w-1/2 gap-3">
-        <Avatar {pubkey} class="w-7 h-7" />
+        <Avatar {pubkey} />
         <div class="w-0 flex flex-col flex-grow">
             <span class="truncate whitespace-nowrap">
                 <Name {pubkey} class="text-base-100-content font-normal text-xs leading-[18px] capitalize"/>
