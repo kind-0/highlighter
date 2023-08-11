@@ -1,15 +1,12 @@
 <script lang="ts">
     import ndk from '$lib/stores/ndk';
-    import UserCard from '$lib/components/UserCard.svelte';
-    import PillButton from '$lib/components/buttons/pill.svelte';
     import Input from '$lib/components/Input.svelte';
-    import CloseIcon from '$lib/icons/Close.svelte';
     import { NDKEvent } from '@nostr-dev-kit/ndk';
     import { requestProvider } from 'webln';
 
     import { closeModal } from 'svelte-modals';
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
-    import ModalButton from '$lib/components/ModalButton.svelte';
+    import ZapUserSplit from '$lib/components/ZapUserSplit.svelte';
 
     export let event: NDKEvent;
 
@@ -40,60 +37,45 @@
     }
 </script>
 
-<ModalWrapper class="max-w-md">
-    <button class="
-        text-zinc-500 hover:text-zinc-300 transition duration-300
-        absolute top-2 right-2
-    " on:click={closeModal}>
-        <CloseIcon />
-    </button>
-    <div class="flex flex-col gap-8">
-        <h2 class="text-zinc-500 font-semibold text-base uppercase">SPLITS</h2>
-
-        <UserCard pubkey={event.pubkey}>
-            <div slot="right">
-                ⚡️ {amount}
-            </div>
-        </UserCard>
+<ModalWrapper class="w-[374px]" title="Zap">
+    <div class="flex flex-col gap-3">
+        <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">SPLITS</div>
+        <ZapUserSplit pubkey={event.pubkey} split={100}/>
+        <!-- TODO add other people involved in the highlight? -->
     </div>
 
-    <div class="flex flex-col gap-3">
-        <h2 class="text-zinc-500 font-semibold text-base uppercase">
-            AMOUNT
-        </h2>
+    <div class="flex flex-col gap-3 mt-[22px]">
+        <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">AMOUNT</div>
 
-        <div class="flex flex-row">
-            <PillButton bind:group={amount} value="1000">
-                👍 1k
-            </PillButton>
-            <PillButton bind:group={amount} value="5000">
-                💜 5k
-            </PillButton>
-            <PillButton bind:group={amount} value="10000">
-                😍 10k
-            </PillButton>
-            <PillButton bind:group={amount} value="50000">
-                🤩 50k
-            </PillButton>
-            <PillButton bind:group={amount} value="100000">
-                🤯 100k
-            </PillButton>
+        <div class="flex flex-row gap-4">
+            <div class="flex flex-row gap-3">
+                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
+                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
+                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
+                <div class="w-11 h-11 bg-neutral-800 rounded-full"></div>
+                <!-- <PillButton bind:group={amount} value="1000">
+                    👍 1k
+                </PillButton> -->
+            </div>
+            <div class="w-full h-11 rounded-[22px] border border-neutral-800"></div>
         </div>
     </div>
 
-    <div class="flex flex-col gap-3">
-        <h2 class="text-zinc-500 font-semibold text-base uppercase">
-            COMMENT
-        </h2>
-
+    <div class="flex flex-col gap-3 mt-[22px]">
+        <div class="w-full h-11 rounded-[22px] border border-neutral-800">
         <Input
             type="text"
             maxlength="50"
+            class="
+                block w-full rounded-full
+                !bg-base-200
+                text-base-100-content
+            "
             placeholder="Add a comment..."
             bind:value={comment} />
-    </div>
+        </div>
 
-    <ModalButton on:click={zap}>
-        ZAP
-    </ModalButton>
+    </div>
+    <button class="w-[330px] h-11 rounded-[22px] border border-red-400">Zap</button>
+
 </ModalWrapper>
