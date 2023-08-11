@@ -11,7 +11,7 @@
 
 <div class="flex flex-col items-center">
     {#if group === value}
-        <button on:click={onClick} class="w-11 h-11 btn-circle bg-base-300 text-red-400 mb-2 grid place-items-center border border-red-400 hover:bg-red-400 hover:bg-opacity-20">
+        <button on:click={onClick} class="w-11 h-11 btn-circle bg-base-300 text-accent mb-2 grid place-items-center border border-accent hover:bg-accent hover:bg-opacity-20">
             <slot />
         </button>
     {:else}

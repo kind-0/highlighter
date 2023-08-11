@@ -18,30 +18,48 @@
     let customAmount = '';
     let hasCustomAmountFocus = false;
     let isValidCustomAmount = true;
+    let isCustomAmountSelected = false;
     let comment = '';
     let zapButtonLabel: string;
+    let zapButtonEnabled = true;
 
     $: {
         switch (amount) {
             case "1000":
-                zapButtonLabel = "Zap 1K"
+                isCustomAmountSelected = false;
+                zapButtonLabel = "Zap 1K";
                 break;
             case "10000":
-                zapButtonLabel = "Zap 10K"
+                isCustomAmountSelected = false;
+                zapButtonLabel = "Zap 10K";
                 break;
             case "50000":
-                zapButtonLabel = "Zap 50K"
+                isCustomAmountSelected = false;
+                zapButtonLabel = "Zap 50K";
                 break;
             case "100000":
-                zapButtonLabel = "Zap 100K"
+                isCustomAmountSelected = false;
+                zapButtonLabel = "Zap 100K";
                 break;
             default:
-                if (isValidCustomAmount){
-                    zapButtonLabel = `Zap ${customAmount} sats`
+                if (customAmount && isValidCustomAmount){
+                    zapButtonLabel = `Zap ${customAmount} sats`;
                 } else {
-                    zapButtonLabel = "Zap"
+                    zapButtonLabel = "Zap";
                 }
                 break;
+        }
+    }
+
+    $: {
+        if (amount) {
+            zapButtonEnabled = true;
+        } else {
+            if (customAmount && isValidCustomAmount){
+                zapButtonEnabled = true;
+            } else {
+                zapButtonEnabled = false;
+            }
         }
     }
 
@@ -49,15 +67,17 @@
         console.log("focusCustom!!!")
         hasCustomAmountFocus = true;
         if (customAmount) {
+            isCustomAmountSelected = true;
             amount = ''
         }
     }
 
-    let validateAmount = () => {
-        console.log(customAmount)
-        isValidCustomAmount = /^\+?(0|[1-9]\d*)$/.test(customAmount)
+    let validateCustomAmount = () => {
+        // Should be positive integer
+        isValidCustomAmount = /^\+?(0|[1-9]\d*)$/.test(customAmount);
         if (isValidCustomAmount){
-            amount = ''
+            amount = '';
+            isCustomAmountSelected = true;
         }
     }
 
@@ -65,6 +85,7 @@
         if (!isValidCustomAmount) {
             customAmount = ''
             isValidCustomAmount = true
+            isCustomAmountSelected = false
         }
     }
 
@@ -123,7 +144,8 @@
                         type="text"
                         maxlength="50"
                         class="
-                            form-input text-center w-full  rounded-full h-11 mb-2 border-1 border-neutral-800
+                            form-input text-center w-full  rounded-full h-11 mb-2
+                            border-1 {isCustomAmountSelected ? 'border-accent': 'border-neutral-800'} 
                             focus:border-0
                             focus:ring-1 focus:ring-inset focus:ring-accent
                             {isValidCustomAmount ? '!bg-transparent' : '!bg-red-400 !bg-opacity-20'}
@@ -131,7 +153,7 @@
                         bind:value={customAmount}
                         on:focus={focusCustomInput} 
                         on:blur={clearCustomAmount}
-                        on:input={validateAmount}/>
+                        on:input={validateCustomAmount}/>
                     <span class="text-xs text-center font-normal text-base-100-content">
                         Custom
                     </span>
@@ -155,7 +177,11 @@
             </div>
 
         </div>
-        <button class="w-full h-11 rounded-[22px] border border-red-400 ">{zapButtonLabel}</button>
+        <!-- <button class="btn rounded-full btn-rounded-full{!zapButtonEnabled ? 'btn-disabled' : '' } w-full h-11 rounded-[22px] border border-accent ">{zapButtonLabel}</button> -->
+
+        <button class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
+                {zapButtonLabel}
+        </button>
     </div>
 
 </ModalWrapper>
