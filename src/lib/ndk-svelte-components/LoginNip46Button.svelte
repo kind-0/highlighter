@@ -13,6 +13,6 @@
     }
 </script>
 
-<SubtleButton handleClick={openNip46Modal}>
+<SubtleButton handleClick={openNip46Modal} class="w-full">
     <span slot="btn-content">nsecBunker</span>
 </SubtleButton>
