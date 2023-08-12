@@ -21,6 +21,7 @@
 
     let amount = '1000';
     let customAmount = '';
+    let zapAmount = '1000';
     let hasCustomAmountFocus = false;
     let isValidCustomAmount = true;
     let isCustomAmountSelected = false;
@@ -33,22 +34,27 @@
             case "1000":
                 isCustomAmountSelected = false;
                 zapButtonLabel = "Zap 1K";
+                zapAmount = amount;
                 break;
             case "10000":
                 isCustomAmountSelected = false;
                 zapButtonLabel = "Zap 10K";
+                zapAmount = amount;
                 break;
             case "50000":
                 isCustomAmountSelected = false;
                 zapButtonLabel = "Zap 50K";
+                zapAmount = amount;
                 break;
             case "100000":
                 isCustomAmountSelected = false;
                 zapButtonLabel = "Zap 100K";
+                zapAmount = amount;
                 break;
             default:
                 if (customAmount && isValidCustomAmount){
                     zapButtonLabel = `Zap ${customAmount} sats`;
+                    zapAmount = customAmount;
                 } else {
                     zapButtonLabel = "Zap";
                 }
@@ -69,7 +75,6 @@
     }
 
     let focusCustomInput = () => {
-        console.log("focusCustom!!!")
         hasCustomAmountFocus = true;
         if (customAmount) {
             isCustomAmountSelected = true;
@@ -94,9 +99,15 @@
         }
     }
 
+    async function testZap() {
+        console.log("zapAmount: ", zapAmount);
+        console.log("zapComment: ", comment);
+        zapSent = true;
+    }
+
     async function zap() {
         event.ndk = $ndk;
-        let pr = await event.zap(parseInt(amount)*1000, comment);
+        let pr = await event.zap(parseInt(zapAmount)*1000, comment);
 
         if (!pr) {
             console.log('no payment request');
@@ -187,7 +198,7 @@
                 placeholder="Add a comment..."
                 bind:value={comment}/>
 
-            <button on:click={() => {zapSent = true;}} class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
+            <button on:click={testZap} class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
                     {zapButtonLabel}
             </button>
         </div>
