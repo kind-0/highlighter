@@ -120,111 +120,76 @@
 
 <ModalWrapper class="w-[374px]" bodyClass="p-[22px]" title="Zap">
     {#if zapSent}
-        <div class="flex flex-col gap-16 items-center justify-center pt-[30px]">
-            <!-- <div class="container">
-                <div class="icon-zap"> -->
-                    <ZapSent class="w-[102px] h-[147.48px]"/>
-                <!-- </div>
-            </div> -->
+        <div class="flex flex-col items-center justify-center">
             <div>
-                <SubtleButton handleClick={closeModal}>
-                    <span class="glow flex items-center gap-3 text-base-100-content text-base leading-normal font-normal" slot="btn-content"><CheckSimple class="text-accent"/> Zap Sent</span>
-                </SubtleButton>
+                <ZapSent class="h-[267px]"/>
             </div>
+            <SubtleButton handleClick={closeModal} class="w-fit">
+                <span class="glow flex items-center gap-3 text-base-100-content text-base leading-normal font-normal" slot="btn-content"><CheckSimple class="text-accent"/> Zap Sent</span>
+            </SubtleButton>
         </div>
 
     {:else}
-    <div class="flex flex-col gap-[22px]">
-        <div class="flex flex-col gap-3">
-            <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">SPLITS</div>
-            <ZapUserSplit pubkey={event.pubkey} split={100}/>
-            <!-- TODO add other people involved in the highlight? -->
-        </div>
+        <div class="flex flex-col gap-[22px]">
+            <div class="flex flex-col gap-3">
+                <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">SPLITS</div>
+                <ZapUserSplit pubkey={event.pubkey} split={100}/>
+                <!-- TODO add other people involved in the highlight? -->
+            </div>
 
-        <div class="flex flex-col gap-3">
-            <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">AMOUNT</div>
+            <div class="flex flex-col gap-3">
+                <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">AMOUNT</div>
 
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-row gap-3">
-                    <CircularIconButton title={"1K"} bind:group={amount} value={"1000"}>
-                        <Like />
-                    </CircularIconButton>
-                    <CircularIconButton title={"10K"} bind:group={amount} value={"10000"}>
-                        <Heart />
-                    </CircularIconButton>
-                    <CircularIconButton title={"50K"} bind:group={amount} value={"50000"}>
-                        <Fire />
-                    </CircularIconButton>
-                    <CircularIconButton title={"100K"} bind:group={amount} value={"100000"}>
-                        <Rocket />
-                    </CircularIconButton>
-                </div>
-                <div class="w-full flex flex-col items-center">
-                    <input
-                        type="text"
-                        maxlength="50"
-                        class="
-                            form-input text-center w-full  rounded-full h-11 mb-2
-                            border-1 {isCustomAmountSelected ? 'border-accent': 'border-neutral-800'} 
-                            focus:ring-transparent focus:border-accent
-                            {isValidCustomAmount ? '!bg-transparent' : '!bg-red-400 !bg-opacity-20'}
-                        "
-                        bind:value={customAmount}
-                        on:focus={focusCustomInput} 
-                        on:blur={clearCustomAmount}
-                        on:input={validateCustomAmount}/>
-                    <span class="text-xs text-center font-normal text-base-100-content">
-                        Custom
-                    </span>
+                <div class="flex flex-row gap-4">
+                    <div class="flex flex-row gap-3">
+                        <CircularIconButton title={"1K"} bind:group={amount} value={"1000"}>
+                            <Like />
+                        </CircularIconButton>
+                        <CircularIconButton title={"10K"} bind:group={amount} value={"10000"}>
+                            <Heart />
+                        </CircularIconButton>
+                        <CircularIconButton title={"50K"} bind:group={amount} value={"50000"}>
+                            <Fire />
+                        </CircularIconButton>
+                        <CircularIconButton title={"100K"} bind:group={amount} value={"100000"}>
+                            <Rocket />
+                        </CircularIconButton>
+                    </div>
+                    <div class="w-full flex flex-col items-center">
+                        <input
+                            type="text"
+                            maxlength="50"
+                            class="
+                                form-input text-center w-full  rounded-full h-11 mb-2
+                                border-1 {isCustomAmountSelected ? 'border-accent': 'border-neutral-800'} 
+                                focus:ring-transparent focus:border-accent
+                                {isValidCustomAmount ? '!bg-transparent' : '!bg-red-400 !bg-opacity-20'}
+                            "
+                            bind:value={customAmount}
+                            on:focus={focusCustomInput} 
+                            on:blur={clearCustomAmount}
+                            on:input={validateCustomAmount}/>
+                        <span class="text-xs text-center font-normal text-base-100-content">
+                            Custom
+                        </span>
+                    </div>
                 </div>
             </div>
+
+            <input
+                type="text"
+                maxlength="50"
+                class="
+                    form-input text-start text-xs px-6 w-full  rounded-full h-11
+                    border-1 border-neutral-800 focus:ring-transparent focus:border-neutral-800
+                    !bg-transparent
+                "
+                placeholder="Add a comment..."
+                bind:value={comment}/>
+
+            <button on:click={() => {zapSent = true;}} class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
+                    {zapButtonLabel}
+            </button>
         </div>
-
-        <input
-            type="text"
-            maxlength="50"
-            class="
-                form-input text-start text-xs px-6 w-full  rounded-full h-11
-                border-1 border-neutral-800 focus:ring-transparent focus:border-neutral-800
-                !bg-transparent
-            "
-            placeholder="Add a comment..."
-            bind:value={comment}/>
-
-        <button on:click={() => {zapSent = true;}} class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
-                {zapButtonLabel}
-        </button>
-    </div>
     {/if}
 </ModalWrapper>
-
-<!-- <style>
-    .container {
-    position: relative;
-    }
-
-    .container::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at center, #FF685E, transparent);
-        opacity: 0;
-        animation: radialBreathing 3s infinite alternate;
-    }
-
-    @keyframes radialBreathing {
-        0% {
-            transform: scale(1);
-            opacity: 0;
-        }
-        100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-
-</style> -->
-
