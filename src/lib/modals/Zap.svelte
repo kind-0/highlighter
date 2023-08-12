@@ -1,6 +1,6 @@
 <script lang="ts">
     import ndk from '$lib/stores/ndk';
-    import { NDKEvent } from '@nostr-dev-kit/ndk';
+    import type { NDKEvent } from '@nostr-dev-kit/ndk';
     import { requestProvider } from 'webln';
 
     import { closeModal } from 'svelte-modals';
@@ -28,6 +28,7 @@
     let comment = '';
     let zapButtonLabel: string;
     let zapButtonEnabled = true;
+    let zapping = false;
 
     $: {
         switch (amount) {
@@ -99,14 +100,11 @@
         }
     }
 
-    async function testZap() {
-        console.log("zapAmount: ", zapAmount);
-        console.log("zapComment: ", comment);
-        zapSent = true;
-    }
-
     async function zap() {
+        // closeModal();
+
         event.ndk = $ndk;
+        zapping = true;
         let pr = await event.zap(parseInt(zapAmount)*1000, comment);
 
         if (!pr) {
@@ -114,16 +112,16 @@
             return;
         }
 
-        closeModal();
-
         try {
             const webln = await requestProvider();
-            webln.sendPayment(pr);
+            await webln.sendPayment(pr);
+            zapping = false;
+            zapSent = true;
             // TODO we should check here if the payment was successful, with a timer
             // that is canceled here; if the timer doesn't come back, show the modal again
             // or instruct the user to do something with the failed payment
         } catch (err: any) {
-            console.log(err);
+            zapping = false;
             return;
         }
     }
@@ -143,13 +141,13 @@
     {:else}
         <div class="flex flex-col gap-[22px]">
             <div class="flex flex-col gap-3">
-                <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">SPLITS</div>
+                <div class="text-base-300-content text-[10px] font-semibold tracking-widest">SPLITS</div>
                 <ZapUserSplit pubkey={event.pubkey} split={100}/>
                 <!-- TODO add other people involved in the highlight? -->
             </div>
 
             <div class="flex flex-col gap-3">
-                <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">AMOUNT</div>
+                <div class="text-base-300-content text-[10px] font-semibold tracking-widest">AMOUNT</div>
 
                 <div class="flex flex-row gap-4">
                     <div class="flex flex-row gap-3">
@@ -172,12 +170,12 @@
                             maxlength="50"
                             class="
                                 form-input text-center w-full  rounded-full h-11 mb-2
-                                border-1 {isCustomAmountSelected ? 'border-accent': 'border-neutral-800'} 
+                                border-1 {isCustomAmountSelected ? 'border-accent': 'border-neutral-800'}
                                 focus:ring-transparent focus:border-accent
-                                {isValidCustomAmount ? '!bg-transparent' : '!bg-red-400 !bg-opacity-20'}
+                                {isValidCustomAmount ? '!bg-transparent' : '!bg-error !bg-opacity-20'}
                             "
                             bind:value={customAmount}
-                            on:focus={focusCustomInput} 
+                            on:focus={focusCustomInput}
                             on:blur={clearCustomAmount}
                             on:input={validateCustomAmount}/>
                         <span class="text-xs text-center font-normal text-base-100-content">
@@ -191,15 +189,19 @@
                 type="text"
                 maxlength="50"
                 class="
-                    form-input text-start text-xs px-6 w-full  rounded-full h-11
+                    form-input text-start text-base px-6 w-full  rounded-full h-11
                     border-1 border-neutral-800 focus:ring-transparent focus:border-neutral-800
                     !bg-transparent
                 "
                 placeholder="Add a comment..."
                 bind:value={comment}/>
 
-            <button on:click={testZap} class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
+            <button on:click={zap} class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content">
+                {#if zapping}
+                    <span class="loading loading-sm opacity-50"></span>
+                {:else}
                     {zapButtonLabel}
+                {/if}
             </button>
         </div>
     {/if}

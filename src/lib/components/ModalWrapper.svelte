@@ -4,7 +4,7 @@
     import { fade } from "svelte/transition";
 
     export let title: string | undefined;
-    export let subtitle: string | undefined;
+    export let subtitle: string | undefined = undefined;
     export let bodyClass: string | undefined;
 </script>
 

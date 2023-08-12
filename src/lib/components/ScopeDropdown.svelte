@@ -1,6 +1,5 @@
 <script lang="ts">
     import { currentUserFollowPubkeys, currentScope, currentUser } from '$lib/store';
-    import { fade } from 'svelte/transition';
     import { fetchFollowers } from '$lib/currentUser';
 
     export let scope: string;

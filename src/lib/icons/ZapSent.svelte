@@ -8,7 +8,7 @@
                 <feMergeNode in="SourceGraphic"/>
             </feMerge>
         </filter>
-        
+
         <linearGradient id="paint0_linear_1061_7577" x1="267.686" y1="74.6531" x2="115.153" y2="306.279" gradientUnits="userSpaceOnUse">
             <stop stop-color="#FF7E34"/>
             <stop offset="1" stop-color="#FF5E69"/>
@@ -30,14 +30,14 @@
 <style>
     @keyframes glowAnimation {
         0%, 100% {
-            filter: drop-shadow(0 0 0px #FF685E) drop-shadow(0 0 5px #FF685E) drop-shadow(0 0 20px #FF685E);
+            filter: drop-shadow(0 0 0px #FF685Ea0) drop-shadow(0 0 5px #FF685Ea0) drop-shadow(0 0 20px #FF685Ea0);
         }
         50% {
-            filter: drop-shadow(0 0 0px #FF685E) drop-shadow(0 0 15px #FF685E) drop-shadow(0 0 22px #FF685E);
+            filter: drop-shadow(0 0 0px #FF685Ea0) drop-shadow(0 0 15px #FF685Ea0) drop-shadow(0 0 22px #FF685Ea0);
         }
     }
 
     #Vector_2 path {
-        animation: glowAnimation 3s infinite;
+        animation: glowAnimation 2s infinite;
     }
 </style>
