@@ -9,8 +9,6 @@
     import ModalWrapper from '$lib/components/ModalWrapper.svelte';
     import Textarea from '$lib/components/Textarea.svelte';
 
-    export let isOpen: boolean | undefined;
-
     let nip46ConnectionString = '';
     let nip46ConnectionStatus: string | undefined = undefined;
     let nip46ConnectionInfo: string | undefined = undefined;

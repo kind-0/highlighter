@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="p-[22px]">
-                <SubtleButton handleClick={logout}>
+                <SubtleButton handleClick={logout} class="w-full">
                     <span slot="btn-content">Log Out</span>
                 </SubtleButton>
             </div>

@@ -30,7 +30,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require("@tailwindcss/typography"),
-    require('flowbite/plugin'),
+    // require('flowbite/plugin'),
     require("daisyui"),
   ],
   daisyui: {
@@ -120,9 +120,6 @@ module.exports = {
           },
           ".card": {
             "background": "#111111"
-          },
-          ".card:not([class^=\"rounded\"])": {
-            "border-radius": "5px",
           },
           ".input": {
             "background": "rgb(26, 25, 25)",

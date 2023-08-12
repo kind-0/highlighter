@@ -1,9 +1,11 @@
 <script lang="ts">
+    import CloseIcon from "$lib/icons/Close.svelte";
     import { closeModal } from "svelte-modals";
     import { fade } from "svelte/transition";
 
     export let title: string | undefined;
-    export let subtitle: string | undefined;
+    export let subtitle: string | undefined = undefined;
+    export let bodyClass: string | undefined;
 </script>
 
 <div class="
@@ -15,29 +17,38 @@
 " transition:fade on:click={closeModal}>
     <div class="
         card
-        rounded-lg sm:rounded-xl
+        rounded-3xl
         max-w-3xl
         shadow-xl
-        flex flex-col gap-8
+        flex flex-col
         relative
         overflow-y-auto
         {$$props.class}
     " style="pointer-events: auto; max-height: 80vh;" on:click|stopPropagation={()=>{}}>
-        {#if title}
-            <div class="flex flex-col gap-2 items-center p-8">
-                <div class="card-title text-base-100-content text-4xl font-bold">
-                    {title}
+        <div class="flex flex-col divide-y divide-neutral-800">
+            <div class="relative flex w-full justify-center items-center">
+                <div class="absolute top-[22px] left-[22px]">
+                    <button on:click={closeModal} class="btn-close-inner w-7 h-7 p-1.5 rounded-full">
+                        <CloseIcon />
+                    </button>
                 </div>
+                {#if title}
+                    <div class="flex flex-col items-center py-6">
+                        <div class="card-title text-base-100-content text-base font-medium">
+                            {title}
+                        </div>
 
-                {#if subtitle}
-                    <div class="text-sm text-accent2">
-                        {subtitle}
+                        {#if subtitle}
+                            <div class="text-sm text-accent2">
+                                {subtitle}
+                            </div>
+                        {/if}
                     </div>
                 {/if}
             </div>
-        {/if}
-        <div class="card-body">
-            <slot />
+            <div class="card-body {bodyClass}">
+                <slot />
+            </div>
         </div>
     </div>
 </div>
