@@ -11,8 +11,13 @@
     import Like from '$lib/icons/Like.svelte';
     import Fire from '$lib/icons/Fire.svelte';
     import Rocket from '$lib/icons/Rocket.svelte';
+    import ZapSent from '$lib/icons/ZapSent.svelte';
+    import SubtleButton from '$lib/components/buttons/SubtleButton.svelte';
+    import CheckSimple from '$lib/icons/CheckSimple.svelte';
 
     export let event: NDKEvent;
+
+    let zapSent = false;
 
     let amount = '1000';
     let customAmount = '';
@@ -114,6 +119,21 @@
 </script>
 
 <ModalWrapper class="w-[374px]" bodyClass="p-[22px]" title="Zap">
+    {#if zapSent}
+        <div class="flex flex-col gap-16 items-center justify-center pt-[30px]">
+            <!-- <div class="container">
+                <div class="icon-zap"> -->
+                    <ZapSent class="w-[102px] h-[147.48px]"/>
+                <!-- </div>
+            </div> -->
+            <div>
+                <SubtleButton handleClick={closeModal}>
+                    <span class="glow flex items-center gap-3 text-base-100-content text-base leading-normal font-normal" slot="btn-content"><CheckSimple class="text-accent"/> Zap Sent</span>
+                </SubtleButton>
+            </div>
+        </div>
+
+    {:else}
     <div class="flex flex-col gap-[22px]">
         <div class="flex flex-col gap-3">
             <div class="text-zinc-400 text-[10px] font-semibold tracking-widest">SPLITS</div>
@@ -171,8 +191,40 @@
             placeholder="Add a comment..."
             bind:value={comment}/>
 
-        <button class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
+        <button on:click={() => {zapSent = true;}} class="btn btn-outline {!zapButtonEnabled ? 'btn-disabled' : ''} btn-rounded-full rounded-full border-accent bg-transparent text-base-100-content text-base normal-case font-normal leading-normal hover:border-accent hover:bg-accent hover:bg-opacity-20 hover:text-base-100-content"> 
                 {zapButtonLabel}
         </button>
     </div>
+    {/if}
 </ModalWrapper>
+
+<!-- <style>
+    .container {
+    position: relative;
+    }
+
+    .container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, #FF685E, transparent);
+        opacity: 0;
+        animation: radialBreathing 3s infinite alternate;
+    }
+
+    @keyframes radialBreathing {
+        0% {
+            transform: scale(1);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+</style> -->
+
