@@ -1,7 +1,3 @@
-<script lang="ts">
-    import "@fontsource/lora";
-</script>
-
 <div class="
     text-xl text-justify leading-loose
     overflow-auto w-full

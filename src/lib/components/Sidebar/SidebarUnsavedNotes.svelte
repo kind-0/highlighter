@@ -1,7 +1,7 @@
 <script lang="ts">
     import { unsavedLongFormStore } from '$lib/stores/long-form';
     import { Cloud, Pen } from 'phosphor-svelte';
-    import MenuItem from './MenuItem.svelte';
+    import MenuItem from '../sidebars/MenuItem.svelte';
 </script>
 
 

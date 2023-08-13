@@ -1,9 +1,9 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { currentUserFollowPubkeys, currentScope, currentUser } from '$lib/store';
-    import { fetchFollowers } from '$lib/currentUser';
+    import { currentScope, currentUser } from '$lib/store';
+    import { userFollows } from '$stores/session';
     import MainWithRightSidebar from '$lib/layouts/MainWithRightSidebar.svelte';
-    import MenuItem from '$lib/components/Sidebar/MenuItem.svelte';
+    import MenuItem from '$components/sidebars/MenuItem.svelte';
     import PopularShelves from '$lib/components/lists/PopularShelves.svelte';
     import ndk from '$lib/stores/ndk';
     import type { NDKEvent } from '@nostr-dev-kit/ndk';
@@ -58,8 +58,8 @@
 
                 break;
             case 'network':
-                if ($currentUserFollowPubkeys) {
-                    $currentScope.pubkeys = $currentUserFollowPubkeys;
+                if ($userFollows) {
+                    $currentScope.pubkeys = Array.from($userFollows);
                     $currentScope.label = $page.params.scope;
                 }
                 break;
@@ -90,12 +90,8 @@
 
 <MainWithRightSidebar>
     {#if $page.params.scope === 'network'}
-        {#if $currentUserFollowPubkeys === undefined}
-            {#await fetchFollowers()}
-                Loading follow List
-            {:then}
-                <slot />
-            {/await}
+        {#if $userFollows === undefined}
+            <slot />
         {:else}
             <slot />
         {/if}

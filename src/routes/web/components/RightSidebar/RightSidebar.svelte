@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { NDKDVMJobResult, NDKDVMRequest, NDKKind } from '@nostr-dev-kit/ndk';
-    import MenuItem from "$lib/components/Sidebar/MenuItem.svelte";
+    import MenuItem from "$components/sidebars/MenuItem.svelte";
     import ndk from "$lib/stores/ndk";
 </script>
 

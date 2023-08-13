@@ -4,7 +4,7 @@
     import type { NDKUser } from '@nostr-dev-kit/ndk';
     import { Books, HighlighterCircle, Newspaper } from 'phosphor-svelte';
     import { page } from '$app/stores';
-    import MenuItem from '$lib/components/Sidebar/MenuItem.svelte';
+    import MenuItem from '$components/sidebars/MenuItem.svelte';
 
     export let user: NDKUser;
 

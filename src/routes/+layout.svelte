@@ -2,33 +2,38 @@
     import ndk, { bunkerNDK } from '$lib/stores/ndk';
     import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
-    import { fetchFollowers } from '$lib/currentUser';
     import { currentUserFollowPubkeys as currentUserFollowPubkeysStore } from '$lib/store';
-    import { getLists } from '$lib/stores/list';
     import { login } from '$lib/utils/login';
     import '../app.postcss';
     import { Modals, closeModal } from 'svelte-modals'
     import { fade } from 'svelte/transition'
     import { pwaInfo } from 'virtual:pwa-info';
+    import "@fontsource/lora";
+    import Loading from '$lib/components/Loading.svelte';
+    import { user, prepareSession } from '$stores/session';
+    import { page } from '$app/stores';
 
     $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
 
     let prevCurrentUser: string | undefined = undefined;
 
-    let subscribed = false;
-    let listSub;
+    let sessionPreparationStarted = false;
+    let mounted = false;
 
-    $: if (!subscribed && $currentUser) {
-        subscribed = true;
-        listSub = getLists($currentUser);
-    }
+    login($ndk, $bunkerNDK).then((user) => {
+        $currentUser = user;
+        $user = $currentUser;
+    })
 
     onMount(async () => {
         try {
             $ndk.connect();
-            $currentUser = await login($ndk, $bunkerNDK);
+            console.log($currentUser);
+            mounted = true;
         } catch (e) {
+            console.log('here')
             console.error(`layout error`, e);
+            mounted = true;
         }
     });
 
@@ -39,16 +44,45 @@
         if (cachedFollows) {
             $currentUserFollowPubkeysStore = JSON.parse(cachedFollows);
         }
-
-        fetchFollowers();
     }
+
+    let loading: boolean = false;
+
+    $: if (mounted && !!$currentUser && !sessionPreparationStarted) {
+        sessionPreparationStarted = true;
+        if (true) {
+            loading = true;
+            prepareSession().then(() => {
+                loading = false;
+            })
+        } else {
+            prepareSession();
+        }
+    }
+
+    let shouldShowLoadingScreen = false;
+
+    $: shouldShowLoadingScreen = $page.url.pathname !== '/';
+
+    // setTimeout(() => { loading = false }, 5000 );
+
 </script>
 
 <svelte:head>
     {@html webManifestLink}
 </svelte:head>
 
-<slot />
+{#if mounted}
+    {#if loading && shouldShowLoadingScreen}
+        <div transition:fade>
+            <Loading on:loaded={() => loading = false } />
+        </div>
+    {:else}
+        <div transition:fade>
+            <slot />
+        </div>
+    {/if}
+{/if}
 
 <Modals>
     <div

@@ -3,7 +3,7 @@
     import type NDKList from '$lib/ndk-kinds/lists';
     import { Graph, UserCircle } from 'phosphor-svelte';
     import Highlight from '$lib/icons/Highlight.svelte';
-    import MenuItem from "./MenuItem.svelte";
+    import MenuItem from "../sidebars/MenuItem.svelte";
     import { createDraggableEvent } from "$lib/utils/draggable";
 
     export let item: NDKList;

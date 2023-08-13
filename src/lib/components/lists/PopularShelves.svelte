@@ -2,7 +2,7 @@
     This component shows lists of popular lists
 -->
 <script lang="ts">
-    import MenuItem from "../Sidebar/MenuItem.svelte";
+    import MenuItem from "../sidebars/MenuItem.svelte";
     import NDKList from "$lib/ndk-kinds/lists";
     import ndk from "$lib/stores/ndk";
     import { Name } from "@nostr-dev-kit/ndk-svelte-components";

@@ -23,5 +23,5 @@ export async function setupPlaceholderProfile(profile?: NDKUserProfile) {
     await $currentUser.publish();
 
     const pablo = new NDKUser({npub: 'npub1l2vyh47mk2p0qlsku7hg0vn29faehy9hy34ygaclpn66ukqp3afqutajft'});
-    $currentUser.follow(pablo);
+    await $currentUser.follow(pablo);
 }
