@@ -51,7 +51,7 @@
     <div class="
         card card-compact !rounded-none md:!rounded-2xl group {$$props.class??""}
     " on:mouseenter on:mouseleave on:click={toggleDrawer}>
-        <div class="card-body flex flex-col text-base gap-2">
+        <div class="card-body flex flex-col text-base gap-4">
             {#if !skipHeader}
                 <div class="flex flex-row justify-between gap-4 md:gap-12">
                     <slot name="header" />

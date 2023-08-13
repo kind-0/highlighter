@@ -46,12 +46,12 @@
     }
 </script>
 
-<div class="flex flex-row justify-center items-stretch gap-4">
+<div class="flex flex-row justify-center items-stretch gap-4 md:font-serif leading-[1.8rem]">
     {#if !floatedHighlightBorder}
         <div class="bg-accent h-100 rounded-lg quote-line shrink-0"></div>
     {/if}
     <div class="flex-grow">
-        <NoteContent note={contextWithHighlight} tags={(article??highlight).tags} />
+        <NoteContent note={contextWithHighlight} tags={(article??highlight)?.tags} />
     </div>
 </div>
 

@@ -37,7 +37,7 @@
         </div>
 
         <a href={linkToArticle(highlight)} class="
-            h-full flex flex-col
+            h-full flex flex-col gap-2
             overflow-auto
             {$$props.class}
         ">
@@ -49,7 +49,7 @@
                 </div>
             {/if}
 
-            <div class="text-base-100-content">
+            <div class="text-base-100-content md:font-serif leading-[1.8rem]">
                 <EventContent
                     note={removeQuotedEvent(event)}
                     tags={event.tags}
