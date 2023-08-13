@@ -1,5 +1,5 @@
 <script lang="ts">
-    import MenuItem from '$lib/components/Sidebar/MenuItem.svelte';
+    import MenuItem from '$components/sidebars/MenuItem.svelte';
     import Input from '$lib/components/Input.svelte';
     import { CaretDown, Hash } from 'phosphor-svelte';
 

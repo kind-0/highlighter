@@ -17,8 +17,6 @@
 </script>
 
 <li class="border-b border-base-300 -mx-2 px-2">
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <a class="
         flex flex-row gap-4 items-center text-lg rounded-b-none
     " on:click={() => {openModal(RelaySetNavigatorModal) }}>
