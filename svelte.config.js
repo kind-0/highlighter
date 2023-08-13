@@ -5,6 +5,13 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 const config = {
 	kit: {
 		adapter: adapter({ out: 'build' }),
+		alias: {
+			$actions: 'src/lib/actions',
+			$components: 'src/lib/components',
+			$icons: 'src/lib/icons',
+			$stores: 'src/lib/stores',
+			$utils: 'src/lib/utils'
+		}
 	},
 	preprocess: vitePreprocess(),
 	onwarn: (warning, handler) => {
