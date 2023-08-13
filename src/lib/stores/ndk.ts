@@ -9,7 +9,7 @@ import NDKSvelte from '@nostr-dev-kit/ndk-svelte';
 let cacheAdapter: NDKCacheAdapter | undefined;
 
 if (browser) {
-    cacheAdapter = new DexieAdapter();
+    // cacheAdapter = new DexieAdapter();
 } else {
     // cacheAdapter = new NDKRedisCacheAdapter();
     // console.log(`Using cache NDKRedisCacheAdapter`);
