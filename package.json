@@ -52,7 +52,7 @@
 		"@mozilla/readability": "^0.4.4",
 		"@neodrag/svelte": "^2.0.3",
 		"@noble/hashes": "^1.3.1",
-		"@nostr-dev-kit/ndk": "0.8.13",
+		"@nostr-dev-kit/ndk": "0.8.17",
 		"@nostr-dev-kit/ndk-cache-redis": "^1.3.0",
 		"@nostr-dev-kit/ndk-svelte": "0.8.13-0",
 		"@nostr-dev-kit/ndk-svelte-components": "0.8.13-0",

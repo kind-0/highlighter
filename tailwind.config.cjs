@@ -21,6 +21,9 @@ module.exports = {
       },
       spacing: {
         '32': '32px'
+      },
+      borderRadius: {
+        'xl': '22px'
       }
     },
     fontFamily: {
@@ -132,6 +135,12 @@ module.exports = {
           },
           ".dropdown-content": {
             "box-shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px"
+          },
+          ".grad-orange": {
+            "background-image": "radial-gradient(farthest-corner at 100% 0px, #FF7E34 0%, #FF5E63 100%)"
+          },
+          ".grad-blue": {
+            "background-image": "radial-gradient(farthest-corner at 100% 0px, #5CA2FF 0%, #916EFF 100%)"
           },
           "mark": {
             "background": "rgba(255, 104, 94, 0.33)",
