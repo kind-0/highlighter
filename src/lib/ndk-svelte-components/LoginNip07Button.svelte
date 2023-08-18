@@ -37,7 +37,7 @@
         </div>
     </div>
 {:else}
-    <SubtleButton handleClick={loginNip07} class="w-full">
+    <SubtleButton on:click={loginNip07} class="w-full">
         <span slot="btn-content">Use Browser Extension</span>
     </SubtleButton>
 {/if}
