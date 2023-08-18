@@ -1,21 +1,17 @@
 <script lang="ts">
-    import ZapCounterIcon from "$icons/ZapCounter.svelte";
+    import ZapCounter from "./ZapCounter.svelte";
 
     export let title: string | undefined = "Nostr long form article";
     export let summary: string | undefined;
     export let image: string | undefined;
-    export let zapAmount: string = "1K";
 
     let aspectRatio: number;
+    let imgLoaded: boolean = false;
 
     export const lazyLoad = (image, src) => {
         const loaded = () => {
             aspectRatio = image.naturalWidth/image.naturalHeight;
-        }
-        let options = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0
+            imgLoaded = true;
         }
         const observer = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
@@ -28,7 +24,7 @@
                     image.addEventListener('load', loaded)
                 }
             }
-        }, options)
+        }, {})
         // intersection observer
         observer.observe(image)  
         return {
@@ -43,11 +39,9 @@
 
 <div class="flex flex-col gap-4">
     <div class="relative group overflow-hidden flex flex-col justify-end w-[174px] h-[244px] shadow rounded-xl">
-        <div class="absolute top-0 left-0 h-full w-full">
+        <div class="absolute top-0 left-0 h-full w-full rounded-xl {!imgLoaded ? 'grad-blue' : ''}">
         {#if image}
-            <img id="bg-image" use:lazyLoad={image} class="object-cover {aspectRatio <= 1 ? 'w-full': 'h-full'} rounded-xl"/>
-        {:else}
-            <div class="h-full w-full grad-blue rounded-xl"></div>
+            <img use:lazyLoad={image} class="object-cover rounded-xl {aspectRatio <= 1 ? 'w-full': 'h-full'}"/>
         {/if}
         </div>
 
@@ -65,10 +59,7 @@
                     <p class="summary text-xs font-normal leading-[18px]">{summary}</p>
                     {/if}
                 </div>
-                <div class="h-7 w-fit flex items-center px-3 gap-2 bg-base-200  rounded-full">
-                    <span class="text-right text-xs font-normal">{zapAmount}</span>
-                    <ZapCounterIcon />
-                </div>
+                <ZapCounter />
             </div>
         </div>
     </div>
