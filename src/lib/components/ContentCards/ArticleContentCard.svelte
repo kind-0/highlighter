@@ -8,7 +8,7 @@
 
 </script>
 
-<ContentCard title={article.title} summary={article.summary} image={article.image}>
+<ContentCard title={article.title} summary={article.tagValue("summary")} image={article.image}>
     <LongForm slot="icon" class="w-7 h-7" />
     <AvatarWithName slot="footer" pubkey={article.pubkey} avatarClass="w-7 h-7" nameClass="text-base-100-content" />
 </ContentCard>
