@@ -1,7 +1,7 @@
 <script lang="ts">
     import ZapCounter from "./ZapCounter.svelte";
 
-    export let title: string | undefined = "Nostr long form article";
+    export let title: string | undefined;
     export let summary: string | undefined;
     export let image: string | undefined;
 
@@ -37,8 +37,8 @@
 
 </script>
 
-<div class="flex flex-col gap-4">
-    <div class="relative group overflow-hidden flex flex-col justify-end w-[174px] h-[244px] shadow rounded-xl">
+<div class="flex flex-col gap-4 w-[174px]">
+    <div class="relative group overflow-hidden flex flex-col justify-end h-[244px] shadow rounded-xl">
         <div class="absolute top-0 left-0 h-full w-full rounded-xl {!imgLoaded ? 'grad-blue' : ''}">
         {#if image}
             <img use:lazyLoad={image} class="object-cover rounded-xl {aspectRatio <= 1 ? 'w-full': 'h-full'}"/>
