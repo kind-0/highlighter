@@ -2,14 +2,13 @@
     import AddTopicInput from "$components/AddTopicInput.svelte";
     import CardWithTitle from "$components/cards/CardWithTitle.svelte";
     import Hashtag from "$icons/Hashtag.svelte";
-    import { userFollowHashtags, userFollows } from "$stores/session";
-    import { onMount } from "svelte";
+    import { user, userFollowHashtags, userFollows } from "$stores/session";
     import { fade } from "svelte/transition";
     import ndk from '$stores/ndk';
     import { NDKList, type NDKEvent, type NDKFilter, type NostrEvent } from "@nostr-dev-kit/ndk";
     import GeneralButton from "$components/buttons/GeneralButton.svelte";
 
-    let shouldDisplay: boolean;
+    let shouldDisplay: boolean = false;
     let newTopics: string[] = [];
 
     async function getSuggestedTopics(selectedTopics?: string[]): Promise<string[]> {
@@ -62,9 +61,7 @@
         }
     }
 
-    onMount(() => {
-        shouldDisplay = ($userFollowHashtags.length < 3);
-    })
+    $: shouldDisplay = ($userFollowHashtags.length < 3) && !!$user;
 
     function addTopic(topic: string) {
         if (userTopics.includes(topic)) return;
@@ -73,7 +70,7 @@
 
         newTopics.push(topic);
         newTopics = newTopics;
-        userTopics = [...Object.keys($userFollowHashtags), ...newTopics];
+        userTopics = [...$userFollowHashtags, ...newTopics];
 
         if (newTopics.length > 2) {
             suggestedTopicsPromise = new Promise<void>((resolve) => {
@@ -86,15 +83,16 @@
     }
 
     function removeTopic(topic: string) {
-        delete $userFollowHashtags[topic];
+        $userFollowHashtags = $userFollowHashtags.filter((t) => t !== topic);
         newTopics = newTopics.filter((t) => t !== topic);
+        $userFollowHashtags = $userFollowHashtags;
         newTopics = newTopics;
-        userTopics = [...Object.keys($userFollowHashtags), ...newTopics];
+        userTopics = [...$userFollowHashtags, ...newTopics];
     }
 
     let userTopics: string[];
 
-    $: userTopics = [...Object.keys($userFollowHashtags), ...newTopics];
+    $: userTopics = [...$userFollowHashtags, ...newTopics];
 
     let searchInput: string;
 
@@ -163,7 +161,7 @@
                             <li class="menu-title">SUGGESTED</li>
 
                             {#each filteredSuggestedTopics as topic}
-                                {#if !$userFollowHashtags[topic]}
+                                {#if !$userFollowHashtags.includes(topic)}
                                     <li transition:fade={{ duration: 100 }}>
                                         <button on:click={() => addTopic(topic)}>
                                             <Hashtag class="w-6 h-6 mr-1 text-base-300-content" />

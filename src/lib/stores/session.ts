@@ -5,9 +5,12 @@ import type NDKSvelte from '@nostr-dev-kit/ndk-svelte';
 import { NDKListKinds } from '$lib/ndk-kinds';
 import NDKHighlight from '$lib/ndk-kinds/highlight';
 import { persist, createLocalStorage } from "@macfja/svelte-persistent-store";
+import { newArticles } from './articles';
 import debug from 'debug';
 
 const d = debug('highlighter:session');
+
+export const loadingScreen = writable<boolean>(false);
 
 /**
  * Current user logged-in
@@ -20,7 +23,7 @@ export const user = writable<NDKUser | null>(null);
 export const userFollows = persist(
     writable<Set<string>>(new Set()),
     createLocalStorage(),
-    'userFollows'
+    'user-follows'
 );
 
 /**
@@ -28,12 +31,12 @@ export const userFollows = persist(
  */
 export const userLists = writable<Map<string, NDKList>>(new Map());
 
-export const highlights = writable<Map<string, NDKEvent>>(new Map());
+export const highlights = writable<Map<string, NDKHighlight>>(new Map());
 
 /**
  * Current user's followed hashtags
  */
-export const userFollowHashtags = writable<Record<string, number>>({});
+export const userFollowHashtags = writable<string[]>([]);
 
 /**
  * The user's extended network
@@ -41,17 +44,13 @@ export const userFollowHashtags = writable<Record<string, number>>({});
 export const networkFollows = persist(
     writable<Set<string>>(new Set()),
     createLocalStorage(),
-    'networkFollows'
+    'network-follows'
 );
 
 /**
  * The user's extended network lists
  */
-export const networkLists = persist(
-    writable<Map<string, NDKList>>(new Map()),
-    createLocalStorage(),
-    'networkLists'
-);
+export const networkLists = writable<Map<string, NDKList>>(new Map());
 
 /**
  * Main entry point to prepare the session.
@@ -64,10 +63,12 @@ export async function prepareSession(): Promise<void> {
         return;
     }
 
+    d(`running prepareSession`);
+
     return new Promise((resolve) => {
         const alreadyKnowFollows = getStore(userFollows).size > 0;
 
-        console.log('before-follows', getStore(userFollows).size, Object.keys(getStore(userFollowHashtags)).length);
+        console.log('before-follows', getStore(userFollows).size, getStore(userFollowHashtags).length);
 
         fetchData(
             'user',
@@ -78,7 +79,8 @@ export async function prepareSession(): Promise<void> {
                 followsStore: userFollows,
                 listsStore: userLists,
                 followHashtagsStore: userFollowHashtags,
-                waitUntilEoseToResolve: !alreadyKnowFollows
+                waitUntilEoseToResolve: !alreadyKnowFollows,
+                extraKinds: [0],
             }
         ).then(() => {
             const $userFollows = getStore(userFollows);
@@ -86,6 +88,8 @@ export async function prepareSession(): Promise<void> {
             console.log(`user follows count: ${$userFollows.size}`);
             console.log(`user lists count: ${getStore(userLists).size}`);
             console.log(`user hashtags: ${Object.keys(getStore(userFollowHashtags)).length}`);
+
+            newArticles.ref();
 
             resolve();
 
@@ -97,24 +101,43 @@ export async function prepareSession(): Promise<void> {
                     highlightStore: highlights,
                     listsStore: networkLists,
                     listsKinds: [39802],
+                    extraKinds: [0],
                 }
             ).then(() => {
                 console.log(`network lists count: ${getStore(networkLists).size}`);
 
-                // fetchData(
-                //     $ndk,
-                //     Array.from($userFollows),
-                //     undefined,
-                //     networkFollows,
-                //     undefined,
-                //     undefined,
-                //     true
-                // ).then(() => {
-                //     console.log(`network follows count: ${getStore(networkFollows).size}`);
-                // });
+                if (shouldFollowNetworkFollows()) {
+                    fetchData(
+                        'network-follows',
+                        $ndk,
+                        Array.from($userFollows),
+                        {
+                            followsStore: networkFollows,
+                            listsStore: networkLists,
+                            listsKinds: [39802],
+                            closeOnEose: true,
+                            waitUntilEoseToResolve: true
+                        }
+                    ).then(() => {
+                        console.log(`network follows count: ${getStore(networkFollows).size}`);
+                        localStorage.setItem('network-follows-updated-t', Date.now().toString());
+                    });
+                }
             });
         });
     });
+}
+
+function shouldFollowNetworkFollows() {
+    // check if the user has more than 30k network follows or if the last update was more than 7d ago
+    const lastUpdate = localStorage.getItem('network-follows-updated-t');
+    const lastUpdateDate = lastUpdate ? new Date(parseInt(lastUpdate)) : null;
+
+    if (lastUpdateDate && lastUpdateDate.getDate() > (new Date()).getDate() - 7) {
+        return false;
+    }
+
+    return getStore(networkFollows).size < 10000;
 }
 
 function isHashtagListEvent(event: NDKEvent) {
@@ -129,7 +152,8 @@ interface IFetchDataOptions {
     followsStore?: Writable<Set<string>>;
     listsStore?: Writable<Map<string, NDKList>>;
     listsKinds?: number[];
-    followHashtagsStore?: Writable<Record<string, number>>;
+    extraKinds?: number[];
+    followHashtagsStore?: Writable<string[]>;
     closeOnEose?: boolean;
     waitUntilEoseToResolve?: boolean;
 }
@@ -186,7 +210,7 @@ async function fetchData(
     const processHighlight = (event: NDKEvent) => {
         const highlight = NDKHighlight.from(event);
         opts.highlightStore!.update((highlights) => {
-            highlights.set(highlight.pubkey, highlight);
+            highlights.set(highlight.id, highlight);
 
             return highlights;
         });
@@ -207,14 +231,18 @@ async function fetchData(
 
     const processHashtagList = (event: NDKEvent) => {
         userFollowHashtags.update((existingHashtags) => {
-            console.log({existingHashtags});
             for (const t of event.tags) {
                 if (t[0] === 't') {
-                    existingHashtags[t[1]] = (existingHashtags[t[1]] ?? 0) + 1;
+                    if (existingHashtags instanceof Array) {
+                        if (!existingHashtags.includes(t[1]))
+                            existingHashtags.push(t[1]);
+                    // } else {
+                    //     existingHashtags[t[1]] = (existingHashtags[t[1]] ?? 0) + 1;
+                    }
                 }
             }
 
-            // console.log(existingHashtags);
+            console.log(existingHashtags);
 
             return existingHashtags;
         });
@@ -244,17 +272,10 @@ async function fetchData(
     };
 
     return new Promise((resolve) => {
-        const kinds = [];
-
-        // If we only have a single author, fetch kind 0
-        if (authors.length === 1) {
-            kinds.push(0);
-        }
+        const kinds = opts.extraKinds ?? [];
 
         if (opts.highlightStore) {
-            kinds.push(
-                9802 as number,      // highlight shelves
-            );
+            kinds.push(9802 as number);      // highlight shelves
         }
 
         if (opts.followsStore)
@@ -264,7 +285,10 @@ async function fetchData(
             kinds.push(...opts.listsKinds!);
         }
 
-        const filters: NDKFilter[] = [ { kinds, authors } ];
+        const filters: NDKFilter[] = [
+            { kinds, authors },
+            { "#k": ["9802"], authors }
+        ];
 
         if (opts.followHashtagsStore) {
             filters.push({

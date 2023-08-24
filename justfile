@@ -1,5 +1,5 @@
 update:
-	pnpm add @nostr-dev-kit/ndk@latest @nostr-dev-kit/ndk-svelte-components@latest @nostr-dev-kit/ndk-svelte@latest
+	pnpm add @nostr-dev-kit/ndk@latest @nostr-dev-kit/ndk-svelte-components@latest @nostr-dev-kit/ndk-svelte@latest @nostr-dev-kit/ndk-cache-dexie@latest
 
 deploy:
 	rsync -avP -l -t . --exclude node_modules pablo@highlighter.com:highlighter

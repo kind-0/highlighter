@@ -65,11 +65,6 @@
 
 <Navbar />
 
-<div class="flex mb-4 px-2 md:px-6">
-    <SidebarMode />
-
-</div>
-
 {#await articlePromise}
     <div class="full relative card">
         <div class="card-body">

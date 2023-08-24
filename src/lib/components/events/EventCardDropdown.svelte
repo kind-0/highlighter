@@ -9,7 +9,7 @@
     import { signers } from "$lib/stores/signer";
     import ndk from "$lib/stores/ndk";
 
-    import { db } from "$lib/interfaces/db";
+    import { db } from "@nostr-dev-kit/ndk-cache-dexie";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();

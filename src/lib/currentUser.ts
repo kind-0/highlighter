@@ -29,6 +29,11 @@ export function logout(): void {
     currentUserFollowPubkeysStore.set([]);
     localStorage.removeItem("currentUserFollowPubkeysStore");
     localStorage.removeItem("currentUserStore");
+    localStorage.removeItem("user-follows");
+    localStorage.removeItem("network-follows");
+    localStorage.removeItem("network-follows-updated-t");
+    localStorage.removeItem("currentUserNpub");
+    localStorage.removeItem("nostr-target-npub");
 
     // explicitly prevent auto-login with NIP-07
     localStorage.setItem("nostr-key-method", "none");

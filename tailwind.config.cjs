@@ -130,6 +130,9 @@ module.exports = {
           ".text-base-100-content": {
             "color": "#ffffff",
           },
+          ".text-base-300-content": {
+            "color": "#B3B3B3",
+          },
           ".dropdown-content": {
             "box-shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px"
           },

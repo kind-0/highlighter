@@ -19,7 +19,7 @@
     <li class="border-b border-base-300 -mx-2 px-2">
         <div class="flex flex-row gap-4 items-center text-lg rounded-b-none hover:!bg-transparent hover:!cursor-default">
             <Avatar ndk={$ndk} {user} class="w-12 h-12 rounded-lg" />
-            <Name ndk={$ndk} {user} class="text-lg font-semibold text-base-content brightness-150" />
+            <Name ndk={$ndk} {user} class="text-lg font-semibold text-base-100-content" />
         </div>
     </li>
         <MenuItem

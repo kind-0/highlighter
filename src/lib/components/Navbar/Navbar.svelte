@@ -13,13 +13,14 @@
     let homeLink = '/';
     let navbarOpened = false;
 
-    $: homeLink = $currentUser ? `/highlights/network/newest` : '/';
+    $: homeLink = $currentUser ? `/highlights` : '/';
 </script>
 
-<nav class="navbar bg-base-100 shrink-0 sticky top-0 z-20 py-4 lg:px-10 bg-base-100/80 justify-center gap-4">
+<nav class="navbar max-w-7xl mx-auto bg-base-100 shrink-0 sticky top-0 z-20 py-4 bg-base-100/80 justify-center gap-4">
     <div class="
         {navbarOpened ? 'hidden lg:flex' : 'flex'}
         flex-row items-center sm:gap-4 navbar-start
+        w-sidebar
     ">
         <div class="flex-none {!isHiddenSidebar ? 'lg:hidden' : ''}">
             <label for="left-drawer" class="btn btn-square btn-ghost {isHiddenDrawerBtn ? 'hidden' : ''}">
@@ -41,13 +42,15 @@
 
     <div class="
         navbar-center transition-all duration-100 ease-in-out
-        {navbarOpened ? 'w-full md:w-[700px]' : 'w-1/2'}
+        flex-grow
+        {navbarOpened ? 'w-full md:w-[700px]' : ''}
     ">
         <SearchInput bind:hasFocus={navbarOpened} />
     </div>
 
     <div class="
         navbar-end
+        w-sidebar
         {navbarOpened ? 'hidden lg:flex' : 'flex'}
     ">
         <div class="flex items-center md:order-2 gap-4">

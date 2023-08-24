@@ -3,7 +3,7 @@ import { NDKListKinds } from '../ndk-kinds/index.js';
 import { NDKKind, type NDKEvent, type NDKUser, NDKSubscriptionCacheUsage, type NDKFilter, NDKSubscription } from '@nostr-dev-kit/ndk';
 import { writable, derived, get as getStore } from 'svelte/store';
 import ndk from './ndk';
-import { db } from '$lib/interfaces/db';
+import { db } from '@nostr-dev-kit/ndk-cache-dexie';
 
 
 export const blockedListNames = [ 'mute' ];

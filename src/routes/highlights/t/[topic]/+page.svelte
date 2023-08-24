@@ -45,15 +45,19 @@
         otherTopics.clear();
         if (highlights) highlights.unsubscribe();
 
-        highlights = $ndk.storeSubscribeWithReposts(
+        highlights = $ndk.storeSubscribe(
             { kinds: [NDKKind.Highlight as number], '#t': [topic] },
-            { kinds: [16 as number], '#k': [NDKKind.Highlight.toString()], '#t': [topic] },
-            { closeOnEose: false },
+            {
+                repostsFilters: [
+                    { kinds: [16 as number], '#k': [NDKKind.Highlight.toString()], '#t': [topic] },
+                ],
+                closeOnEose: false,
+            },
             NDKHighlight
         );
     }
 
-    $: $highlights?.forEach((highlight) => {
+    $: $highlights?.forEach((highlight: NDKHighlight) => {
         users.add(highlight.author.npub);
         const topicTags = highlight.getMatchingTags('t');
         topicTags.forEach((tag) => {

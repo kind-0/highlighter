@@ -126,16 +126,3 @@
         />
     {/if}
 </div>
-
-<style>
-    :global(article mark[data-highlight-id]) {
-        cursor: pointer;
-        @apply transition-all duration-200;
-    }
-
-    :global(article mark:hover) {
-        cursor: pointer;
-        background: rgba(246, 48, 2, 0.8);
-        color: #FFF0F0;
-    }
-</style>

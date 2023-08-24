@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Sidebar from "$lib/components/Sidebar/Sidebar.svelte";
+    import Sidebar from "$components/sidebars/HighlightsSidebar.svelte";
     import WithLeftSidebar from "$lib/layouts/WithLeftSidebar.svelte";
 </script>
 

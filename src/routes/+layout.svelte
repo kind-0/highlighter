@@ -2,7 +2,6 @@
     import ndk, { bunkerNDK } from '$lib/stores/ndk';
     import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
-    import { currentUserFollowPubkeys as currentUserFollowPubkeysStore } from '$lib/store';
     import { login } from '$lib/utils/login';
     import '../app.postcss';
     import { Modals, closeModal } from 'svelte-modals'
@@ -10,25 +9,26 @@
     import { pwaInfo } from 'virtual:pwa-info';
     import "@fontsource/lora";
     import Loading from '$lib/components/Loading.svelte';
-    import { user, prepareSession } from '$stores/session';
     import { page } from '$app/stores';
+    import { goto } from '$app/navigation';
+
+    import { user, prepareSession, loadingScreen, userFollows, networkFollows } from '$stores/session';
+    import { setNewArticlesFilters } from '$stores/articles';
 
     $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : ''
-
-    let prevCurrentUser: string | undefined = undefined;
 
     let sessionPreparationStarted = false;
     let mounted = false;
 
-    login($ndk, $bunkerNDK).then((user) => {
-        $currentUser = user;
-        $user = $currentUser;
-    })
+    $: $user = $currentUser;
 
     onMount(async () => {
         try {
             $ndk.connect();
+            $currentUser = await login($ndk, $bunkerNDK);
             console.log($currentUser);
+            $user = $currentUser;
+            console.log(`setting $user`, !!$user);
             mounted = true;
         } catch (e) {
             console.log('here')
@@ -37,51 +37,54 @@
         }
     });
 
-    $: if ($currentUser && $currentUser?.npub !== prevCurrentUser) {
-        prevCurrentUser = $currentUser?.npub;
-
-        const cachedFollows = localStorage.getItem('currentUserFollowPubkeysStore');
-        if (cachedFollows) {
-            $currentUserFollowPubkeysStore = JSON.parse(cachedFollows);
-        }
-    }
-
-    let loading: boolean = false;
-
-    $: if (mounted && !!$currentUser && !sessionPreparationStarted) {
+    $: if (mounted && !!$user && !sessionPreparationStarted) {
+        console.log(`here`, $userFollows.size);
         sessionPreparationStarted = true;
-        if (true) {
-            loading = true;
+        if ($userFollows.size === 0) {
+            $loadingScreen = true;
+
+            if ($page.url.pathname === '/') {
+                goto('/reader');
+            }
+
             prepareSession().then(() => {
-                loading = false;
+                // $loadingScreen = false;
             })
         } else {
             prepareSession();
         }
     }
 
-    let shouldShowLoadingScreen = false;
+    let shouldShowLoadingScreen = true;
 
-    $: shouldShowLoadingScreen = $page.url.pathname !== '/';
-
-    // setTimeout(() => { loading = false }, 5000 );
+    // $: shouldShowLoadingScreen = $page.url.pathname !== '/';
 
 </script>
+
+sessionPreparationStarted = {sessionPreparationStarted}
+<br>
+$loadingScreen = {$loadingScreen}
+<br>
+mounted = {mounted}
+<br>
+$userFollows.size = {$userFollows?.size}
+<br>
+$networkFollows.size = {$networkFollows?.size}
+<br>
+!!$user = {!!$user}
 
 <svelte:head>
     {@html webManifestLink}
 </svelte:head>
 
-{#if mounted}
-    {#if loading && shouldShowLoadingScreen}
-        <div transition:fade>
-            <Loading on:loaded={() => loading = false } />
-        </div>
-    {:else}
-        <div transition:fade>
-            <slot />
-        </div>
-    {/if}
+{#if $loadingScreen && shouldShowLoadingScreen}
+    <div transition:fade>
+        <Loading on:loaded={() => $loadingScreen = false } />
+    </div>
+{:else if mounted}
+    <div transition:fade>
+        <slot />
+    </div>
 {/if}
 
 <Modals>

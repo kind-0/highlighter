@@ -3,7 +3,7 @@ import ndkStore from '$lib/stores/ndk';
 import type { GetUserParams, NDKFilterOptions } from '@nostr-dev-kit/ndk';
 import { liveQuery, type Observable } from 'dexie';
 import { browser } from '$app/environment';
-import { db } from '$lib/interfaces/db';
+import { db } from '@nostr-dev-kit/ndk-cache-dexie';
 
 const UserInterface = {
     get: (opts: GetUserParams): Observable<App.UserProfile> => {
