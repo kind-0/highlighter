@@ -12,7 +12,7 @@
     let zaps: NDKEventStore<NDKEvent>;
 
     zaps = $ndk.storeSubscribe(
-        { kinds: [ 9735 ], '#e': [event.id] },
+        { kinds: [ 9735 ], ...event.filter() },
         { closeOnEose: false, groupableDelay: 2500 }
     );
 
