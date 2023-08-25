@@ -19,7 +19,7 @@
     }
 </script>
 
-<AttentionButton handleClick={loginAsGuest}>
+<AttentionButton on:click={loginAsGuest}>
     <div slot="btn-content" class="flex items-center gap-2">
         <KeyIcon />
         <span >Continue as Guest</span>

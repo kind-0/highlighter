@@ -21,17 +21,17 @@ dependencies:
     specifier: ^1.3.1
     version: 1.3.1
   '@nostr-dev-kit/ndk':
-    specifier: 0.8.13
-    version: 0.8.13(typescript@5.1.3)
+    specifier: 0.8.21-1
+    version: 0.8.21-1(typescript@5.1.3)
   '@nostr-dev-kit/ndk-cache-redis':
     specifier: ^1.3.0
     version: 1.3.0(typescript@5.1.3)
   '@nostr-dev-kit/ndk-svelte':
-    specifier: 0.8.13-0
-    version: 0.8.13-0
+    specifier: 0.8.21-1
+    version: 0.8.21-1
   '@nostr-dev-kit/ndk-svelte-components':
-    specifier: 0.8.13-0
-    version: 0.8.13-0(@babel/core@7.22.10)(postcss@8.4.21)(prettier@2.8.8)(svelte@4.1.1)(typescript@5.1.3)
+    specifier: 0.8.21-1
+    version: 0.8.21-1(@babel/core@7.22.10)(postcss@8.4.21)(prettier@2.8.8)(svelte@4.1.1)(typescript@5.1.3)
   '@rollup/plugin-commonjs':
     specifier: ^24.0.1
     version: 24.0.1(rollup@3.28.0)
@@ -1960,19 +1960,19 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk-svelte-components@0.8.13-0(@babel/core@7.22.10)(postcss@8.4.21)(prettier@2.8.8)(svelte@4.1.1)(typescript@5.1.3):
-    resolution: {integrity: sha512-nEBxH1TV4nC/ZPmGA9MPP4SjnP0IQtNzLbLaWX+fwb6tLL2FtmMc4panSUxhLEN73cmcF6Bw2zQAb1dYOCT71g==}
+  /@nostr-dev-kit/ndk-svelte-components@0.8.21-1(@babel/core@7.22.10)(postcss@8.4.21)(prettier@2.8.8)(svelte@4.1.1)(typescript@5.1.3):
+    resolution: {integrity: sha512-IXsMYa1ixWLdxQ2scdIxnaRj1vU96Tk9N1XPb2etGnem6A21peevp3S7SAHiqNKtziZU4KYQxUCCpJofF4EGVQ==}
     peerDependencies:
       svelte: ^4.1
     dependencies:
-      '@nostr-dev-kit/ndk': 0.8.13(typescript@5.1.3)
+      '@nostr-dev-kit/ndk': 0.8.21(typescript@5.1.3)
       '@trivago/prettier-plugin-sort-imports': 4.2.0(prettier@2.8.8)
       classnames: 2.3.2
-      hurdak: github.com/ConsignCloud/hurdak/91a8e9364123876715a1986c1d2dfc07eece20bf
       isomorphic-dompurify: 1.8.0
-      marked: 7.0.2
-      marked-gfm-heading-id: 3.0.6(marked@7.0.2)
-      marked-mangle: 1.1.2(marked@7.0.2)
+      lucide-svelte: 0.268.0(svelte@4.1.1)
+      marked: 7.0.4
+      marked-gfm-heading-id: 3.0.6(marked@7.0.4)
+      marked-mangle: 1.1.2(marked@7.0.4)
       nostr-tools: 1.14.0
       ramda: 0.29.0
       rehype-autolink-headings: 6.1.1
@@ -2000,10 +2000,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@nostr-dev-kit/ndk-svelte@0.8.13-0:
-    resolution: {integrity: sha512-S6hZDrExcLSFSwVKqvz/vQXcQUnxfXaspk9cjBdYnXuswCuOk3Es0vaWYi5tQ3eprGm9h4FVtrkuKr0AugKlCg==}
+  /@nostr-dev-kit/ndk-svelte@0.8.21-1:
+    resolution: {integrity: sha512-5c34Tzbu85xIeJTX0YbgrWTY5y5INrlrsNkctpFAX9dLBXOl5fKg2s+y1ulEYGPbnTD4K12laO6MDuO28+Ys8A==}
     dependencies:
-      '@nostr-dev-kit/ndk': 0.8.13(typescript@5.1.6)
+      '@nostr-dev-kit/ndk': 0.8.21(typescript@5.1.6)
       svelte: 4.2.0
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -2040,8 +2040,8 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk@0.8.13(typescript@5.1.3):
-    resolution: {integrity: sha512-WDDx0B3eRJWiqKbkMKTxqNPWTDShTt7IfMbZblas700Hm5DvoFb6E5jXyE4/szLM2gFf785gBXfp+rdLUfIktw==}
+  /@nostr-dev-kit/ndk@0.8.21(typescript@5.1.3):
+    resolution: {integrity: sha512-nthH3uoFuaXWqhZt96/p/iXTbYcMdkcee6pDm+Wi+MIcEsbj4o7r+ChoQ757TQZtEBLkOmku8/loi2LnHpkI9A==}
     dependencies:
       '@noble/hashes': 1.3.1
       '@noble/secp256k1': 2.0.0
@@ -2069,14 +2069,43 @@ packages:
       - typescript
     dev: false
 
-  /@nostr-dev-kit/ndk@0.8.13(typescript@5.1.6):
-    resolution: {integrity: sha512-WDDx0B3eRJWiqKbkMKTxqNPWTDShTt7IfMbZblas700Hm5DvoFb6E5jXyE4/szLM2gFf785gBXfp+rdLUfIktw==}
+  /@nostr-dev-kit/ndk@0.8.21(typescript@5.1.6):
+    resolution: {integrity: sha512-nthH3uoFuaXWqhZt96/p/iXTbYcMdkcee6pDm+Wi+MIcEsbj4o7r+ChoQ757TQZtEBLkOmku8/loi2LnHpkI9A==}
     dependencies:
       '@noble/hashes': 1.3.1
       '@noble/secp256k1': 2.0.0
       '@scure/base': 1.1.1
       '@typescript-eslint/eslint-plugin': 5.59.9(@typescript-eslint/parser@5.59.9)(eslint@8.45.0)(typescript@5.1.6)
       '@typescript-eslint/parser': 5.59.9(eslint@8.45.0)(typescript@5.1.6)
+      debug: 4.3.4(supports-color@7.2.0)
+      esbuild: 0.17.19
+      esbuild-plugin-alias: 0.2.1
+      eslint: 8.45.0
+      eslint-config-prettier: 8.8.0(eslint@8.45.0)
+      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.59.9)(eslint@8.45.0)
+      esm-loader-typescript: 1.0.4
+      eventemitter3: 5.0.1
+      light-bolt11-decoder: 3.0.0
+      node-fetch: 3.3.1
+      nostr-tools: 1.14.0
+      tsd: 0.28.1
+      utf8-buffer: 1.0.0
+      websocket-polyfill: 0.0.3
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+      - typescript
+    dev: false
+
+  /@nostr-dev-kit/ndk@0.8.21-1(typescript@5.1.3):
+    resolution: {integrity: sha512-cZJup5KrtbNO4yA3EluzILfLJ1aIyTgUk05IbU8wv0GHsKXtQm+aZm9+XCe0LJPYNgLYjzhN/wqWHI9MXnpQvQ==}
+    dependencies:
+      '@noble/hashes': 1.3.1
+      '@noble/secp256k1': 2.0.0
+      '@scure/base': 1.1.1
+      '@typescript-eslint/eslint-plugin': 5.59.9(@typescript-eslint/parser@5.59.9)(eslint@8.45.0)(typescript@5.1.3)
+      '@typescript-eslint/parser': 5.59.9(eslint@8.45.0)(typescript@5.1.3)
       debug: 4.3.4(supports-color@7.2.0)
       esbuild: 0.17.19
       esbuild-plugin-alias: 0.2.1
@@ -6042,6 +6071,14 @@ packages:
     dependencies:
       yallist: 4.0.0
 
+  /lucide-svelte@0.268.0(svelte@4.1.1):
+    resolution: {integrity: sha512-w2pqfViiU9PgHkyOoYEr3FBG4tk+fupm2tR7/p6ugfNQZg1ABdXP2okkasEfQ8TF41KkR6uFqQUp8ciCdpGwVw==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      svelte: 4.1.1
+    dev: false
+
   /lunr@2.3.9:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
     dev: false
@@ -6100,21 +6137,21 @@ packages:
       uc.micro: 1.0.6
     dev: false
 
-  /marked-gfm-heading-id@3.0.6(marked@7.0.2):
+  /marked-gfm-heading-id@3.0.6(marked@7.0.4):
     resolution: {integrity: sha512-ot/iTTxvSJpUWv+DJ5aGVj2kxdEpsiKj6NJy6icwcdrVPHsbAE3dZ3Usk4ORt8ke2HKbw83n5Q5jNwSMuAYMSA==}
     peerDependencies:
       marked: ^4 || ^5 || ^6 || ^7
     dependencies:
       github-slugger: 2.0.0
-      marked: 7.0.2
+      marked: 7.0.4
     dev: false
 
-  /marked-mangle@1.1.2(marked@7.0.2):
+  /marked-mangle@1.1.2(marked@7.0.4):
     resolution: {integrity: sha512-+TDSCT4YiXYlSoinMLEzOY6ErY9S1ZuLMjP5OcC6ZWpre93OxCxspFwa5qZ4RIu7X7TH7fnV0CYxEmgvBz4aFg==}
     peerDependencies:
       marked: ^4 || ^5 || ^6 || ^7
     dependencies:
-      marked: 7.0.2
+      marked: 7.0.4
     dev: false
 
   /marked@4.3.0:
@@ -6123,8 +6160,8 @@ packages:
     hasBin: true
     dev: false
 
-  /marked@7.0.2:
-    resolution: {integrity: sha512-ADEBjnCHOrsLoV7JPvUNWtELZ0b4SeIALhrfxuA9uhS3hw2PCezROoFduIqMOjeagBPto732+YC5tZHBMQRdqg==}
+  /marked@7.0.4:
+    resolution: {integrity: sha512-t8eP0dXRJMtMvBojtkcsA7n48BkauktUKzfkPSCq85ZMTJ0v76Rke4DYz01omYpPTUh4p/f7HePgRo3ebG8+QQ==}
     engines: {node: '>= 16'}
     hasBin: true
     dev: false
@@ -7338,10 +7375,6 @@ packages:
   /quick-lru@4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
-    dev: false
-
-  /ramda@0.28.0:
-    resolution: {integrity: sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==}
     dev: false
 
   /ramda@0.29.0:
@@ -8957,11 +8990,6 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  /uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    hasBin: true
-    dev: false
-
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
@@ -9381,12 +9409,3 @@ packages:
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  github.com/ConsignCloud/hurdak/91a8e9364123876715a1986c1d2dfc07eece20bf:
-    resolution: {tarball: https://codeload.github.com/ConsignCloud/hurdak/tar.gz/91a8e9364123876715a1986c1d2dfc07eece20bf}
-    name: hurdak
-    version: 0.0.5
-    dependencies:
-      ramda: 0.28.0
-      uuid: 8.3.2
-    dev: false
