@@ -20,6 +20,12 @@ const config = {
 		}
 		handler(warning);
 	},
+	vitePlugin: {
+		inspector: {
+			holdMode: true,
+			toggleKeyCombo: 'control-shift'
+		}
+	}
 };
 
 export default config;
