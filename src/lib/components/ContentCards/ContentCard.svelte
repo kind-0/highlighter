@@ -1,9 +1,11 @@
 <script lang="ts">
+    import type { NDKEvent } from "@nostr-dev-kit/ndk";
     import ZapCounter from "./ZapCounter.svelte";
 
     export let title: string | undefined;
     export let summary: string | undefined;
     export let image: string | undefined;
+    export let event: NDKEvent;
 
     let aspectRatio: number;
     let imgLoaded: boolean = false;
@@ -37,8 +39,8 @@
 
 </script>
 
-<div class="flex flex-col gap-4 w-[174px]">
-    <div class="relative group overflow-hidden flex flex-col justify-end h-[244px] shadow rounded-xl">
+<a href="/a/{event.id}" class="flex flex-col gap-4 w-[174px] shrink-0">
+    <div class="relative group overflow-hidden flex flex-col justify-end h-[244px] w-full shadow rounded-xl">
         <div class="absolute top-0 left-0 h-full w-full rounded-xl {!imgLoaded ? 'grad-blue' : ''}">
         {#if image}
             <img use:lazyLoad={image} class="object-cover rounded-xl {aspectRatio <= 1 ? 'w-full': 'h-full'}"/>
@@ -59,15 +61,15 @@
                     <p class="summary text-xs font-normal leading-[18px]">{summary}</p>
                     {/if}
                 </div>
-                <ZapCounter />
+                <ZapCounter {event} />
             </div>
         </div>
     </div>
 
-    <div class="flex justify-center items-center">
+    <div class="flex w-full px-2 justify-center items-center">
         <slot name="footer" />
     </div>
-</div>
+</a>
 
 <style>
     .title {
