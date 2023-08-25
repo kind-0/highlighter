@@ -3,6 +3,7 @@
     import { currentUser } from "$lib/store";
     import ndk from "$stores/ndk";
     import { nicelyFormattedMilliSatNumber } from "$utils";
+    import { onDestroy } from "svelte";
     import { zapInvoiceFromEvent, type NDKEvent } from "@nostr-dev-kit/ndk";
     import type { NDKEventStore } from "@nostr-dev-kit/ndk-svelte";
 
@@ -14,6 +15,10 @@
         { kinds: [ 9735 ], '#e': [event.id] },
         { closeOnEose: false, groupableDelay: 2500 }
     );
+
+    onDestroy(() => {
+        if (zaps) zaps.unsubscribe();
+    });
 
     let zappedAmount: number = 0;
     let zappedByCurrentUser: boolean = false;

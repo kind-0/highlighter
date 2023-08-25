@@ -18,7 +18,7 @@
     });
 </script>
 
-{#await author.fetchProfile()}
+{#await authorPromise}
     <div class="h-64 flex items-center justify-center">
         <span class="loading loading-lg"></span>
     </div>

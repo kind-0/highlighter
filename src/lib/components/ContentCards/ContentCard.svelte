@@ -41,7 +41,7 @@
 </script>
 
 <a href={url} class="flex flex-col gap-4 w-[174px]">
-    <div class="relative group overflow-hidden flex flex-col justify-end h-[244px] shadow rounded-xl">
+    <div class="relative group overflow-hidden flex flex-col justify-end h-[244px] w-full shadow rounded-xl">
         <div class="absolute top-0 left-0 h-full w-full rounded-xl {!imgLoaded ? 'grad-blue' : ''}">
         {#if image}
             <img use:lazyLoad={image} class="object-cover rounded-xl {aspectRatio <= 1 ? 'w-full': 'h-full'}"/>
@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <div class="flex justify-start items-center truncate">
+    <div class="flex w-full px-2 justify-center items-center">
         <slot name="footer" />
     </div>
 </a>
