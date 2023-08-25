@@ -1,9 +1,12 @@
 <script lang="ts">
+    import type { NDKEvent } from "@nostr-dev-kit/ndk";
     import ZapCounter from "./ZapCounter.svelte";
 
     export let title: string | undefined;
     export let summary: string | undefined;
     export let image: string | undefined;
+    export let url: string = "#";
+    export let event: NDKEvent;
 
     let aspectRatio: number;
     let imgLoaded: boolean = false;
@@ -17,8 +20,8 @@
             if (entries[0].isIntersecting) {
                 image.src = src
                 // check if instantly loaded
-                if (image.complete) {  
-                    loaded()        
+                if (image.complete) {
+                    loaded()
                 } else {
                     // if the image isn't loaded yet, add an event listener
                     image.addEventListener('load', loaded)
@@ -26,18 +29,18 @@
             }
         }, {})
         // intersection observer
-        observer.observe(image)  
+        observer.observe(image)
         return {
             destroy() {
                 // clean up the event listener
-                image.removeEventListener('load', loaded)           
+                image.removeEventListener('load', loaded)
             }
         }
     }
 
 </script>
 
-<div class="flex flex-col gap-4 w-[174px]">
+<a href={url} class="flex flex-col gap-4 w-[174px]">
     <div class="relative group overflow-hidden flex flex-col justify-end h-[244px] shadow rounded-xl">
         <div class="absolute top-0 left-0 h-full w-full rounded-xl {!imgLoaded ? 'grad-blue' : ''}">
         {#if image}
@@ -59,15 +62,15 @@
                     <p class="summary text-xs font-normal leading-[18px]">{summary}</p>
                     {/if}
                 </div>
-                <ZapCounter />
+                <ZapCounter {event} />
             </div>
         </div>
     </div>
 
-    <div class="flex justify-center items-center">
+    <div class="flex justify-start items-center truncate">
         <slot name="footer" />
     </div>
-</div>
+</a>
 
 <style>
     .title {

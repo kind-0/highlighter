@@ -7,6 +7,7 @@
     import ndk from '$stores/ndk';
     import { NDKList, type NDKEvent, type NDKFilter, type NostrEvent } from "@nostr-dev-kit/ndk";
     import GeneralButton from "$components/buttons/GeneralButton.svelte";
+    import EmptyState from "$icons/EmptyState.svelte";
 
     let shouldDisplay: boolean = false;
     let newTopics: string[] = [];
@@ -130,30 +131,32 @@
         >
             <div class="flex flex-row divide-x divide-base-300 w-full">
                 <div class="w-1/2">
-                    <ul class="menu w-full rounded-box">
-                        {#if userTopics.length === 0}
-                            Some blank state here?
-                        {/if}
-                        <li class="menu-title">TOPICS</li>
-
-                        {#each userTopics as suggestedHashtag}
-                            <li transition:fade={{ duration: 100 }}>
-                                <button on:click={() => removeTopic(suggestedHashtag)}>
-                                    <Hashtag class="w-6 h-6 mr-1 text-accent2" />
-                                    <span class="text-base-100-content font-light">
-                                        {suggestedHashtag}
-                                    </span>
-                                </button>
-                            </li>
-                        {/each}
-
+                    <div class="p-4">
                         <AddTopicInput
                             bind:value={searchInput}
                             on:add={(e) => addTopic(e.detail)}
                         />
-                        {searchInput}
+                    </div>
+                    {#if userTopics.length === 0}
+                        <div class="flex items-center justify-center h-full self-center p-4">
+                            <EmptyState />
+                        </div>
+                    {:else}
+                        <ul class="menu w-full rounded-box">
+                            <li class="menu-title">TOPICS</li>
 
-                    </ul>
+                            {#each userTopics as suggestedHashtag}
+                                <li transition:fade={{ duration: 100 }}>
+                                    <button on:click={() => removeTopic(suggestedHashtag)}>
+                                        <Hashtag class="w-6 h-6 mr-1 text-accent2" />
+                                        <span class="text-base-100-content font-light">
+                                            {suggestedHashtag}
+                                        </span>
+                                    </button>
+                                </li>
+                            {/each}
+                        </ul>
+                    {/if}
                 </div>
                 <div class="w-1/2">
                     {#if filteredSuggestedTopics.length > 0}
@@ -165,7 +168,7 @@
                                     <li transition:fade={{ duration: 100 }}>
                                         <button on:click={() => addTopic(topic)}>
                                             <Hashtag class="w-6 h-6 mr-1 text-base-300-content" />
-                                            <span class="text-base-100-content font-light">
+                                            <span class="text-base-100-content !font-thin">
                                                 {topic}
                                             </span>
                                         </button>
@@ -195,13 +198,20 @@
                 </div>
             </div>
 
-            <div class="flex flex-row justify-end">
-                <GeneralButton
-                    class="mt-4 px-10 !font-thin"
-                    on:click={done}
-                >
-                    Done
-                </GeneralButton>
+            <div class="
+                flex flex-row w-full
+                border-t border-base-300 items-center
+            ">
+                <div class="w-1/2 p-4">
+                </div>
+                <div class="w-1/2 p-4 flex justify-end">
+                    <GeneralButton
+                        class="px-10 !font-thin self-end"
+                        on:click={done}
+                    >
+                        Done
+                    </GeneralButton>
+                </div>
             </div>
         </CardWithTitle>
     </div>

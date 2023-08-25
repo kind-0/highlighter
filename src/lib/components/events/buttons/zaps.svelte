@@ -1,6 +1,5 @@
 <script lang="ts">
     import { openModal } from 'svelte-modals'
-    import { Tooltip } from 'flowbite-svelte';
 
     import ZapIcon from '$lib/icons/Zap.svelte';
 
@@ -9,7 +8,8 @@
     import { type NDKEvent, zapInvoiceFromEvent } from '@nostr-dev-kit/ndk';
     import { nicelyFormattedMilliSatNumber } from '$lib/utils';
     import { currentUser } from '$lib/store';
-    import ndk, { type NDKEventStore } from '$lib/stores/ndk';
+    import ndk from '$stores/ndk';
+    import type { NDKEventStore } from '@nostr-dev-kit/ndk-svelte';
 
     export let event: NDKEvent;
     let eventId: string;

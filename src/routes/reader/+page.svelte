@@ -5,11 +5,16 @@
     import type { NDKArticle } from "@nostr-dev-kit/ndk";
     import { fade } from "svelte/transition";
     import { loadingScreen } from "$stores/session";
+    import { onMount } from "svelte";
 
     let renderNewContent = false;
     let newContentItems: NDKArticle[];
     let newContentArticlesToRender: number;
     let newContentExpanded = false;
+
+    onMount(() => {
+        newContentEose();
+    })
 
     function newContentEose() {
         renderNewContent = renderNewContent || (
@@ -31,10 +36,15 @@
                 <button class="btn btn-ghost font-light"
                     on:click={() => {
                         newContentArticlesToRender += 10;
-                        newContentExpanded = true;
+                        newContentExpanded = !newContentExpanded;
                     }}
                 >
-                    View More
+                    View
+                    {#if newContentExpanded}
+                        Less
+                    {:else}
+                        More
+                    {/if}
                 </button>
             </div>
             {newContentArticlesToRender}
