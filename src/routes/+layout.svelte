@@ -61,18 +61,6 @@
 
 </script>
 
-sessionPreparationStarted = {sessionPreparationStarted}
-<br>
-$loadingScreen = {$loadingScreen}
-<br>
-mounted = {mounted}
-<br>
-$userFollows.size = {$userFollows?.size}
-<br>
-$networkFollows.size = {$networkFollows?.size}
-<br>
-!!$user = {!!$user}
-
 <svelte:head>
     {@html webManifestLink}
 </svelte:head>
